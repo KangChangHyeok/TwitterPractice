@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		27EF662328EC269000C1E570 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EF662228EC269000C1E570 /* AppDelegate.swift */; };
 		27EF662528EC269000C1E570 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EF662428EC269000C1E570 /* SceneDelegate.swift */; };
-		27EF662A28EC269000C1E570 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27EF662828EC269000C1E570 /* Main.storyboard */; };
 		27EF662C28EC269200C1E570 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27EF662B28EC269200C1E570 /* Assets.xcassets */; };
 		27EF662F28EC269200C1E570 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27EF662D28EC269200C1E570 /* LaunchScreen.storyboard */; };
 		27F2E71F28EC28C700CFE9F2 /* MainTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F2E71E28EC28C700CFE9F2 /* MainTabController.swift */; };
@@ -25,6 +24,9 @@
 		63254B5829111E9F00C90DEC /* EditProfileHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63254B5729111E9F00C90DEC /* EditProfileHeader.swift */; };
 		63254B5A291147ED00C90DEC /* EditProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63254B59291147ED00C90DEC /* EditProfileViewModel.swift */; };
 		63254B5C2911487000C90DEC /* EditProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63254B5B2911487000C90DEC /* EditProfileCell.swift */; };
+		634FB56F2ABB021C00BBCBA3 /* BuilderKit in Frameworks */ = {isa = PBXBuildFile; productRef = 634FB56E2ABB021C00BBCBA3 /* BuilderKit */; };
+		634FB5722ABB219900BBCBA3 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 634FB5712ABB219900BBCBA3 /* SnapKit */; };
+		634FB5762ABB230200BBCBA3 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634FB5752ABB230200BBCBA3 /* BaseViewController.swift */; };
 		635B56AE28EF15A6005C13BF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 635B56AD28EF15A6005C13BF /* GoogleService-Info.plist */; };
 		639EA1FE28EFF85000564ED9 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639EA1FD28EFF85000564ED9 /* Constants.swift */; };
 		639EA20028F003E300564ED9 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639EA1FF28F003E300564ED9 /* AuthService.swift */; };
@@ -64,7 +66,6 @@
 		27EF661F28EC269000C1E570 /* TwitterPractice.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwitterPractice.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27EF662228EC269000C1E570 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		27EF662428EC269000C1E570 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		27EF662928EC269000C1E570 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		27EF662B28EC269200C1E570 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		27EF662E28EC269200C1E570 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		27EF663028EC269200C1E570 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -81,6 +82,7 @@
 		63254B5729111E9F00C90DEC /* EditProfileHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileHeader.swift; sourceTree = "<group>"; };
 		63254B59291147ED00C90DEC /* EditProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewModel.swift; sourceTree = "<group>"; };
 		63254B5B2911487000C90DEC /* EditProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileCell.swift; sourceTree = "<group>"; };
+		634FB5752ABB230200BBCBA3 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		635B56AD28EF15A6005C13BF /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		639EA1FD28EFF85000564ED9 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		639EA1FF28F003E300564ED9 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
@@ -121,7 +123,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				634FB5722ABB219900BBCBA3 /* SnapKit in Frameworks */,
 				680FA38579CCBD581089FD96 /* Pods_TwitterPractice.framework in Frameworks */,
+				634FB56F2ABB021C00BBCBA3 /* BuilderKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -150,15 +154,14 @@
 		27EF662128EC269000C1E570 /* TwitterPractice */ = {
 			isa = PBXGroup;
 			children = (
+				27EF662228EC269000C1E570 /* AppDelegate.swift */,
+				27EF662428EC269000C1E570 /* SceneDelegate.swift */,
 				639EA1FB28EFF7F100564ED9 /* Model */,
 				639EA1F928EFF7E300564ED9 /* View */,
 				639EA1FA28EFF7E800564ED9 /* ViewModel */,
 				27F2E71B28EC280F00CFE9F2 /* Controller */,
 				27F2E71D28EC282300CFE9F2 /* Utils */,
 				639EA1FC28EFF7FC00564ED9 /* API */,
-				27EF662228EC269000C1E570 /* AppDelegate.swift */,
-				27EF662428EC269000C1E570 /* SceneDelegate.swift */,
-				27EF662828EC269000C1E570 /* Main.storyboard */,
 				27EF662B28EC269200C1E570 /* Assets.xcassets */,
 				27EF662D28EC269200C1E570 /* LaunchScreen.storyboard */,
 				635B56AD28EF15A6005C13BF /* GoogleService-Info.plist */,
@@ -180,6 +183,7 @@
 				639EA21128F5720200564ED9 /* ProfileController.swift */,
 				63D0BA6B29003714009F369A /* TweetController.swift */,
 				63254B5429111A7E00C90DEC /* EditProfileController.swift */,
+				634FB5752ABB230200BBCBA3 /* BaseViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -304,13 +308,17 @@
 				27EF661C28EC269000C1E570 /* Frameworks */,
 				27EF661D28EC269000C1E570 /* Resources */,
 				C80EDAE628853ACF0EB31F72 /* [CP] Embed Pods Frameworks */,
-				63D0BA6428FC3BC3009F369A /* SwiftLint */,
+				63D4C9172AA4C5FD003D71C2 /* ShellScript */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = TwitterPractice;
+			packageProductDependencies = (
+				634FB56E2ABB021C00BBCBA3 /* BuilderKit */,
+				634FB5712ABB219900BBCBA3 /* SnapKit */,
+			);
 			productName = TwitterPractice;
 			productReference = 27EF661F28EC269000C1E570 /* TwitterPractice.app */;
 			productType = "com.apple.product-type.application";
@@ -339,6 +347,10 @@
 				Base,
 			);
 			mainGroup = 27EF661628EC269000C1E570;
+			packageReferences = (
+				634FB56B2ABB008600BBCBA3 /* XCRemoteSwiftPackageReference "BuilderKit" */,
+				634FB5702ABB219900BBCBA3 /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
 			productRefGroup = 27EF662028EC269000C1E570 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -357,15 +369,15 @@
 				27EF662F28EC269200C1E570 /* LaunchScreen.storyboard in Resources */,
 				635B56AE28EF15A6005C13BF /* GoogleService-Info.plist in Resources */,
 				27EF662C28EC269200C1E570 /* Assets.xcassets in Resources */,
-				27EF662A28EC269000C1E570 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		63D0BA6428FC3BC3009F369A /* SwiftLint */ = {
+		63D4C9172AA4C5FD003D71C2 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -373,14 +385,13 @@
 			);
 			inputPaths = (
 			);
-			name = SwiftLint;
 			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/SwiftLint/swiftlint\"\n";
+			shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftlint > /dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 		C80EDAE628853ACF0EB31F72 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -433,6 +444,7 @@
 				639EA20828F318FC00564ED9 /* InputTextView.swift in Sources */,
 				639EA21828F6513B00564ED9 /* ProfileFilterCell.swift in Sources */,
 				27F2E72528EC2AD700CFE9F2 /* NotificationController.swift in Sources */,
+				634FB5762ABB230200BBCBA3 /* BaseViewController.swift in Sources */,
 				639EA21C28F6919900564ED9 /* UserCell.swift in Sources */,
 				27F2E73028EC65BC00CFE9F2 /* Utilities.swift in Sources */,
 				63254B5529111A7E00C90DEC /* EditProfileController.swift in Sources */,
@@ -478,14 +490,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		27EF662828EC269000C1E570 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				27EF662928EC269000C1E570 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		27EF662D28EC269200C1E570 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -547,7 +551,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -601,7 +605,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -624,8 +628,8 @@
 				INFOPLIST_FILE = TwitterPractice/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -655,8 +659,8 @@
 				INFOPLIST_FILE = TwitterPractice/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -695,6 +699,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		634FB56B2ABB008600BBCBA3 /* XCRemoteSwiftPackageReference "BuilderKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/KangChangHyeok/BuilderKit.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+		634FB5702ABB219900BBCBA3 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.6.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		634FB56E2ABB021C00BBCBA3 /* BuilderKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 634FB56B2ABB008600BBCBA3 /* XCRemoteSwiftPackageReference "BuilderKit" */;
+			productName = BuilderKit;
+		};
+		634FB5712ABB219900BBCBA3 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 634FB5702ABB219900BBCBA3 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 27EF661728EC269000C1E570 /* Project object */;
 }
