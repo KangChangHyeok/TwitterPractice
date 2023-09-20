@@ -3,7 +3,7 @@
 </p>
 
 
-[![Build Status](http://img.shields.io/travis/SDWebImage/SDWebImage/master.svg?style=flat)](https://travis-ci.org/SDWebImage/SDWebImage)
+[![Build Status](https://github.com/SDWebImage/SDWebImage/actions/workflows/CI.yml/badge.svg)](https://github.com/SDWebImage/SDWebImage/actions/workflows/CI.yml)
 [![Pod Version](http://img.shields.io/cocoapods/v/SDWebImage.svg?style=flat)](http://cocoadocs.org/docsets/SDWebImage/)
 [![Pod Platform](http://img.shields.io/cocoapods/p/SDWebImage.svg?style=flat)](http://cocoadocs.org/docsets/SDWebImage/)
 [![Pod License](http://img.shields.io/cocoapods/l/SDWebImage.svg?style=flat)](https://www.apache.org/licenses/LICENSE-2.0.html)
@@ -13,6 +13,8 @@
 [![codecov](https://codecov.io/gh/SDWebImage/SDWebImage/branch/master/graph/badge.svg)](https://codecov.io/gh/SDWebImage/SDWebImage)
 
 This library provides an async image downloader with cache support. For convenience, we added categories for UI elements like `UIImageView`, `UIButton`, `MKAnnotationView`.
+
+Note: `SD` is the prefix for **Simple Design** (which is the team name in Daily Motion company from the author Olivier Poitrey)
 
 ## Features
 
@@ -34,6 +36,14 @@ This library provides an async image downloader with cache support. For convenie
 - [x] A guarantee that main thread will never be blocked
 - [x] Modern Objective-C and better Swift support 
 - [x] Performances!
+
+## For Apple visionOS
+
+From 5.18.0, SDWebImage can be compiled for visionOS platform. However, it's still in beta and may contains issues unlike the stable iOS UIKit support. Welcome to have a try and [report issue](https://github.com/SDWebImage/SDWebImage/issues).
+
+To build on visionOS, currently we only support the standard Xcode integration. Which means, open that `SDWebImage.xcodeproj` (Xcode 15+), then choose the target to build as library, framework or XCFramework (supports static and dynamic), and integrate to your visionOS App.
+
+Once the visionOS toolchain is stable, we will add the package manager support later (include CocoaPods and SwiftPM).
 
 ## Supported Image Formats
 
@@ -62,6 +72,7 @@ The new framework introduce two View structs `WebImage` and `AnimatedImage` for 
 - [SDWebImageAVIFCoder](https://github.com/SDWebImage/SDWebImageAVIFCoder) - coder for AVIF (AV1-based) format. Based on [libavif](https://github.com/AOMediaCodec/libavif)
 - [SDWebImagePDFCoder](https://github.com/SDWebImage/SDWebImagePDFCoder) - coder for PDF vector format. Using built-in frameworks
 - [SDWebImageSVGCoder](https://github.com/SDWebImage/SDWebImageSVGCoder) - coder for SVG vector format. Using built-in frameworks
+- [SDWebImageSVGNativeCoder](https://github.com/SDWebImage/SDWebImageSVGNativeCoder) - coder for SVG-Native vector format. Based on [svg-native](https://github.com/adobe/svg-native-viewer)
 - [SDWebImageLottieCoder](https://github.com/SDWebImage/SDWebImageLottieCoder) - coder for Lottie animation format. Based on [rlottie](https://github.com/Samsung/rlottie)
 - and more from community!
 
