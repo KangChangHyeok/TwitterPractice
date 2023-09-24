@@ -23,18 +23,17 @@ class Utilities {
         dividerView.anchor(left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingLeft: 8, height: 0.75)
         return view
     }
-    func textField(withPlaceholder placeholder: String) -> UITextField {
-        let tf = UITextField()
-        tf.textColor = .white
-        tf.font = UIFont.systemFont(ofSize: 16)
-        tf.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
-        return tf
-    }
-    func attributedButton(_ firstPart: String, _ secondPart: String) -> UIButton {
-        let button = UIButton(type: .system)
-        let attributedTitle = NSMutableAttributedString(string: firstPart, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16), NSAttributedString.Key.foregroundColor: UIColor.white])
-        attributedTitle.append(NSMutableAttributedString(string: secondPart, attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16), NSAttributedString.Key.foregroundColor: UIColor.white]))
-        button.setAttributedTitle(attributedTitle, for: .normal)
-        return button
-    }
+//    func textField(withPlaceholder placeholder: String) -> UITextField {
+//        let tf = UITextField()
+//        tf.textColor = .white
+//        tf.font = UIFont.systemFont(ofSize: 16)
+//        tf.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
+//        return tf
+//    }
+}
+
+struct Screen {
+    static let scenes = UIApplication.shared.connectedScenes
+    static let windowScene = scenes.first as? UIWindowScene
+    static let window = windowScene?.windows.first
 }
