@@ -34,6 +34,10 @@ class BaseViewController: UIViewController, Base {
         fatalError("init(coder:) has not been implemented")
     }
     
+    deinit {
+        print("뷰컨트롤러 메모리 해제~")
+    }
+    
     // MARK: - 기본 설정
     
     func configure(controller: UIViewController) {

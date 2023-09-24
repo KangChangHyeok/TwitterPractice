@@ -40,7 +40,7 @@ final class LoginViewController: BaseViewController {
         .textColor(.white)
         .font(.systemFont(ofSize: 16))
         .attributedPlaceHolder(NSAttributedString(
-            string: "Email",
+            string: "이메일 입력",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
         )
         .create()
@@ -49,43 +49,36 @@ final class LoginViewController: BaseViewController {
         .textColor(.white)
         .font(.systemFont(ofSize: 16))
         .attributedPlaceHolder(NSAttributedString(
-            string: "Password",
+            string: "비밀번호 입력",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
         )
         .isSecureTextEntry(true)
         .create()
     
     private lazy var loginButton = UIButtonBuilder(buttonType: .filled)
-        .title("Log In",font: .boldSystemFont(ofSize: 20) , color: .twitterBlue)
+        .title("로그인",font: .boldSystemFont(ofSize: 20) , color: .twitterBlue)
         .backgroundColor(.white)
         .cornerRadius(5)
         .addAction { [weak self] _ in
             guard let self else { return }
-            guard let email = emailTextField.text,
-                  let password = passwordTextField.text else { return }
-            viewModel.userLogin(email: email, password: password) {_, error in
-                if let error = error {
-                    print("DEBUG: Login Error \(error.localizedDescription)")
-                    return
-                }
-                guard let window = Screen.window else { return }
-                guard let tab = window.rootViewController as? MainTabController else { return }
-                tab.authenticateUserAndConfigureUI()
-                self.dismiss(animated: true)
-            }
+            self.loginButtonDidTap()
         }
         .create()
     
     private lazy var dontHaveAccountButton = UIButtonBuilder(buttonType: .plain)
         .foregroundColor(.white)
-        .attributedTitle(attributedString("Dont Have an account", " Sign Up"))
+        .attributedTitle(attributedString("아직 회원이 아니라면?", " 회원가입"))
         .addAction { [weak self] _ in
             let controller = RegisterationViewController()
             self?.navigationController?.pushViewController(controller, animated: true)
         }
         .create()
 
-    // MARK: - Helpers
+    // MARK: - Override Methods
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+    }
     
     override func configureUI() {
         view.backgroundColor = .twitterBlue
@@ -112,7 +105,11 @@ final class LoginViewController: BaseViewController {
             $0.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
-    private func attributedString(_ firstPart: String?, _ secondPart: String?) -> AttributedString {
+    
+    private func attributedString(
+        _ firstPart: String?,
+        _ secondPart: String?
+    ) -> AttributedString {
         guard let firstPart, let secondPart else { return AttributedString("nil") }
         var firstAttributedString = AttributedString(firstPart)
         firstAttributedString.font = .systemFont(ofSize: 16)
@@ -121,5 +118,42 @@ final class LoginViewController: BaseViewController {
         secondAttributedString.font = .boldSystemFont(ofSize: 16)
         
         return firstAttributedString + secondAttributedString
+    }
+    
+    private func loginButtonDidTap() {
+        guard let email = emailTextField.text, email.isEmpty == false
+        else {
+            UIAlertController.presentAlert(
+                title: "이메일 미 입력",
+                messages: "이메일이 입력되지 않았습니다. 이메일을 입력해주세요.",
+                self
+            )
+            return
+        }
+        guard let password = passwordTextField.text, password.isEmpty == false
+        else {
+            
+            UIAlertController.presentAlert(
+                title: "비밀번호 미 입력",
+                messages: "비밀번호가 입력되지 않았습니다. 비밀번호를 입력해주세요.",
+                self
+            )
+            return
+        }
+        viewModel.userLogin(email: email, password: password) {_, error in
+            if let error = error {
+                print("DEBUG: Login Error \(error.localizedDescription), alert 표시")
+                UIAlertController.presentAlert(
+                    title: "로그인 실패",
+                    messages: "입력하신 이메일과 비밀번호를 다시 확인해 주세요.",
+                    self
+                )
+                return
+            }
+            guard let window = Screen.window else { return }
+            guard let tab = window.rootViewController as? MainTabController else { return }
+            tab.authenticateUserAndConfigureUI()
+            self.dismiss(animated: true)
+        }
     }
 }
