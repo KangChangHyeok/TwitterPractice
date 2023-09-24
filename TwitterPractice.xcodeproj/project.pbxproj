@@ -17,8 +17,8 @@
 		27F2E72528EC2AD700CFE9F2 /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F2E72428EC2AD700CFE9F2 /* NotificationController.swift */; };
 		27F2E72728EC2AED00CFE9F2 /* ConversationsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F2E72628EC2AED00CFE9F2 /* ConversationsController.swift */; };
 		27F2E72928EC3BF000CFE9F2 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F2E72828EC3BF000CFE9F2 /* Extension.swift */; };
-		27F2E72C28EC456200CFE9F2 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F2E72B28EC456200CFE9F2 /* LoginController.swift */; };
-		27F2E72E28EC465700CFE9F2 /* RegisterationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F2E72D28EC465700CFE9F2 /* RegisterationController.swift */; };
+		27F2E72C28EC456200CFE9F2 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F2E72B28EC456200CFE9F2 /* LoginViewController.swift */; };
+		27F2E72E28EC465700CFE9F2 /* RegisterationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F2E72D28EC465700CFE9F2 /* RegisterationViewController.swift */; };
 		27F2E73028EC65BC00CFE9F2 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F2E72F28EC65BC00CFE9F2 /* Utilities.swift */; };
 		63254B5529111A7E00C90DEC /* EditProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63254B5429111A7E00C90DEC /* EditProfileController.swift */; };
 		63254B5829111E9F00C90DEC /* EditProfileHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63254B5729111E9F00C90DEC /* EditProfileHeader.swift */; };
@@ -27,6 +27,8 @@
 		634FB56F2ABB021C00BBCBA3 /* BuilderKit in Frameworks */ = {isa = PBXBuildFile; productRef = 634FB56E2ABB021C00BBCBA3 /* BuilderKit */; };
 		634FB5722ABB219900BBCBA3 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 634FB5712ABB219900BBCBA3 /* SnapKit */; };
 		634FB5762ABB230200BBCBA3 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634FB5752ABB230200BBCBA3 /* BaseViewController.swift */; };
+		634FB5822ABF16F100BBCBA3 /* NSAttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634FB5812ABF16F100BBCBA3 /* NSAttributedString.swift */; };
+		634FB5852ABF23F000BBCBA3 /* InputTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634FB5842ABF23F000BBCBA3 /* InputTextFieldView.swift */; };
 		635B56AE28EF15A6005C13BF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 635B56AD28EF15A6005C13BF /* GoogleService-Info.plist */; };
 		639EA1FE28EFF85000564ED9 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639EA1FD28EFF85000564ED9 /* Constants.swift */; };
 		639EA20028F003E300564ED9 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639EA1FF28F003E300564ED9 /* AuthService.swift */; };
@@ -75,14 +77,16 @@
 		27F2E72428EC2AD700CFE9F2 /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
 		27F2E72628EC2AED00CFE9F2 /* ConversationsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsController.swift; sourceTree = "<group>"; };
 		27F2E72828EC3BF000CFE9F2 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
-		27F2E72B28EC456200CFE9F2 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
-		27F2E72D28EC465700CFE9F2 /* RegisterationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterationController.swift; sourceTree = "<group>"; };
+		27F2E72B28EC456200CFE9F2 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		27F2E72D28EC465700CFE9F2 /* RegisterationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterationViewController.swift; sourceTree = "<group>"; };
 		27F2E72F28EC65BC00CFE9F2 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		63254B5429111A7E00C90DEC /* EditProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileController.swift; sourceTree = "<group>"; };
 		63254B5729111E9F00C90DEC /* EditProfileHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileHeader.swift; sourceTree = "<group>"; };
 		63254B59291147ED00C90DEC /* EditProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewModel.swift; sourceTree = "<group>"; };
 		63254B5B2911487000C90DEC /* EditProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileCell.swift; sourceTree = "<group>"; };
 		634FB5752ABB230200BBCBA3 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		634FB5812ABF16F100BBCBA3 /* NSAttributedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSAttributedString.swift; sourceTree = "<group>"; };
+		634FB5842ABF23F000BBCBA3 /* InputTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputTextFieldView.swift; sourceTree = "<group>"; };
 		635B56AD28EF15A6005C13BF /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		639EA1FD28EFF85000564ED9 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		639EA1FF28F003E300564ED9 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
@@ -159,7 +163,7 @@
 				639EA1FB28EFF7F100564ED9 /* Model */,
 				639EA1F928EFF7E300564ED9 /* View */,
 				639EA1FA28EFF7E800564ED9 /* ViewModel */,
-				27F2E71B28EC280F00CFE9F2 /* Controller */,
+				27F2E71B28EC280F00CFE9F2 /* ViewController */,
 				27F2E71D28EC282300CFE9F2 /* Utils */,
 				639EA1FC28EFF7FC00564ED9 /* API */,
 				27EF662B28EC269200C1E570 /* Assets.xcassets */,
@@ -170,7 +174,7 @@
 			path = TwitterPractice;
 			sourceTree = "<group>";
 		};
-		27F2E71B28EC280F00CFE9F2 /* Controller */ = {
+		27F2E71B28EC280F00CFE9F2 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
 				27F2E72A28EC454500CFE9F2 /* Authentication */,
@@ -185,12 +189,13 @@
 				63254B5429111A7E00C90DEC /* EditProfileController.swift */,
 				634FB5752ABB230200BBCBA3 /* BaseViewController.swift */,
 			);
-			path = Controller;
+			path = ViewController;
 			sourceTree = "<group>";
 		};
 		27F2E71D28EC282300CFE9F2 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				634FB5802ABF16DF00BBCBA3 /* Extension */,
 				27F2E72828EC3BF000CFE9F2 /* Extension.swift */,
 				27F2E72F28EC65BC00CFE9F2 /* Utilities.swift */,
 				639EA1FD28EFF85000564ED9 /* Constants.swift */,
@@ -202,8 +207,9 @@
 		27F2E72A28EC454500CFE9F2 /* Authentication */ = {
 			isa = PBXGroup;
 			children = (
-				27F2E72B28EC456200CFE9F2 /* LoginController.swift */,
-				27F2E72D28EC465700CFE9F2 /* RegisterationController.swift */,
+				634FB5832ABF23D800BBCBA3 /* Views */,
+				27F2E72B28EC456200CFE9F2 /* LoginViewController.swift */,
+				27F2E72D28EC465700CFE9F2 /* RegisterationViewController.swift */,
 			);
 			path = Authentication;
 			sourceTree = "<group>";
@@ -219,6 +225,22 @@
 				63C5ADF62914139C0061132B /* EditProfileFooter.swift */,
 			);
 			path = Profile;
+			sourceTree = "<group>";
+		};
+		634FB5802ABF16DF00BBCBA3 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				634FB5812ABF16F100BBCBA3 /* NSAttributedString.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		634FB5832ABF23D800BBCBA3 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				634FB5842ABF23F000BBCBA3 /* InputTextFieldView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		639EA1F928EFF7E300564ED9 /* View */ = {
@@ -440,7 +462,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				639EA20228F068D500564ED9 /* UserService.swift in Sources */,
-				27F2E72C28EC456200CFE9F2 /* LoginController.swift in Sources */,
+				27F2E72C28EC456200CFE9F2 /* LoginViewController.swift in Sources */,
 				639EA20828F318FC00564ED9 /* InputTextView.swift in Sources */,
 				639EA21828F6513B00564ED9 /* ProfileFilterCell.swift in Sources */,
 				27F2E72528EC2AD700CFE9F2 /* NotificationController.swift in Sources */,
@@ -460,7 +482,7 @@
 				63254B5C2911487000C90DEC /* EditProfileCell.swift in Sources */,
 				63254B5A291147ED00C90DEC /* EditProfileViewModel.swift in Sources */,
 				639EA20E28F5390900564ED9 /* TweetCell.swift in Sources */,
-				27F2E72E28EC465700CFE9F2 /* RegisterationController.swift in Sources */,
+				27F2E72E28EC465700CFE9F2 /* RegisterationViewController.swift in Sources */,
 				63C5ADF92916A6260061132B /* LoginViewModel.swift in Sources */,
 				63D0BA78290685B6009F369A /* Notification.swift in Sources */,
 				639EA20028F003E300564ED9 /* AuthService.swift in Sources */,
@@ -470,8 +492,10 @@
 				63254B5829111E9F00C90DEC /* EditProfileHeader.swift in Sources */,
 				27F2E72328EC2A9800CFE9F2 /* ExploreController.swift in Sources */,
 				27EF662528EC269000C1E570 /* SceneDelegate.swift in Sources */,
+				634FB5822ABF16F100BBCBA3 /* NSAttributedString.swift in Sources */,
 				63D0BA7A2906B002009F369A /* NotificationService.swift in Sources */,
 				27F2E71F28EC28C700CFE9F2 /* MainTabController.swift in Sources */,
+				634FB5852ABF23F000BBCBA3 /* InputTextFieldView.swift in Sources */,
 				63D0BA6E29003A6D009F369A /* TweetHeader.swift in Sources */,
 				639EA21028F54B1B00564ED9 /* TweetViewModel.swift in Sources */,
 				63D0BA76290598E2009F369A /* ActionSheetViewModel.swift in Sources */,

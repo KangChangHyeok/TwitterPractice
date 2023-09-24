@@ -7,7 +7,6 @@
 
 import UIKit
 
-
 import BuilderKit
 import FirebaseAuth
 import FirebaseStorage
@@ -52,7 +51,7 @@ final class MainTabController: BaseTabBarController {
         super.viewWillAppear(animated)
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = UIColor.systemBackground
+        appearance.backgroundColor = .systemBackground
         UINavigationBar.appearance().standardAppearance = appearance
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
         tabBar.backgroundColor = .systemBackground
@@ -84,7 +83,7 @@ final class MainTabController: BaseTabBarController {
     func authenticateUserAndConfigureUI() {
         if Auth.auth().currentUser == nil {
             DispatchQueue.main.async {
-                let nav = UINavigationController(rootViewController: LoginController())
+                let nav = UINavigationController(rootViewController: LoginViewController())
                 nav.modalPresentationStyle = .fullScreen
                 self.present(nav, animated: true)
             }
@@ -115,7 +114,6 @@ final class MainTabController: BaseTabBarController {
             rootViewController: ConversationsController()
         )
         viewControllers = [feed, explore, notifications, conversations]
-        
     }
     
     func templateNavigationController(

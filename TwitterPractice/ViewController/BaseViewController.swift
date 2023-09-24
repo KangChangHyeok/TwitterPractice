@@ -16,7 +16,7 @@ protocol Base: AnyObject {
 class BaseViewController: UIViewController, Base {
     typealias Controller = UIViewController
     
-    //MARK: - LifeCycle
+    // MARK: - LifeCycle
     
     override func viewDidLoad() {
         view.backgroundColor = .systemBackground
@@ -24,7 +24,7 @@ class BaseViewController: UIViewController, Base {
         configureUI()
     }
     
-    //MARK: - Initializer
+    // MARK: - Initializer
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nil, bundle: nil)
@@ -34,13 +34,13 @@ class BaseViewController: UIViewController, Base {
         fatalError("init(coder:) has not been implemented")
     }
     
-    //MARK: - 기본 설정
+    // MARK: - 기본 설정
     
     func configure(controller: UIViewController) {
         
     }
     
-    //MARK: - UI 설정
+    // MARK: - UI 설정
     
     func configureUI() {
         
@@ -50,14 +50,14 @@ class BaseViewController: UIViewController, Base {
 class BaseTabBarController: UITabBarController, Base {
     typealias Controller = UITabBarController
     
-    //MARK: - LifeCycle
+    // MARK: - LifeCycle
     
     override func viewDidLoad() {
         configure(controller: self)
         configureUI()
     }
     
-    //MARK: - Initializer
+    // MARK: - Initializer
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nil, bundle: nil)
@@ -67,7 +67,7 @@ class BaseTabBarController: UITabBarController, Base {
         fatalError("init(coder:) has not been implemented")
     }
     
-    //MARK: - 기본 설정
+    // MARK: - 기본 설정
     
     func configure(controller: UITabBarController) {
         
