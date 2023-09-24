@@ -61,7 +61,7 @@ final class RegisterationViewController: BaseViewController {
     
     private let emailTextField = UITextFieldBuilder()
         .attributedPlaceHolder(NSAttributedString(
-            string: "Email",
+            string: "이메일 입력",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
         )
         .textColor(.white)
@@ -69,7 +69,7 @@ final class RegisterationViewController: BaseViewController {
     
     private let passwordTextField = UITextFieldBuilder()
         .attributedPlaceHolder(NSAttributedString(
-            string: "Password",
+            string: "비밀번호 입력",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
         )
         .textColor(.white)
@@ -78,7 +78,7 @@ final class RegisterationViewController: BaseViewController {
     
     private let fullnameTextField = UITextFieldBuilder()
         .attributedPlaceHolder(NSAttributedString(
-            string: "Full Name",
+            string: "이름",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
         )
         .textColor(.white)
@@ -86,7 +86,7 @@ final class RegisterationViewController: BaseViewController {
     
     private let usernameTextField = UITextFieldBuilder()
         .attributedPlaceHolder(NSAttributedString(
-            string: "Username",
+            string: "트위터에서 사용할 이름",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
         )
         .textColor(.white)
@@ -96,7 +96,7 @@ final class RegisterationViewController: BaseViewController {
         .backgroundColor(.white)
         .foregroundColor(.twitterBlue)
         .cornerRadius(5)
-        .title("Sign Up", font: .boldSystemFont(ofSize: 20))
+        .title("회원가입", font: .boldSystemFont(ofSize: 20))
         .addAction { [weak self] _ in
             guard let self else { return }
             // 프로필 이미지 등록 안됐을때
@@ -128,7 +128,7 @@ final class RegisterationViewController: BaseViewController {
     
     private lazy var alreadyHaveAccountButton = UIButtonBuilder(buttonType: .plain)
         .foregroundColor(.white)
-        .attributedTitle(attributedString("Already Have an account", " Log In"))
+        .attributedTitle(attributedString("이미 가입된 계정이 있다면?", " 로그인"))
         .addAction { [weak self] _ in
             self?.navigationController?.popViewController(animated: true)
         }

@@ -29,6 +29,7 @@
 		634FB5762ABB230200BBCBA3 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634FB5752ABB230200BBCBA3 /* BaseViewController.swift */; };
 		634FB5822ABF16F100BBCBA3 /* NSAttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634FB5812ABF16F100BBCBA3 /* NSAttributedString.swift */; };
 		634FB5852ABF23F000BBCBA3 /* InputTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634FB5842ABF23F000BBCBA3 /* InputTextFieldView.swift */; };
+		634FB5872AC05A8900BBCBA3 /* UIAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634FB5862AC05A8900BBCBA3 /* UIAlertController.swift */; };
 		635B56AE28EF15A6005C13BF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 635B56AD28EF15A6005C13BF /* GoogleService-Info.plist */; };
 		639EA1FE28EFF85000564ED9 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639EA1FD28EFF85000564ED9 /* Constants.swift */; };
 		639EA20028F003E300564ED9 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639EA1FF28F003E300564ED9 /* AuthService.swift */; };
@@ -87,6 +88,7 @@
 		634FB5752ABB230200BBCBA3 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		634FB5812ABF16F100BBCBA3 /* NSAttributedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSAttributedString.swift; sourceTree = "<group>"; };
 		634FB5842ABF23F000BBCBA3 /* InputTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputTextFieldView.swift; sourceTree = "<group>"; };
+		634FB5862AC05A8900BBCBA3 /* UIAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIAlertController.swift; sourceTree = "<group>"; };
 		635B56AD28EF15A6005C13BF /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		639EA1FD28EFF85000564ED9 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		639EA1FF28F003E300564ED9 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
@@ -231,6 +233,7 @@
 			isa = PBXGroup;
 			children = (
 				634FB5812ABF16F100BBCBA3 /* NSAttributedString.swift */,
+				634FB5862AC05A8900BBCBA3 /* UIAlertController.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -489,6 +492,7 @@
 				639EA21A28F65A6A00564ED9 /* ProfileHeaderViewModel.swift in Sources */,
 				639EA20628F310F800564ED9 /* UpLoadTweetController.swift in Sources */,
 				639EA20428F06D9A00564ED9 /* User.swift in Sources */,
+				634FB5872AC05A8900BBCBA3 /* UIAlertController.swift in Sources */,
 				63254B5829111E9F00C90DEC /* EditProfileHeader.swift in Sources */,
 				27F2E72328EC2A9800CFE9F2 /* ExploreController.swift in Sources */,
 				27EF662528EC269000C1E570 /* SceneDelegate.swift in Sources */,
