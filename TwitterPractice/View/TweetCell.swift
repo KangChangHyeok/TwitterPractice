@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import ActiveLabel
 
 protocol TweetCellDelegate: AnyObject {
     func handleProfileImageTapped(_ cell: TweetCell)
@@ -36,21 +35,17 @@ class TweetCell: UICollectionViewCell {
         return iv
     }()
     
-    private let replyLabel: ActiveLabel = {
-        let label = ActiveLabel()
+    private let replyLabel: UILabel = {
+        let label = UILabel()
         label.textColor = .lightGray
         label.font = UIFont.systemFont(ofSize: 12)
         label.numberOfLines = 0
-        label.mentionColor = .twitterBlue
-        label.hashtagColor = .twitterBlue
         return label
     }()
-    private let captionLabel: ActiveLabel = {
-        let label = ActiveLabel()
+    private let captionLabel: UILabel = {
+        let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
         label.numberOfLines = 0
-        label.mentionColor = .twitterBlue
-        label.hashtagColor = .twitterBlue
         return label
     }()
     private lazy var commentButton: UIButton = {
@@ -156,9 +151,5 @@ class TweetCell: UICollectionViewCell {
     }
     
     func configureMentionHandler() {
-        captionLabel.handleMentionTap { username in
-            self.delegate?.handleFetchUser(withUsername: username)
-        }
     }
-
 }

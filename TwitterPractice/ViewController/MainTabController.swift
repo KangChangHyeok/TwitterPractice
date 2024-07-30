@@ -25,19 +25,15 @@ final class MainTabController: BaseTabBarController {
         }
     }
 
-    lazy var actionButton = UIButtonBuilder(buttonType: .plain)
-        .backgroundColor(.twitterBlue)
-        .foregroundColor(.white)
-        .image(.init(named: "new_tweet"))
-        .cornerRadius(28)
-        .addAction { [weak self] _ in
-            guard let user = self?.user else { return }
-            let controller = UploadTweetViewController(user: user, config: .tweet)
-            let nav = UINavigationController(rootViewController: controller)
-            nav.modalPresentationStyle = .fullScreen
-            self?.present(nav, animated: true)
-        }
-        .create()
+    private lazy var actionButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .twitterBlue
+        button.setTitleColor(.white, for: .normal)
+        button.setImage(.init(named: "new_tweet"), for: .normal)
+        button.layer.cornerRadius = 28
+        button.addTarget(self, action: #selector(actionButtonDidTap), for: .touchUpInside)
+        return button
+    }()
 
     // MARK: - LifeCycle
     
@@ -74,7 +70,7 @@ final class MainTabController: BaseTabBarController {
     // MARK: - API
     
     private func fetchUser() {
-        guard let uid = Auth.auth().currentUser?.uid else { return}
+        guard let uid = Auth.auth().currentUser?.uid else { return }
         UserService.shared.fetchUser(uid: uid) { user in
             self.user = user
         }
@@ -123,5 +119,13 @@ final class MainTabController: BaseTabBarController {
         let nav = UINavigationController(rootViewController: rootViewController)
         nav.tabBarItem.image = image
         return nav
+    }
+    
+    @objc func actionButtonDidTap() {
+        guard let user else { return }
+        let controller = UploadTweetViewController(user: user, config: .tweet)
+        let nav = UINavigationController(rootViewController: controller)
+        nav.modalPresentationStyle = .fullScreen
+        self.present(nav, animated: true)
     }
 }

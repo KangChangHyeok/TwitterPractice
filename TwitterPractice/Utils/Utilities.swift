@@ -23,13 +23,6 @@ class Utilities {
         dividerView.anchor(left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingLeft: 8, height: 0.75)
         return view
     }
-//    func textField(withPlaceholder placeholder: String) -> UITextField {
-//        let tf = UITextField()
-//        tf.textColor = .white
-//        tf.font = UIFont.systemFont(ofSize: 16)
-//        tf.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
-//        return tf
-//    }
 }
 
 struct Screen {
