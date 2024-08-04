@@ -111,7 +111,7 @@ extension NotificationController: NotificationCellDelegate {
     
     func didTapProfileImage(_ cell: NotificationCell) {
         guard let user = cell.notification?.user else { return }
-        let controller = ProfileController(user: user)
-        navigationController?.pushViewController(controller, animated: true)
+//        let controller = ProfileController(user: user)
+//        navigationController?.pushViewController(controller, animated: true)
     }
 }

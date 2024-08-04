@@ -8,8 +8,8 @@
 import UIKit
 
 struct TweetViewModel {
-    let tweet: Tweet
-    let user: User
+    let tweet: TweetInfo
+    let user: UserInfo
     var profileImageUrl: URL? {
         return tweet.user.profileImageUrl
     }
@@ -61,7 +61,7 @@ struct TweetViewModel {
     
     // MARK: - Lifecycle
 
-    init(tweet: Tweet) {
+    init(tweet: TweetInfo) {
         self.tweet = tweet
         self.user = tweet.user
     }

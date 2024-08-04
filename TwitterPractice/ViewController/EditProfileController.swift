@@ -10,13 +10,13 @@ import UIKit
 private let reuserIdentifier = "EditProfileCell"
 
 protocol EditProfileControllerDelegate: AnyObject {
-    func controller(_ controller: EditProfileController, wantsToUpdate user: User)
+    func controller(_ controller: EditProfileController, wantsToUpdate user: UserInfo)
     func handleLogout()
 }
 
 class EditProfileController: UITableViewController {
     // MARK: - Properties
-    private var user: User
+    private var user: UserInfo
     private lazy var headerView = EditProfileHeader(user: user)
     private let footerView = EditProfileFooter()
     private let imagePicker = UIImagePickerController()
@@ -35,7 +35,7 @@ class EditProfileController: UITableViewController {
     
     // MARK: - Lifecycle
     
-    init(user: User) {
+    init(user: UserInfo) {
         self.user = user
         super.init(style: .plain)
     }

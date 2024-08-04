@@ -8,30 +8,20 @@
 import UIKit
 
 import BuilderKit
-import FirebaseAuth
-import FirebaseStorage
-import FirebaseDatabase
 import SnapKit
 
-final class MainTabController: BaseTabBarController {
+final class MainTabController: UITabBarController {
 
     // MARK: - Properties
 
-    var user: User? {
-        didSet {
-            guard let nav = viewControllers?[0] as? UINavigationController else { return }
-            guard let feed = nav.viewControllers.first as? FeedController else { return }
-            feed.user = user
-        }
-    }
-
-    private lazy var actionButton: UIButton = {
+    private lazy var tweetRegisterButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = .twitterBlue
-        button.setTitleColor(.white, for: .normal)
+        button.tintColor = .white
         button.setImage(.init(named: "new_tweet"), for: .normal)
         button.layer.cornerRadius = 28
         button.addTarget(self, action: #selector(actionButtonDidTap), for: .touchUpInside)
+        button.isHidden = true
         return button
     }()
 
@@ -40,7 +30,9 @@ final class MainTabController: BaseTabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .twitterBlue
-        authenticateUserAndConfigureUI()
+        //        UserDefaults.standard.set(false, forKey: "userIsLogin")
+        configureUI()
+        checkUserIsloggedIn()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -52,15 +44,10 @@ final class MainTabController: BaseTabBarController {
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
         tabBar.backgroundColor = .systemBackground
     }
-    
-    override func configure(controller: UITabBarController) {
-        controller.view.backgroundColor = .twitterBlue
-        authenticateUserAndConfigureUI()
-    }
      
-    override func configureUI() {
-        view.addSubview(actionButton)
-        actionButton.snp.makeConstraints {
+    func configureUI() {
+        view.addSubview(tweetRegisterButton)
+        tweetRegisterButton.snp.makeConstraints {
             $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-64)
             $0.trailing.equalToSuperview().offset(-16)
             $0.size.equalTo(CGSize(width: 56, height: 56))
@@ -69,33 +56,25 @@ final class MainTabController: BaseTabBarController {
     
     // MARK: - API
     
-    private func fetchUser() {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        UserService.shared.fetchUser(uid: uid) { user in
-            self.user = user
-        }
-    }
-    
-    func authenticateUserAndConfigureUI() {
-        if Auth.auth().currentUser == nil {
-            DispatchQueue.main.async {
+    func checkUserIsloggedIn() {
+        guard UserDefaults.userIsLogin() else {
+            DispatchQueue.main.async { [weak self] in
                 let nav = UINavigationController(rootViewController: LoginViewController())
                 nav.modalPresentationStyle = .fullScreen
-                self.present(nav, animated: true)
+                self?.present(nav, animated: true)
             }
-        } else {
-            configureViewControllers()
-            configureUI()
-            fetchUser()
+            return
         }
+        tweetRegisterButton.isHidden = false
+        configureViewControllers()
     }
     
     // MARK: - Helpers
     
-    private func configureViewControllers() {
+    func configureViewControllers() {
         let feed = templateNavigationController(
             image: UIImage(named: "home_unselected"),
-            rootViewController: FeedController(collectionViewLayout: UICollectionViewFlowLayout())
+            rootViewController: FeedViewController()
         )
         let explore = templateNavigationController(
             image: UIImage(named: "search_unselected"),
@@ -122,8 +101,7 @@ final class MainTabController: BaseTabBarController {
     }
     
     @objc func actionButtonDidTap() {
-        guard let user else { return }
-        let controller = UploadTweetViewController(user: user, config: .tweet)
+        let controller = UploadTweetViewController(config: .tweet)
         let nav = UINavigationController(rootViewController: controller)
         nav.modalPresentationStyle = .fullScreen
         self.present(nav, animated: true)

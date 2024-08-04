@@ -10,7 +10,7 @@ import FirebaseAuth
 
 struct NotificationService {
     static let shared = NotificationService()
-    func uploadNotification(toUser user: User,
+    func uploadNotification(toUser user: UserInfo,
                             type: NotificationType,
                             tweetID: String? = nil
                             ) {

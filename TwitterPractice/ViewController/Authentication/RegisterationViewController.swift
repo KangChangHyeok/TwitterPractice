@@ -7,8 +7,6 @@
 import UIKit
 
 import BuilderKit
-import FirebaseAuth
-import FirebaseDatabase
 
 final class RegisterationViewController: BaseViewController {
     // MARK: - Properties
@@ -100,8 +98,8 @@ final class RegisterationViewController: BaseViewController {
         .addAction { [weak self] _ in
             guard let self else { return }
             // 프로필 이미지 등록 안됐을때
-            guard let profileImage = profileImage else {
-                print("프로필 이미지를 등록해 주세요!")
+            guard let profileImage = profileImage?.jpegData(compressionQuality: 0.5) else {
+                UIAlertController.presentAlert(title: "프로필 이미지를 등록해주세요!", messages: nil, self)
                 return
             }
             guard let email = self.emailTextField.text else { return }
@@ -109,19 +107,41 @@ final class RegisterationViewController: BaseViewController {
             guard let fullname = self.fullnameTextField.text else { return }
             guard let username = self.usernameTextField.text?.lowercased() else { return }
             
-            let credentials = AuthCredentials(
+            let userInfo = User(
                 email: email,
                 password: password,
-                fullname: fullname,
-                username: username,
+                fullName: fullname,
+                userName: username,
                 profileImage: profileImage
             )
             
-            viewModel.registerUser(credentials: credentials) { _, _ in
-                guard let window = Screen.window,
-                      let tab = window.rootViewController as? MainTabController else { return }
-                tab.authenticateUserAndConfigureUI()
-                self.dismiss(animated: true)
+            Task {
+                do {
+                    let user = try await NetworkManager.userCollection.document(userInfo.email).getDocument()
+                    
+                    guard user.exists == false else {
+                        UIAlertController.presentAlert(title: "이미 가입된 계정입니다.", messages: nil, self)
+                        return
+                    }
+                    // 등록되지 않은 email이라면 회원가입 처리하기
+                    try await NetworkManager.userCollection.document(userInfo.email).setData([
+                        "email": userInfo.email,
+                        "password": userInfo.password,
+                        "fullName": userInfo.fullName,
+                        "userName": userInfo.userName,
+                        "profileImage": userInfo.profileImage
+                    ])
+                    print("DEBUG: 유저 회원가입 및 등록 완료")
+                    UserDefaults.standard.set(true, forKey: "userIsLogin")
+                    UserDefaults.standard.set(userInfo.email, forKey: "userID")
+                    // 회원가입이 완료되었을때
+                    guard let window = Screen.window,
+                          let tab = window.rootViewController as? MainTabController else { return }
+                    tab.checkUserIsloggedIn()
+                    self.dismiss(animated: true)
+                } catch {
+                    print("DEBUG: \(error)")
+                }
             }
         }
         .create()
@@ -136,7 +156,7 @@ final class RegisterationViewController: BaseViewController {
     
     // MARK: - Helpers
     
-    override func configure(controller: UIViewController) {
+    override func setDefaults(at viewController: UIViewController) {
         view.backgroundColor = .twitterBlue
         imagePicker.delegate = self
         imagePicker.allowsEditing = true
@@ -145,21 +165,22 @@ final class RegisterationViewController: BaseViewController {
         navigationController?.navigationBar.barStyle = .black
     }
     
-    override func configureUI() {
+    override func setHierarchy(at view: UIView) {
         view.addSubview(plusPhotoButton)
+        view.addSubview(stackView)
+        view.addSubview(alreadyHaveAccountButton)
+    }
+    
+    override func setLayout(at view: UIView) {
         plusPhotoButton.snp.makeConstraints {
             $0.centerX.equalTo(view)
             $0.top.equalTo(view.safeAreaLayoutGuide)
             $0.size.equalTo(CGSize(width: 128, height: 128))
         }
-        
-        view.addSubview(stackView)
         stackView.snp.makeConstraints {
             $0.top.equalTo(plusPhotoButton.snp.bottom).offset(32)
             $0.leading.trailing.equalToSuperview().inset(32)
         }
-        
-        view.addSubview(alreadyHaveAccountButton)
         alreadyHaveAccountButton.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(40)
             $0.bottom.equalTo(view.safeAreaLayoutGuide)
@@ -189,6 +210,7 @@ extension RegisterationViewController: UIImagePickerControllerDelegate, UINaviga
     ) {
         guard let profileImage = info[.editedImage] as? UIImage else { return }
         self.profileImage = profileImage
+        profileImage.jpegData(compressionQuality: 1)
         plusPhotoButton.layer.cornerRadius = 128 / 2
         plusPhotoButton.layer.masksToBounds = true
         plusPhotoButton.imageView?.contentMode = .scaleAspectFill

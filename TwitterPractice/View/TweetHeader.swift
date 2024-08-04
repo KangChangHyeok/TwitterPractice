@@ -13,7 +13,7 @@ protocol TweetHeaderDelegate: AnyObject {
 }
 class TweetHeader: UICollectionReusableView {
     // MARK: - Properties
-    var tweet: Tweet? {
+    var tweet: TweetInfo? {
         didSet { configure() }
     }
     weak var delegate: TweetHeaderDelegate?

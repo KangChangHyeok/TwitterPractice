@@ -15,7 +15,7 @@ protocol ProfileHeaderDelegate: AnyObject {
 
 class ProfileHeader: UICollectionReusableView {
     // MARK: - Properties
-    var user: User? {
+    var user: UserInfo? {
         didSet { configure() }
     }
     weak var delegate: ProfileHeaderDelegate?

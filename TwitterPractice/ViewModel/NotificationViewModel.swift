@@ -11,7 +11,7 @@ struct NotificationViewModel {
     
     private let notification: Notification
     private let type: NotificationType
-    private let user: User
+    private let user: UserInfo
     
     var timestampString: String? {
         let formatter = DateComponentsFormatter()

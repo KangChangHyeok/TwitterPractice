@@ -9,7 +9,7 @@ import UIKit
 import SDWebImage
 class UserCell: UITableViewCell {
     // MARK: - Properties
-    var user: User? {
+    var user: UserInfo? {
         didSet {
             configure()
         }

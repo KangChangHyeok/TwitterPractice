@@ -13,7 +13,7 @@ protocol EditProfileHeaderDelegate: AnyObject {
 class EditProfileHeader: UIView {
     // MARK: - Properties
     
-    private let user: User
+    private let user: UserInfo
     
     weak var delegate: EditProfileHeaderDelegate?
     
@@ -38,7 +38,7 @@ class EditProfileHeader: UIView {
     
     // MARK: - Lifecycle
 
-    init(user: User) {
+    init(user: UserInfo) {
         self.user = user
         super.init(frame: .zero)
         

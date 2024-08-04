@@ -13,8 +13,6 @@ import SnapKit
 final class LoginViewController: BaseViewController {
     // MARK: - Properties
     
-    var viewModel = LoginViewModel()
-    
     private let logoImageView = UIImageViewBuilder()
         .contentMode(.scaleAspectFit)
         .image(.init(named: "TwitterLogo"))
@@ -73,33 +71,35 @@ final class LoginViewController: BaseViewController {
             self?.navigationController?.pushViewController(controller, animated: true)
         }
         .create()
-
-    // MARK: - Override Methods
+    
+    // MARK: - Life Cycle
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }
     
-    override func configureUI() {
+    override func setDefaults(at viewController: UIViewController) {
         view.backgroundColor = .twitterBlue
         navigationController?.navigationBar.isHidden = true
         navigationController?.navigationBar.barStyle = .black
-        
+    }
+    
+    override func setHierarchy(at view: UIView) {
         view.addSubview(logoImageView)
-        
+        view.addSubview(stackView)
+        view.addSubview(dontHaveAccountButton)
+    }
+    
+    override func setLayout(at view: UIView) {
         logoImageView.snp.makeConstraints {
             $0.centerX.equalTo(view)
             $0.top.equalTo(view.safeAreaLayoutGuide)
             $0.size.equalTo(CGSize(width: 150, height: 150))
         }
-        
-        view.addSubview(stackView)
         stackView.snp.makeConstraints {
             $0.top.equalTo(logoImageView.snp.bottom)
             $0.leading.trailing.equalToSuperview().inset(32)
         }
-        
-        view.addSubview(dontHaveAccountButton)
         dontHaveAccountButton.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(40)
             $0.bottom.equalTo(view.safeAreaLayoutGuide)
@@ -121,8 +121,8 @@ final class LoginViewController: BaseViewController {
     }
     
     private func loginButtonDidTap() {
-        guard let email = emailTextField.text, email.isEmpty == false
-        else {
+        // email
+        guard let email = emailTextField.text, email.isEmpty == false else {
             UIAlertController.presentAlert(
                 title: "이메일 미 입력",
                 messages: "이메일이 입력되지 않았습니다. 이메일을 입력해주세요.",
@@ -130,9 +130,8 @@ final class LoginViewController: BaseViewController {
             )
             return
         }
-        guard let password = passwordTextField.text, password.isEmpty == false
-        else {
-            
+        //password
+        guard let inputPassword = passwordTextField.text, inputPassword.isEmpty == false else {
             UIAlertController.presentAlert(
                 title: "비밀번호 미 입력",
                 messages: "비밀번호가 입력되지 않았습니다. 비밀번호를 입력해주세요.",
@@ -140,20 +139,40 @@ final class LoginViewController: BaseViewController {
             )
             return
         }
-        viewModel.userLogin(email: email, password: password) {_, error in
-            if let error = error {
-                print("DEBUG: Login Error \(error.localizedDescription), alert 표시")
-                UIAlertController.presentAlert(
-                    title: "로그인 실패",
-                    messages: "입력하신 이메일과 비밀번호를 다시 확인해 주세요.",
-                    self
-                )
-                return
+        // email, password 모두 입력시 db 조회해서 email - password 일치 확인
+        Task {
+            do {
+                let userRef = NetworkManager.userCollection.document(email)
+                let userDocument = try await userRef.getDocument()
+                
+                //email 검증
+                guard userDocument.exists else {
+                    
+                    UIAlertController.presentAlert(
+                        title: "입력된 정보 오류",
+                        messages: "존재하지 않는 아이디입니다.",
+                        self
+                    )
+                    return
+                }
+                
+                // 해당 아이디와 비밀번호 일치하는지 확인
+                let user = try userDocument.data(as: User.self)
+                
+                guard user.password == inputPassword else {
+                    UIAlertController.presentAlert(title: "입력된 정보 오류", messages: "비밀번호가 일치하지 않습니다", self)
+                    return
+                }
+                // user정보 저장
+                UserDefaults.standard.set(true, forKey: "userIsLogin")
+                UserDefaults.standard.set(email, forKey: "userID")
+                
+                guard let window = Screen.window else { return }
+                guard let tab = window.rootViewController as? MainTabController else { return }
+                tab.checkUserIsloggedIn()
+                
+                self.dismiss(animated: true)
             }
-            guard let window = Screen.window else { return }
-            guard let tab = window.rootViewController as? MainTabController else { return }
-            tab.authenticateUserAndConfigureUI()
-            self.dismiss(animated: true)
         }
     }
 }

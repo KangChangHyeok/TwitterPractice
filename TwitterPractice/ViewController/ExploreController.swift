@@ -11,12 +11,12 @@ private let reuseIdentifier = "UserCell"
 
 class ExploreController: UITableViewController {
     // MARK: - Properties
-    private var users = [User]() {
+    private var users = [UserInfo]() {
         didSet {
             tableView.reloadData()
         }
     }
-    private var filteredUsers = [User]() {
+    private var filteredUsers = [UserInfo]() {
         didSet {
             tableView.reloadData()
         }
@@ -74,9 +74,9 @@ extension ExploreController {
         return cell
     }
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let user = inSearchMode ? filteredUsers[indexPath.row] : users[indexPath.row]
-        let controller = ProfileController(user: user)
-        navigationController?.pushViewController(controller, animated: true)
+//        let user = inSearchMode ? filteredUsers[indexPath.row] : users[indexPath.row]
+//        let controller = ProfileController(user: user)
+//        navigationController?.pushViewController(controller, animated: true)
     }
 }
 

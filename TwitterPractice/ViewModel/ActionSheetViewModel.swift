@@ -8,7 +8,7 @@
 import UIKit
 
 struct ActionSheetViewModel {
-    private let user: User
+    private let user: UserInfo
     var options: [ActionSheetOptions] {
         var results = [ActionSheetOptions]()
         if user.isCurrentUser {
@@ -20,14 +20,14 @@ struct ActionSheetViewModel {
         results.append(.report)
     return results
     }
-    init(user: User) {
+    init(user: UserInfo) {
         self.user = user
     }
 }
 
 enum ActionSheetOptions {
-    case follow(User)
-    case unfollow(User)
+    case follow(UserInfo)
+    case unfollow(UserInfo)
     case report
     case delete
     case blockUser

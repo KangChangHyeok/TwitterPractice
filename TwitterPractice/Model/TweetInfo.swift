@@ -7,20 +7,29 @@
 
 import Foundation
 
-struct Tweet {
+import FirebaseFirestore
+
+struct Tweet: Codable, Hashable {
+    let caption: String
+    var likes: Int
+    let timeStamp: Date
+    let user: User
+}
+
+struct TweetInfo {
     let caption: String
     let tweetID: String
     var likes: Int
     var timeStamp: Date!
     let retweetCount: Int
-    var user: User
+    var user: UserInfo
     var didLike = false
     var replyingTo: String?
     
     
     var isReply: Bool { return replyingTo != nil }
     
-    init(user: User, tweetID: String, dictionary: [String: Any]) {
+    init(user: UserInfo, tweetID: String, dictionary: [String: Any]) {
         self.tweetID = tweetID
         self.user = user
         

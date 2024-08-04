@@ -14,19 +14,19 @@ typealias DatabaseCompletion = ((Error?, DatabaseReference) -> Void)
 
 struct UserService {
     static let shared = UserService()
-    func fetchUser(uid: String, completion: @escaping (User) -> Void) {
+    func fetchUser(uid: String, completion: @escaping (UserInfo) -> Void) {
         userRef.child(uid).observeSingleEvent(of: .value) { snapshot in
             guard let dictionary = snapshot.value as? [String: AnyObject] else { return }
-            let user = User(uid: uid, dictionary: dictionary)
+            let user = UserInfo(uid: uid, dictionary: dictionary)
             completion(user)
         }
     }
-    func fetchUsers(completion: @escaping([User]) -> Void) {
-        var users = [User]()
+    func fetchUsers(completion: @escaping([UserInfo]) -> Void) {
+        var users = [UserInfo]()
         userRef.observe(.childAdded) { snapshot in
             let uid = snapshot.key
             guard let dictionary = snapshot.value as? [String: AnyObject] else { return }
-            let user = User(uid: uid, dictionary: dictionary)
+            let user = UserInfo(uid: uid, dictionary: dictionary)
             users.append(user)
             completion(users)
         }
@@ -78,7 +78,7 @@ struct UserService {
         }
     }
     
-    func saveUserData(user: User, completion: @escaping(DatabaseCompletion)) {
+    func saveUserData(user: UserInfo, completion: @escaping(DatabaseCompletion)) {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         
         let values = ["fullname": user.fullname,
@@ -88,7 +88,7 @@ struct UserService {
         userRef.child(uid).updateChildValues(values, withCompletionBlock: completion)
     }
     
-    func fetchUser(WithUsername username: String, completion: @escaping(User) -> Void) {
+    func fetchUser(WithUsername username: String, completion: @escaping(UserInfo) -> Void) {
         userNamesRef.child(username).observeSingleEvent(of: .value) { snapshot in
             guard let uid = snapshot.value as? String else { return }
             self.fetchUser(uid: uid, completion: completion)

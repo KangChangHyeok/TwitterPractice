@@ -23,7 +23,7 @@ enum EditProfileOptions: Int, CaseIterable {
 
 struct EditProfileViewModel {
     
-    private let user: User
+    private let user: UserInfo
     let option: EditProfileOptions
     
     var titleText: String {
@@ -48,7 +48,7 @@ struct EditProfileViewModel {
         return user.bio != nil
     }
     
-    init(user: User, option: EditProfileOptions) {
+    init(user: UserInfo, option: EditProfileOptions) {
         self.user = user
         self.option = option
     }

@@ -9,16 +9,16 @@ import UIKit
 
 private let reuseIdentifier = "TweetCell"
 private let headerIdentifier = "TweetHeader"
-class TweetController: UICollectionViewController {
+final class TweetController: UICollectionViewController {
 
     // MARK: - Properties
-    private let tweet: Tweet
+    private let tweet: TweetInfo
     private var actionSheetLauncher: ActionSheetLauncher!
-    private var replies = [Tweet]() {
+    private var replies = [TweetInfo]() {
         didSet { collectionView.reloadData() }
     }
     // MARK: - Lifecycle
-    init(tweet: Tweet) {
+    init(tweet: TweetInfo) {
         self.tweet = tweet
         super.init(collectionViewLayout: UICollectionViewFlowLayout())
     }
@@ -48,7 +48,7 @@ class TweetController: UICollectionViewController {
         collectionView.register(TweetCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         collectionView.register(TweetHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerIdentifier)
     }
-    fileprivate func showActionSheet(foruser user: User) {
+    fileprivate func showActionSheet(foruser user: UserInfo) {
         actionSheetLauncher = ActionSheetLauncher(user: user)
         self.actionSheetLauncher.delegate = self
         self.actionSheetLauncher.show()
@@ -64,7 +64,7 @@ extension TweetController {
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as? TweetCell
         guard let cell = cell else { return UICollectionViewCell() }
-        cell.tweet = replies[indexPath.row]
+//        cell.tweet = replies[indexPath.row]
         return cell
     }
 }
@@ -97,10 +97,10 @@ extension TweetController: UICollectionViewDelegateFlowLayout {
 
 extension TweetController: TweetHeaderDelegate {
     func handleFetchUser(withUsername username: String) {
-        UserService.shared.fetchUser(WithUsername: username) { user in
-            let controller = ProfileController(user: user)
-            self.navigationController?.pushViewController(controller, animated: true)
-        }
+//        UserService.shared.fetchUser(WithUsername: username) { user in
+//            let controller = ProfileController(user: user)
+//            self.navigationController?.pushViewController(controller, animated: true)
+//        }
     }
     
     func showActionSheet() {

@@ -13,7 +13,7 @@ protocol ActionSheetLaunCherDelegate: AnyObject {
 }
 class ActionSheetLauncher: NSObject {
     // MARK: - Properties
-    private let user: User
+    private let user: UserInfo
     private let tableView = UITableView()
     private var window: UIWindow?
     private lazy var viewModel = ActionSheetViewModel(user: user)
@@ -46,7 +46,7 @@ class ActionSheetLauncher: NSObject {
         return button
     }()
     // MARK: - Lifecycle
-    init(user: User) {
+    init(user: UserInfo) {
         self.user = user
         super.init()
         configureTableView()
