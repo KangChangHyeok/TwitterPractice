@@ -119,7 +119,7 @@ final class FeedViewController: BaseViewController {
     }
     
     @objc func handleProfileImageTap() {
-        let controller = ProfileController(user: user)
+        let controller = ProfileController()
         navigationController?.pushViewController(controller, animated: true)
     }
     
@@ -190,7 +190,7 @@ extension FeedViewController: TweetCellDelegate {
         guard let indexPath = tweetCollectionView.indexPath(for: cell) else { return }
         
         let tweets = dataSource?.snapshot().itemIdentifiers[indexPath.row]
-        let controller = ProfileController(user: tweets?.user)
+        let controller = ProfileController()
         navigationController?.pushViewController(controller, animated: true)
     }
     func handleReplyTapped(_ cell: TweetCell) {

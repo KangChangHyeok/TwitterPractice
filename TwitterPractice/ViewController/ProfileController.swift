@@ -8,60 +8,127 @@
 import UIKit
 import FirebaseAuth
 
-private let reuseIdentifier = "TweetCell"
 private let headerIdentifier = "ProfileHeader"
 
-class ProfileController: UICollectionViewController {
+final class ProfileController: BaseViewController {
+    
     // MARK: - Properties
+    
+    private enum Section {
+        case tweet
+    }
+    
     private var user: User?
     
-    private var selectedFilter: ProfileFilterOptions = .tweets {
-        didSet { collectionView.reloadData() }
+    private var dataSource: UICollectionViewDiffableDataSource<Section, Tweet>?
+    
+    private var selectedFilter: ProfileFilterOptions = .tweets
+    
+    private var tweets = [Tweet]()
+    
+    private lazy var tweetCollectionView: UICollectionView = {
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: createLayout())
+        collectionView.backgroundColor = .white
+        collectionView.contentInsetAdjustmentBehavior = .never
+        collectionView.bounces = false
+        return collectionView
+    }()
+    
+    // MARK: - Set
+    
+    override func setDefaults(at viewController: UIViewController) {
+        configureDataSource()
+        requestUser()
+        requestUserTweets()
+        //        fetchLikedTweets()
+        //        fetchReplies()
+        //        checkIfUserIsFollowed()
+        //        fetchUserStats()
     }
     
-    private var tweets = [TweetInfo]() {
-        didSet { collectionView.reloadData() }
+    override func setHierarchy(at view: UIView) {
+        view.addSubview(tweetCollectionView)
     }
-    private var likedTweets = [TweetInfo]()
-    private var replies = [TweetInfo]()
-    private var currentDataSource: [TweetInfo] {
-        switch selectedFilter {
-        case .tweets:
-            return tweets
-        case .replies:
-            return replies
-        case .likes:
-            return likedTweets
+    
+    override func setLayout(at view: UIView) {
+        tweetCollectionView.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
     // MARK: - LifeCycle
-    init(user: User?) {
-        self.user = user
-        super.init(collectionViewLayout: UICollectionViewFlowLayout())
-    }
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        configureCollectionView()
-        fetchTweets()
-        fetchLikedTweets()
-        fetchReplies()
-        checkIfUserIsFollowed()
-        fetchUserStats()
-    }
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.barStyle = .black
         navigationController?.navigationBar.isHidden = true
+        let mainTab = tabBarController as? MainTabController
+        mainTab?.setTweetButtonIsHidden(true)
     }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        let mainTab = tabBarController as? MainTabController
+        mainTab?.setTweetButtonIsHidden(false)
+    }
+    
+    func configureDataSource() {
+        let profileHeaderRegisteration = UICollectionView.SupplementaryRegistration<ProfileHeader>(elementKind: "ProfileHeader") { [weak self] supplementaryView, elementKind, indexPath in
+            supplementaryView.user = self?.user
+        }
+        
+        let tweetCellRegisteration = UICollectionView.CellRegistration<TweetCell, Tweet> {
+            cell, indexPath, tweet in
+            cell.bind(tweet: tweet)
+        }
+        
+        self.dataSource = UICollectionViewDiffableDataSource<Section, Tweet>(collectionView: self.tweetCollectionView) { collectionView, indexPath, tweet in
+            return collectionView.dequeueConfiguredReusableCell(using: tweetCellRegisteration, for: indexPath, item: tweet)
+        }
+        
+        dataSource?.supplementaryViewProvider = { view, kind, indexPath in
+            return view.dequeueConfiguredReusableSupplementary(using: profileHeaderRegisteration, for: indexPath)
+        }
+    }
+    
+    func createLayout() -> UICollectionViewLayout {
+        let estimatedHeight = CGFloat(100)
+        let layoutSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(estimatedHeight)
+        )
+        let item = NSCollectionLayoutItem(layoutSize: layoutSize)
+        let group = NSCollectionLayoutGroup.vertical(layoutSize: layoutSize, repeatingSubitem: item, count: 1)
+        
+        let sectionHeaderSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(300))
+        let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: sectionHeaderSize, elementKind: "ProfileHeader", alignment: .top)
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.boundarySupplementaryItems = [sectionHeader]
+        section.interGroupSpacing = 10
+        let layout = UICollectionViewCompositionalLayout(section: section)
+        return layout
+    }
+    
     // MARK: - API
+    
+    func requestUser() {
+        Task {
+            guard let userID = UserDefaults.fecthUserID() else { return }
+            self.user = try await NetworkManager.requestUser(userID: userID)
+        }
+    }
 
-    func fetchTweets() {
-//        TweetService.shared.fetchTweets(forUser: user) { tweets in
-//            self.tweets = tweets
-//        }
+    func requestUserTweets() {
+        Task {
+            guard let userID = UserDefaults.fecthUserID() else { return }
+            self.tweets = try await NetworkManager.tweetCollection.getDocuments().documents.map { try $0.data(as: Tweet.self)
+            }.filter { $0.user.email == userID }
+            
+            var snapshot = NSDiffableDataSourceSnapshot<Section, Tweet>()
+            snapshot.appendSections([.tweet])
+            snapshot.appendItems(self.tweets)
+            await dataSource?.apply(snapshot)
+        }
     }
     func fetchLikedTweets() {
 //        TweetService.shared.fetchLikes(forUser: user) { tweets in
@@ -85,72 +152,15 @@ class ProfileController: UICollectionViewController {
 //            self.collectionView.reloadData()
 //        }
     }
-    // MARK: - Helpers
-    func configureCollectionView() {
-        collectionView.backgroundColor = .white
-        collectionView.contentInsetAdjustmentBehavior = .never
-        collectionView.register(TweetCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        collectionView.register(ProfileHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerIdentifier)
-        
-        guard let tabHeight = tabBarController?.tabBar.frame.height else { return }
-        collectionView.contentInset.bottom = tabHeight
-    }
-}
-
-// MARK: - UICollectionViewDataSource
-
-extension ProfileController {
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.currentDataSource.count
-    }
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as? TweetCell
-        guard let cell else { return UICollectionViewCell() }
-//        cell.bind(tweet: <#T##Tweet#>)
-//        cell.tweet = currentDataSource[indexPath.row]
-        return cell
-    }
 }
 
 // MARK: - UICollectionViewDelegate
 
-extension ProfileController {
-    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerIdentifier, for: indexPath) as? ProfileHeader
-        guard let header = header else { return UICollectionReusableView() }
-        header.delegate = self
-//        header.user = user
-        return header
-    }
+extension ProfileController: UICollectionViewDelegate {
     
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let controller = TweetController(tweet: currentDataSource[indexPath.row])
-        navigationController?.pushViewController(controller, animated: true)
-    }
-}
-
-// MARK: - UICollectionViewDelegateFlowLayout
-
-extension ProfileController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        
-        var height: CGFloat = 300
-        
-//        if user.bio != nil {
-//            print(user.bio)
-//            height += 40
-//        }
-        
-        return CGSize(width: view.frame.width, height: height)
-    }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let viewModel = TweetViewModel(tweet: currentDataSource[indexPath.row])
-        var height = viewModel.size(forwidth: view.frame.width).height + 72
-        
-        if currentDataSource[indexPath.row].isReply {
-            height += 20
-        }
-        return CGSize(width: view.frame.width, height: height)
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        let controller = TweetController(tweet: currentDataSource[indexPath.row])
+//        navigationController?.pushViewController(controller, animated: true)
     }
 }
 
@@ -191,7 +201,6 @@ extension ProfileController: ProfileHeaderDelegate {
 
 extension ProfileController: EditProfileControllerDelegate {
     func handleLogout() {
-        
             do {
                 try Auth.auth().signOut()
                 let nav = UINavigationController(rootViewController: LoginViewController())
@@ -205,6 +214,6 @@ extension ProfileController: EditProfileControllerDelegate {
     func controller(_ controller: EditProfileController, wantsToUpdate user: UserInfo) {
         controller.dismiss(animated: true)
 //        self.user = user
-        self.collectionView.reloadData()
+        self.tweetCollectionView.reloadData()
     }
 }

@@ -13,11 +13,13 @@ protocol ProfileHeaderDelegate: AnyObject {
     func didSelect(filter: ProfileFilterOptions)
 }
 
-class ProfileHeader: UICollectionReusableView {
+final class ProfileHeader: UICollectionReusableView {
     // MARK: - Properties
-    var user: UserInfo? {
+    
+    var user: User? {
         didSet { configure() }
     }
+    
     weak var delegate: ProfileHeaderDelegate?
     private let filterBar = ProfileFillterView()
     private lazy var containerView: UIView = {
@@ -165,15 +167,14 @@ class ProfileHeader: UICollectionReusableView {
 
     func configure() {
         guard let user = user else { return }
-        let viewModel = ProfileHeaderViewModel(user: user)
-        profileImageView.sd_setImage(with: user.profileImageUrl)
-        editProfileFollowButton.setTitle(viewModel.actionButtonTitle, for: .normal)
-        followingLabel.attributedText = viewModel.followersString
-        followersLabel.attributedText = viewModel.followingString
-        fullnameLabel.text = user.fullname
-        usernameLabel.text = viewModel.usernameText
-        
-        bioLabel.text = user.bio
+        profileImageView.image = .init(data: user.profileImage)
+        fullnameLabel.text = user.fullName
+        usernameLabel.text = user.userName
+//        let viewModel = ProfileHeaderViewModel(user: user)
+//        editProfileFollowButton.setTitle(viewModel.actionButtonTitle, for: .normal)
+//        followingLabel.attributedText = viewModel.followersString
+//        followersLabel.attributedText = viewModel.followingString
+//        bioLabel.text = user.bio
     }
 }
 

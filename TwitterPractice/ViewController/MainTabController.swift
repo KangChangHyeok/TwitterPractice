@@ -35,6 +35,7 @@ final class MainTabController: UITabBarController {
         checkUserIsloggedIn()
     }
     
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         let appearance = UINavigationBarAppearance()
@@ -52,6 +53,10 @@ final class MainTabController: UITabBarController {
             $0.trailing.equalToSuperview().offset(-16)
             $0.size.equalTo(CGSize(width: 56, height: 56))
         }
+    }
+    
+    func setTweetButtonIsHidden(_ isHidden: Bool) {
+        self.tweetRegisterButton.isHidden = isHidden
     }
     
     // MARK: - API

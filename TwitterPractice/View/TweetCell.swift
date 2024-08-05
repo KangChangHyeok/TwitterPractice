@@ -25,7 +25,6 @@ final class TweetCell: BaseCVCell {
     private let replyLabel: UILabel = {
         let label = UILabel()
         label.textColor = .lightGray
-        label.text = "replyLabel"
         label.font = UIFont.systemFont(ofSize: 12)
         label.numberOfLines = 0
         return label
@@ -44,14 +43,12 @@ final class TweetCell: BaseCVCell {
     
     private let infoLabel: UILabel = {
         let label = UILabel()
-        label.text = "infoLabel"
-        label.font = UIFont.systemFont(ofSize: 14)
+        label.font = UIFont.boldSystemFont(ofSize: 14)
         return label
     }()
     
     private let captionLabel: UILabel = {
         let label = UILabel()
-        label.text = "captionLabel"
         label.font = UIFont.systemFont(ofSize: 14)
         label.numberOfLines = 0
         return label
@@ -122,6 +119,7 @@ final class TweetCell: BaseCVCell {
         view.backgroundColor = .systemGroupedBackground
         return view
     }()
+    
     // MARK: - Set
     
     override func setHierarchy(at view: UIView) {
