@@ -22,8 +22,6 @@ final class ProfileController: BaseViewController {
     
     private var dataSource: UICollectionViewDiffableDataSource<Section, Tweet>?
     
-    private var selectedFilter: ProfileFilterOptions = .tweets
-    
     private var tweets = [Tweet]()
     
     private lazy var tweetCollectionView: UICollectionView = {
@@ -75,6 +73,7 @@ final class ProfileController: BaseViewController {
     func configureDataSource() {
         let profileHeaderRegisteration = UICollectionView.SupplementaryRegistration<ProfileHeader>(elementKind: "ProfileHeader") { [weak self] supplementaryView, elementKind, indexPath in
             supplementaryView.bind(user: self?.user)
+            supplementaryView.delegate = self
         }
         
         let tweetCellRegisteration = UICollectionView.CellRegistration<TweetCell, Tweet> { [weak self]
@@ -131,6 +130,20 @@ final class ProfileController: BaseViewController {
             await dataSource?.apply(snapshot)
         }
     }
+    
+    func requestUserLikedTweets() {
+        Task {
+            guard let userID = UserDefaults.fecthUserID() else { return }
+            self.tweets = try await NetworkManager.tweetCollection.getDocuments().documents.map { try $0.data(as: Tweet.self)
+            }.filter { $0.likeUsers.contains { $0 == userID } }
+            
+            var snapshot = NSDiffableDataSourceSnapshot<Section, Tweet>()
+            snapshot.appendSections([.tweet])
+            snapshot.appendItems(self.tweets)
+            await dataSource?.apply(snapshot)
+        }
+    }
+    
     func fetchLikedTweets() {
 
     }
@@ -165,7 +178,14 @@ extension ProfileController: UICollectionViewDelegate {
 
 extension ProfileController: ProfileHeaderDelegate {
     func didSelect(filter: ProfileFilterOptions) {
-        self.selectedFilter = filter
+        switch filter {
+        case .tweets:
+            requestUserTweets()
+        case .replies:
+            return
+        case .likes:
+            requestUserLikedTweets()
+        }
     }
     
     func handleEditProfileFollow(_ header: ProfileHeader) {

@@ -77,7 +77,6 @@ extension ProfileFillterView: UICollectionViewDelegate {
             self.underlineView.frame.origin.x = xPosition
         }
         delegate?.filterView(self, didSelect: indexPath.row)
-        
     }
 }
 
