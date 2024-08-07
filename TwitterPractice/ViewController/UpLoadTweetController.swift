@@ -128,11 +128,12 @@ final class UploadTweetViewController: BaseViewController {
         Task {
             guard let userID = UserDefaults.fecthUserID() else { return }
             let user = try await NetworkManager.requestUser(userID: userID)
-            
-            try await NetworkManager.tweetCollection.document(UUID().uuidString).setData([
+            let id = UUID().uuidString
+            try await NetworkManager.tweetCollection.document(id).setData([
                 "caption": caption,
                 "likes": 0,
                 "timeStamp": Date(),
+                "id": id,
                 "user": [
                     "email": user.email,
                     "fullName": user.fullName,

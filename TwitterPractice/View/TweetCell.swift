@@ -10,7 +10,7 @@ import UIKit
 protocol TweetCellDelegate: AnyObject {
     func handleProfileImageTapped(_ cell: TweetCell)
     func handleReplyTapped(_ cell: TweetCell)
-    func handleLikeTapped(_ cell: TweetCell)
+    func handleLikeTapped(_ cell: TweetCell, likeCanceled: Bool)
     func handleFetchUser(withUsername username: String)
 }
 
@@ -68,10 +68,9 @@ final class TweetCell: BaseCVCell {
         return button
     }()
     
-    private lazy var likeButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.configure(imageName: "like")
-        button.addTarget(self, action: #selector(handleCommentTapped), for: .touchUpInside)
+    private lazy var likeButton: LikeButton = {
+        let button = LikeButton()
+        button.addTarget(self, action: #selector(handleLikeTapped), for: .touchUpInside)
         return button
     }()
     
@@ -158,24 +157,26 @@ final class TweetCell: BaseCVCell {
         delegate?.handleProfileImageTapped(self)
     }
     @objc func handleCommentTapped() {
+//        likeButton.isSelected.toggle()
         delegate?.handleReplyTapped(self)
     }
     @objc func handleRetweetTapped() {
     }
     @objc func handleLikeTapped() {
-        delegate?.handleLikeTapped(self)
+        likeButton.isSelected.toggle()
+        delegate?.handleLikeTapped(self, likeCanceled: likeButton.isSelected)
     }
-    @objc func handleShareTapped() {
-    }
+    @objc func handleShareTapped() { }
     // MARK: - Helpers
 
     func bind(tweet: Tweet) {
         captionLabel.text = tweet.caption
         profileImageView.image = UIImage(data: tweet.user.profileImage)
         infoLabel.text = tweet.user.userName
-//        likeButton.tintColor = viewModel.likeButtonTintColor
-//        likeButton.setImage(viewModel.likeButtonImage, for: .normal)
-//        replyLabel.isHidden = viewModel.shouldHideReplyLabel
-//        replyLabel.text = viewModel.replyText
+        
+        guard let userID = UserDefaults.fecthUserID() else { return }
+        likeButton.isSelected = !tweet.likeUsers.filter({ $0 == userID }).isEmpty
+    //        replyLabel.isHidden = viewModel.shouldHideReplyLabel
+    //        replyLabel.text = viewModel.replyText
     }
 }

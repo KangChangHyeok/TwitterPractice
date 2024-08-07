@@ -74,12 +74,13 @@ final class ProfileController: BaseViewController {
     
     func configureDataSource() {
         let profileHeaderRegisteration = UICollectionView.SupplementaryRegistration<ProfileHeader>(elementKind: "ProfileHeader") { [weak self] supplementaryView, elementKind, indexPath in
-            supplementaryView.user = self?.user
+            supplementaryView.bind(user: self?.user)
         }
         
-        let tweetCellRegisteration = UICollectionView.CellRegistration<TweetCell, Tweet> {
+        let tweetCellRegisteration = UICollectionView.CellRegistration<TweetCell, Tweet> { [weak self]
             cell, indexPath, tweet in
             cell.bind(tweet: tweet)
+            cell.delegate = self
         }
         
         self.dataSource = UICollectionViewDiffableDataSource<Section, Tweet>(collectionView: self.tweetCollectionView) { collectionView, indexPath, tweet in
@@ -131,9 +132,7 @@ final class ProfileController: BaseViewController {
         }
     }
     func fetchLikedTweets() {
-//        TweetService.shared.fetchLikes(forUser: user) { tweets in
-//            self.likedTweets = tweets
-//        }
+
     }
     func fetchReplies() {
 //        TweetService.shared.fetchReplies(forUser: user) { tweets in
@@ -198,7 +197,6 @@ extension ProfileController: ProfileHeaderDelegate {
 
 // MARK: - EditProfileControllerDelegate
 
-
 extension ProfileController: EditProfileControllerDelegate {
     func handleLogout() {
             do {
@@ -213,7 +211,60 @@ extension ProfileController: EditProfileControllerDelegate {
     
     func controller(_ controller: EditProfileController, wantsToUpdate user: UserInfo) {
         controller.dismiss(animated: true)
-//        self.user = user
-        self.tweetCollectionView.reloadData()
+    }
+}
+
+extension ProfileController: TweetCellDelegate {
+    func handleProfileImageTapped(_ cell: TweetCell) {
+        
+    }
+    
+    func handleReplyTapped(_ cell: TweetCell) {
+        
+    }
+    
+    func handleLikeTapped(_ cell: TweetCell, likeCanceled: Bool) {
+        guard let indexPath = cell.indexPath,
+              let selectedTweet = dataSource?.snapshot().itemIdentifiers[indexPath.row] else { return }
+        //좋아요를 눌렀다면 해당 트윗의 likeUser에 추가하고, likes + 1
+        if likeCanceled {
+            let likes = selectedTweet.likes + 1
+            var likeUsers = selectedTweet.likeUsers
+            likeUsers.append(selectedTweet.user.email)
+            Task {
+                try await NetworkManager.tweetCollection.document(selectedTweet.id).updateData([
+                    "likes": likes,
+                    "likeUsers": likeUsers
+                ])
+            }
+        } else {
+            let likes = selectedTweet.likes - 1
+            var likeUsers = selectedTweet.likeUsers
+            likeUsers.removeAll { $0 == selectedTweet.user.email }
+            Task {
+                try await NetworkManager.tweetCollection.document(selectedTweet.id).updateData([
+                    "likes": likes,
+                    "likeUsers": likeUsers
+                ])
+            }
+        }
+        //좋아요를 취소했다면 해당 트윗의 likeUser에서 삭제하고 , likes - 1
+        
+        Task {
+            do {
+                let tweets = try await NetworkManager.tweetCollection.getDocuments().documents.map { try $0.data(as: Tweet.self) }
+                var snapShot = NSDiffableDataSourceSnapshot<Section, Tweet>()
+                snapShot.appendSections([.tweet])
+                snapShot.appendItems(tweets)
+                await dataSource?.apply(snapShot, animatingDifferences: true)
+            } catch {
+                print("error", error)
+            }
+        }
+        
+    }
+    
+    func handleFetchUser(withUsername username: String) {
+        
     }
 }

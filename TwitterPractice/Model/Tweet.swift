@@ -10,7 +10,9 @@ import Foundation
 import FirebaseFirestore
 
 struct Tweet: Codable, Hashable {
+    let id: String
     let caption: String
+    var likeUsers: [String]
     var likes: Int
     let timeStamp: Date
     let user: User

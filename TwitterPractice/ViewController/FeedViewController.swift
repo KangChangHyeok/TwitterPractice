@@ -175,15 +175,45 @@ extension FeedViewController: TweetCellDelegate {
 //        }
     }
     
-    func handleLikeTapped(_ cell: TweetCell) {
-//        guard let tweet = cell.tweet else { return }
-//        TweetService.shared.likeTweet(tweet: tweet) { _, _ in
-//            cell.tweet?.didLike.toggle()
-//            let likes = tweet.didLike ? tweet.likes - 1 : tweet.likes + 1
-//            cell.tweet?.likes = likes
-//            guard !tweet.didLike else { return }
-//            NotificationService.shared.uploadNotification(toUser: tweet.user, type: .like, tweetID: tweet.tweetID)
-//        }
+    func handleLikeTapped(_ cell: TweetCell, likeCanceled: Bool) {
+        guard let indexPath = cell.indexPath,
+              let selectedTweet = dataSource?.snapshot().itemIdentifiers[indexPath.row] else { return }
+        //좋아요를 눌렀다면 해당 트윗의 likeUser에 추가하고, likes + 1
+        if likeCanceled {
+            let likes = selectedTweet.likes + 1
+            var likeUsers = selectedTweet.likeUsers
+            likeUsers.append(selectedTweet.user.email)
+            Task {
+                try await NetworkManager.tweetCollection.document(selectedTweet.id).updateData([
+                    "likes": likes,
+                    "likeUsers": likeUsers
+                ])
+            }
+        } else {
+            let likes = selectedTweet.likes - 1
+            var likeUsers = selectedTweet.likeUsers
+            likeUsers.removeAll { $0 == selectedTweet.user.email }
+            Task {
+                try await NetworkManager.tweetCollection.document(selectedTweet.id).updateData([
+                    "likes": likes,
+                    "likeUsers": likeUsers
+                ])
+            }
+        }
+        //좋아요를 취소했다면 해당 트윗의 likeUser에서 삭제하고 , likes - 1
+        
+        Task {
+            do {
+                let tweets = try await NetworkManager.tweetCollection.getDocuments().documents.map { try $0.data(as: Tweet.self) }
+                var snapShot = NSDiffableDataSourceSnapshot<Section, Tweet>()
+                snapShot.appendSections([.main])
+                snapShot.appendItems(tweets)
+                await dataSource?.apply(snapShot, animatingDifferences: true)
+            } catch {
+                print("error", error)
+            }
+        }
+        
     }
     func handleProfileImageTapped(_ cell: TweetCell) {
 //        guard let user = cell.tweet?.user else { return }
