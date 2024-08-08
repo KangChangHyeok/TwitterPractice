@@ -255,8 +255,8 @@
 		27F2E71B28EC280F00CFE9F2 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
-				27F2E72A28EC454500CFE9F2 /* Authentication */,
 				27F2E71E28EC28C700CFE9F2 /* MainTabController.swift */,
+				27F2E72A28EC454500CFE9F2 /* Authentication */,
 				27F2E72028EC2A4900CFE9F2 /* FeedViewController.swift */,
 				27F2E72228EC2A9800CFE9F2 /* ExploreController.swift */,
 				27F2E72428EC2AD700CFE9F2 /* NotificationController.swift */,
@@ -734,7 +734,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -764,7 +764,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

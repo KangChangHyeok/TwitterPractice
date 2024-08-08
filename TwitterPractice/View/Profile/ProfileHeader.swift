@@ -8,7 +8,7 @@
 import UIKit
 
 protocol ProfileHeaderDelegate: AnyObject {
-    func handleDismissal()
+    func backButtonDidTap()
     func handleEditProfileFollow(_ header: ProfileHeader)
     func didSelect(filter: ProfileFilterOptions)
 }
@@ -34,7 +34,7 @@ final class ProfileHeader: UICollectionReusableView {
     private lazy var backButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: "baseline_arrow_back_white_24dp")?.withRenderingMode(.alwaysOriginal), for: .normal)
-        button.addTarget(self, action: #selector(handleDismissal), for: .touchUpInside)
+        button.addTarget(self, action: #selector(backButtonDidTap), for: .touchUpInside)
         return button
     }()
     
@@ -173,8 +173,8 @@ final class ProfileHeader: UICollectionReusableView {
         //        bioLabel.text = user.bio
     }
     // MARK: - Selectors
-    @objc func handleDismissal() {
-        delegate?.handleDismissal()
+    @objc func backButtonDidTap() {
+        delegate?.backButtonDidTap()
     }
 
     @objc func handleEditProfileFollow() {

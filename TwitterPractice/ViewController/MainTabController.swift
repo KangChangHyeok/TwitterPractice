@@ -21,7 +21,7 @@ final class MainTabController: UITabBarController {
         button.setImage(.init(named: "new_tweet"), for: .normal)
         button.layer.cornerRadius = 28
         button.addTarget(self, action: #selector(actionButtonDidTap), for: .touchUpInside)
-        button.isHidden = true
+//        button.isHidden = true
         return button
     }()
 
@@ -30,7 +30,7 @@ final class MainTabController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .twitterBlue
-        //        UserDefaults.standard.set(false, forKey: "userIsLogin")
+//        UserDefaults.standard.set(false, forKey: "userIsLogin")
         configureUI()
         checkUserIsloggedIn()
     }
@@ -111,4 +111,8 @@ final class MainTabController: UITabBarController {
         nav.modalPresentationStyle = .fullScreen
         self.present(nav, animated: true)
     }
+}
+
+#Preview {
+    MainTabController()
 }

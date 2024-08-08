@@ -210,7 +210,7 @@ extension ProfileController: ProfileHeaderDelegate {
 //            }
 //        }
     }
-    func handleDismissal() {
+    func backButtonDidTap() {
         navigationController?.popViewController(animated: true)
     }
 }

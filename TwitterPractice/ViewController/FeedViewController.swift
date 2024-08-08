@@ -6,9 +6,8 @@
 //
 
 import UIKit
+import SwiftUI
 import SDWebImage
-
-private let reuseIdentifier = "TweetCell"
 
 final class FeedViewController: BaseViewController {
     
@@ -65,6 +64,8 @@ final class FeedViewController: BaseViewController {
             make.edges.equalToSuperview()
         }
     }
+    
+    // MARK: - LifeCycle
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -216,10 +217,6 @@ extension FeedViewController: TweetCellDelegate {
         
     }
     func handleProfileImageTapped(_ cell: TweetCell) {
-//        guard let user = cell.tweet?.user else { return }
-        guard let indexPath = tweetCollectionView.indexPath(for: cell) else { return }
-        
-        let tweets = dataSource?.snapshot().itemIdentifiers[indexPath.row]
         let controller = ProfileController()
         navigationController?.pushViewController(controller, animated: true)
     }
@@ -229,5 +226,14 @@ extension FeedViewController: TweetCellDelegate {
 //        let nav = UINavigationController(rootViewController: controller)
 //        nav.modalPresentationStyle = .fullScreen
 //        present(nav, animated: true)
+    }
+}
+
+import SwiftUI
+
+struct PreView: PreviewProvider {
+    static var previews: some View {
+        // Preview를 보고자 하는 ViewController를 넣으면 됩니다.
+        FeedViewController().toPreview()
     }
 }

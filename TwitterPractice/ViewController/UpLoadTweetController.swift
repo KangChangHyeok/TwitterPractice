@@ -133,6 +133,7 @@ final class UploadTweetViewController: BaseViewController {
                 "caption": caption,
                 "likes": 0,
                 "timeStamp": Date(),
+                "likeUsers": [],
                 "id": id,
                 "user": [
                     "email": user.email,
