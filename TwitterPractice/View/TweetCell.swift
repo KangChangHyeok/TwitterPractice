@@ -157,7 +157,6 @@ final class TweetCell: BaseCVCell {
         delegate?.handleProfileImageTapped(self)
     }
     @objc func handleCommentTapped() {
-//        likeButton.isSelected.toggle()
         delegate?.handleReplyTapped(self)
     }
     @objc func handleRetweetTapped() {

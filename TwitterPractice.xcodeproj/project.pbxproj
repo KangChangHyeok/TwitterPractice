@@ -40,7 +40,6 @@
 		638BAE062C5E129E003CA3F2 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638BAE052C5E129E003CA3F2 /* BaseViewController.swift */; };
 		6393D2852C562A5F00532D95 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6393D2842C562A5F00532D95 /* GoogleService-Info.plist */; };
 		6393D2882C562BD200532D95 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 6393D2872C562BD200532D95 /* SnapKit */; };
-		6393D28A2C562BD200532D95 /* SnapKit-Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 6393D2892C562BD200532D95 /* SnapKit-Dynamic */; };
 		6393D28E2C562CF100532D95 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 6393D28D2C562CF100532D95 /* FirebaseAnalytics */; };
 		6393D2902C562CF100532D95 /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = 6393D28F2C562CF100532D95 /* FirebaseAnalyticsOnDeviceConversion */; };
 		6393D2922C562CF100532D95 /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 6393D2912C562CF100532D95 /* FirebaseAnalyticsSwift */; };
@@ -205,7 +204,6 @@
 				6393D2A82C562CF100532D95 /* FirebaseFirestoreCombine-Community in Frameworks */,
 				6393D28E2C562CF100532D95 /* FirebaseAnalytics in Frameworks */,
 				6393D29E2C562CF100532D95 /* FirebaseCrashlytics in Frameworks */,
-				6393D28A2C562BD200532D95 /* SnapKit-Dynamic in Frameworks */,
 				6393D2982C562CF100532D95 /* FirebaseAppDistribution-Beta in Frameworks */,
 				6393D2A42C562CF100532D95 /* FirebaseDynamicLinks in Frameworks */,
 				6393D2AA2C562CF100532D95 /* FirebaseFirestoreSwift in Frameworks */,
@@ -417,7 +415,6 @@
 			packageProductDependencies = (
 				634FB56E2ABB021C00BBCBA3 /* BuilderKit */,
 				6393D2872C562BD200532D95 /* SnapKit */,
-				6393D2892C562BD200532D95 /* SnapKit-Dynamic */,
 				6393D28D2C562CF100532D95 /* FirebaseAnalytics */,
 				6393D28F2C562CF100532D95 /* FirebaseAnalyticsOnDeviceConversion */,
 				6393D2912C562CF100532D95 /* FirebaseAnalyticsSwift */,
@@ -849,11 +846,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 6393D2862C562BD200532D95 /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
-		};
-		6393D2892C562BD200532D95 /* SnapKit-Dynamic */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 6393D2862C562BD200532D95 /* XCRemoteSwiftPackageReference "SnapKit" */;
-			productName = "SnapKit-Dynamic";
 		};
 		6393D28D2C562CF100532D95 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;

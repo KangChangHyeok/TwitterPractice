@@ -235,6 +235,7 @@ extension ProfileController: EditProfileControllerDelegate {
 }
 
 extension ProfileController: TweetCellDelegate {
+    
     func handleProfileImageTapped(_ cell: TweetCell) {
         
     }
@@ -246,42 +247,35 @@ extension ProfileController: TweetCellDelegate {
     func handleLikeTapped(_ cell: TweetCell, likeCanceled: Bool) {
         guard let indexPath = cell.indexPath,
               let selectedTweet = dataSource?.snapshot().itemIdentifiers[indexPath.row] else { return }
+        guard let user else { return }
         //좋아요를 눌렀다면 해당 트윗의 likeUser에 추가하고, likes + 1
-        if likeCanceled {
-            let likes = selectedTweet.likes + 1
-            var likeUsers = selectedTweet.likeUsers
-            likeUsers.append(selectedTweet.user.email)
-            Task {
-                try await NetworkManager.tweetCollection.document(selectedTweet.id).updateData([
-                    "likes": likes,
-                    "likeUsers": likeUsers
-                ])
-            }
-        } else {
-            let likes = selectedTweet.likes - 1
-            var likeUsers = selectedTweet.likeUsers
-            likeUsers.removeAll { $0 == selectedTweet.user.email }
-            Task {
-                try await NetworkManager.tweetCollection.document(selectedTweet.id).updateData([
-                    "likes": likes,
-                    "likeUsers": likeUsers
-                ])
-            }
-        }
-        //좋아요를 취소했다면 해당 트윗의 likeUser에서 삭제하고 , likes - 1
-        
         Task {
-            do {
-                let tweets = try await NetworkManager.tweetCollection.getDocuments().documents.map { try $0.data(as: Tweet.self) }
-                var snapShot = NSDiffableDataSourceSnapshot<Section, Tweet>()
-                snapShot.appendSections([.tweet])
-                snapShot.appendItems(tweets)
-                await dataSource?.apply(snapShot, animatingDifferences: true)
-            } catch {
-                print("error", error)
+            if likeCanceled {
+                let likes = selectedTweet.likes + 1
+                var likeUsers = selectedTweet.likeUsers
+                likeUsers.append(user.email)
+                
+                try await NetworkManager.tweetCollection.document(selectedTweet.id).updateData([
+                    "likes": likes,
+                    "likeUsers": likeUsers
+                ])
+                print("좋아요 누르기 완료")
+                
+            } else {
+                let likes = selectedTweet.likes - 1
+                var likeUsers = selectedTweet.likeUsers
+                likeUsers.removeAll { $0 == user.email }
+                
+                try await NetworkManager.tweetCollection.document(selectedTweet.id).updateData([
+                    "likes": likes,
+                    "likeUsers": likeUsers
+                ])
+                print("좋아요 취소 완료")
+                
+                requestUserLikedTweets()
             }
+            //좋아요를 취소했다면 해당 트윗의 likeUser에서 삭제하고 , likes - 1
         }
-        
     }
     
     func handleFetchUser(withUsername username: String) {

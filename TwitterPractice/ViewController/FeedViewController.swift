@@ -150,6 +150,9 @@ final class FeedViewController: BaseViewController {
                 snapShot.appendSections([.main])
                 snapShot.appendItems(tweets)
                 await dataSource?.apply(snapShot, animatingDifferences: true)
+                
+                print(tweets)
+                print("트윗 새로 가져오기 완료")
             } catch {
                 print("error", error)
             }
@@ -179,42 +182,33 @@ extension FeedViewController: TweetCellDelegate {
     func handleLikeTapped(_ cell: TweetCell, likeCanceled: Bool) {
         guard let indexPath = cell.indexPath,
               let selectedTweet = dataSource?.snapshot().itemIdentifiers[indexPath.row] else { return }
-        //좋아요를 눌렀다면 해당 트윗의 likeUser에 추가하고, likes + 1
-        if likeCanceled {
-            let likes = selectedTweet.likes + 1
-            var likeUsers = selectedTweet.likeUsers
-            likeUsers.append(selectedTweet.user.email)
-            Task {
-                try await NetworkManager.tweetCollection.document(selectedTweet.id).updateData([
-                    "likes": likes,
-                    "likeUsers": likeUsers
-                ])
-            }
-        } else {
-            let likes = selectedTweet.likes - 1
-            var likeUsers = selectedTweet.likeUsers
-            likeUsers.removeAll { $0 == selectedTweet.user.email }
-            Task {
-                try await NetworkManager.tweetCollection.document(selectedTweet.id).updateData([
-                    "likes": likes,
-                    "likeUsers": likeUsers
-                ])
-            }
-        }
-        //좋아요를 취소했다면 해당 트윗의 likeUser에서 삭제하고 , likes - 1
+        guard let user else { return }
         
         Task {
-            do {
-                let tweets = try await NetworkManager.tweetCollection.getDocuments().documents.map { try $0.data(as: Tweet.self) }
-                var snapShot = NSDiffableDataSourceSnapshot<Section, Tweet>()
-                snapShot.appendSections([.main])
-                snapShot.appendItems(tweets)
-                await dataSource?.apply(snapShot, animatingDifferences: true)
-            } catch {
-                print("error", error)
+            if likeCanceled { //좋아요를 눌렀다면 해당 트윗의 likeUser에 현재 로그인한 유저의 이메일을 추가하고, likes + 1
+                var likeUsers = selectedTweet.likeUsers
+                likeUsers.append(user.email)
+                let likes = selectedTweet.likes + 1
+                
+                try await NetworkManager.tweetCollection.document(selectedTweet.id).updateData([
+                    "likes": likes,
+                    "likeUsers": likeUsers
+                ])
+                print("좋아요 누르기 완료")
+            } else {
+                let likes = selectedTweet.likes - 1
+                var likeUsers = selectedTweet.likeUsers
+                likeUsers.removeAll { $0 == user.email }
+                
+                try await NetworkManager.tweetCollection.document(selectedTweet.id).updateData([
+                    "likes": likes,
+                    "likeUsers": likeUsers
+                ])
+                print("좋아요 취소 완료")
             }
+            //좋아요를 취소했다면 해당 트윗의 likeUser에서 삭제하고 , likes - 1
+            requestTweets()
         }
-        
     }
     func handleProfileImageTapped(_ cell: TweetCell) {
         let controller = ProfileController()
@@ -226,14 +220,5 @@ extension FeedViewController: TweetCellDelegate {
 //        let nav = UINavigationController(rootViewController: controller)
 //        nav.modalPresentationStyle = .fullScreen
 //        present(nav, animated: true)
-    }
-}
-
-import SwiftUI
-
-struct PreView: PreviewProvider {
-    static var previews: some View {
-        // Preview를 보고자 하는 ViewController를 넣으면 됩니다.
-        FeedViewController().toPreview()
     }
 }
