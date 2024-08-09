@@ -141,6 +141,8 @@ final class UploadTweetViewController: BaseViewController {
                     "password": user.password,
                     "profileImage": user.profileImage,
                     "userName": user.userName,
+                    "follow": [],
+                    "following": []
                 ]
             ])
             self.dismiss(animated: true)

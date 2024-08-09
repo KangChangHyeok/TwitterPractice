@@ -9,7 +9,6 @@ import UIKit
 
 protocol ProfileHeaderDelegate: AnyObject {
     func backButtonDidTap()
-    func handleEditProfileFollow(_ header: ProfileHeader)
     func didSelect(filter: ProfileFilterOptions)
 }
 
@@ -17,6 +16,8 @@ final class ProfileHeader: UICollectionReusableView {
     // MARK: - Properties
     
     weak var delegate: ProfileHeaderDelegate?
+    
+    private var user: User?
     
     // MARK: - UI
     
@@ -51,12 +52,16 @@ final class ProfileHeader: UICollectionReusableView {
     
     lazy var editProfileFollowButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Loading", for: .normal)
         button.layer.borderColor = UIColor.twitterBlue.cgColor
         button.layer.borderWidth = 1.25
+        button.backgroundColor = .clear
         button.setTitleColor(.twitterBlue, for: .normal)
+        button.setTitleColor(.twitterBlue, for: .selected)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         button.addTarget(self, action: #selector(handleEditProfileFollow), for: .touchUpInside)
+        button.tintAdjustmentMode = .normal
+        button.setTitle("팔로우", for: .normal)
+        button.setTitle("팔로잉", for: .selected)
         return button
     }()
     
@@ -80,20 +85,14 @@ final class ProfileHeader: UICollectionReusableView {
         return label
     }()
     
-    private lazy var followingLabel: UILabel = {
+    private lazy var followLabel: UILabel = {
         let label = UILabel()
-        label.text = "0 following"
-        let followTap = UITapGestureRecognizer(target: self, action: #selector(handleFollowersTapped))
-        label.isUserInteractionEnabled = true
-        label.addGestureRecognizer(followTap)
+        label.text = "0 팔로우"
         return label
     }()
-    private lazy var followersLabel: UILabel = {
+    private lazy var followingLabel: UILabel = {
         let label = UILabel()
-        label.text = "0 followers"
-        let followTap = UITapGestureRecognizer(target: self, action: #selector(handleFollowingTapped))
-        label.isUserInteractionEnabled = true
-        label.addGestureRecognizer(followTap)
+        label.text = "0 팔로잉"
         return label
     }()
     
@@ -144,8 +143,8 @@ final class ProfileHeader: UICollectionReusableView {
                                paddingLeft: 12,
                                paddingRight: 12)
         
-        let followStack = UIStackView(arrangedSubviews: [followingLabel,
-                                                         followersLabel])
+        let followStack = UIStackView(arrangedSubviews: [followLabel,
+                                                         followingLabel])
         followStack.axis = .horizontal
         followStack.spacing = 8
         followStack.distribution = .fillEqually
@@ -162,14 +161,23 @@ final class ProfileHeader: UICollectionReusableView {
     
     func bind(user: User?) {
         guard let user = user else { return }
+        self.user = user
         profileImageView.image = .init(data: user.profileImage)
         fullnameLabel.text = user.fullName
         usernameLabel.text = user.userName
+        followLabel.text = "\(user.follow.count)" + " 팔로우"
+        followingLabel.text = "\(user.following.count)" + " 팔로잉"
+        guard let currentLoginUserID = UserDefaults.fecthUserID() else { return }
+        if user.email == currentLoginUserID {
+            editProfileFollowButton.setTitle("프로필 수정", for: .normal)
+        } else {
+            if user.following.contains(where: { $0 == currentLoginUserID }) {
+                editProfileFollowButton.isSelected = true
+            } else {
+                editProfileFollowButton.isSelected = false
+            }
+        }
         
-        //        let viewModel = ProfileHeaderViewModel(user: user)
-        //        editProfileFollowButton.setTitle(viewModel.actionButtonTitle, for: .normal)
-        //        followingLabel.attributedText = viewModel.followersString
-        //        followersLabel.attributedText = viewModel.followingString
         //        bioLabel.text = user.bio
     }
     // MARK: - Selectors
@@ -178,11 +186,39 @@ final class ProfileHeader: UICollectionReusableView {
     }
 
     @objc func handleEditProfileFollow() {
-        delegate?.handleEditProfileFollow(self)
-    }
-    @objc func handleFollowersTapped() {
-    }
-    @objc func handleFollowingTapped() {
+        editProfileFollowButton.isSelected.toggle()
+        
+        let isUserFollow = editProfileFollowButton.isSelected
+        Task {
+            guard let currentLoginUserID = UserDefaults.fecthUserID() else { return }
+            var currentLoginUser = try await NetworkManager.userCollection.document(currentLoginUserID).getDocument().data(as: User.self)
+            guard var user else { return }
+            if isUserFollow {
+                // 팔로우한경우, db 수정후 새로운 user값 가져오기
+                user.following.append(currentLoginUser.email)
+                // 내가 누른 해당 유저의 팔로잉에 추가됨
+                try await NetworkManager.userCollection.document(user.email).updateData([
+                    "following": user.following
+                ])
+                
+                currentLoginUser.follow.append(user.email)
+                try await NetworkManager.userCollection.document(currentLoginUser.email).updateData([
+                    "follow": currentLoginUser.follow
+                ])
+            } else {
+                // 팔로우 취소한 경우, db 수정후 새로운 user값 가져오기
+                user.following.removeAll { $0 == currentLoginUser.email }
+                // 내가 누른 해당 유저의 팔로잉에서 삭제됨
+                try await NetworkManager.userCollection.document(user.email).updateData([
+                    "following": user.following
+                ])
+                currentLoginUser.follow.removeAll { $0 == user.email}
+                try await NetworkManager.userCollection.document(currentLoginUser.email).updateData([
+                    "follow": currentLoginUser.follow
+                ])
+            }
+        }
+        
     }
 }
 

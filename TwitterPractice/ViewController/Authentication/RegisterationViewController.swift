@@ -112,7 +112,9 @@ final class RegisterationViewController: BaseViewController {
                 password: password,
                 fullName: fullname,
                 userName: username,
-                profileImage: profileImage
+                profileImage: profileImage,
+                follow: [],
+                following: []
             )
             
             Task {
@@ -129,7 +131,9 @@ final class RegisterationViewController: BaseViewController {
                         "password": userInfo.password,
                         "fullName": userInfo.fullName,
                         "userName": userInfo.userName,
-                        "profileImage": userInfo.profileImage
+                        "profileImage": userInfo.profileImage,
+                        "follow": [],
+                        "following": []
                     ])
                     print("DEBUG: 유저 회원가입 및 등록 완료")
                     UserDefaults.standard.set(true, forKey: "userIsLogin")

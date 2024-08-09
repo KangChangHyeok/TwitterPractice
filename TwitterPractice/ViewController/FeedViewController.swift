@@ -120,7 +120,7 @@ final class FeedViewController: BaseViewController {
     }
     
     @objc func handleProfileImageTap() {
-        let controller = ProfileController()
+        let controller = ProfileController(user: self.user)
         navigationController?.pushViewController(controller, animated: true)
     }
     
@@ -211,7 +211,10 @@ extension FeedViewController: TweetCellDelegate {
         }
     }
     func handleProfileImageTapped(_ cell: TweetCell) {
-        let controller = ProfileController()
+        // 내 트윗을 눌렀으면 내 유저 객체 보내주고 아니면 해당 트윗의 유저 정보 보내주기
+        guard let indexPath = cell.indexPath else { return }
+        let selectedTweetUser = dataSource?.snapshot().itemIdentifiers[indexPath.row].user
+        let controller = ProfileController(user: selectedTweetUser)
         navigationController?.pushViewController(controller, animated: true)
     }
     func handleReplyTapped(_ cell: TweetCell) {

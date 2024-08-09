@@ -176,7 +176,3 @@ final class LoginViewController: BaseViewController {
         }
     }
 }
-
-#Preview {
-    LoginViewController()
-}

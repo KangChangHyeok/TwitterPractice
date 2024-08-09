@@ -11,9 +11,9 @@ import BuilderKit
 import SnapKit
 
 final class MainTabController: UITabBarController {
-
+    
     // MARK: - Properties
-
+    
     private lazy var tweetRegisterButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = .twitterBlue
@@ -21,16 +21,16 @@ final class MainTabController: UITabBarController {
         button.setImage(.init(named: "new_tweet"), for: .normal)
         button.layer.cornerRadius = 28
         button.addTarget(self, action: #selector(actionButtonDidTap), for: .touchUpInside)
-//        button.isHidden = true
+        //        button.isHidden = true
         return button
     }()
-
+    
     // MARK: - LifeCycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .twitterBlue
-//        UserDefaults.standard.set(false, forKey: "userIsLogin")
+        UserDefaults.standard.set(false, forKey: "userIsLogin")
         configureUI()
         checkUserIsloggedIn()
     }
@@ -45,7 +45,7 @@ final class MainTabController: UITabBarController {
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
         tabBar.backgroundColor = .systemBackground
     }
-     
+    
     func configureUI() {
         view.addSubview(tweetRegisterButton)
         tweetRegisterButton.snp.makeConstraints {
@@ -90,7 +90,7 @@ final class MainTabController: UITabBarController {
             rootViewController: NotificationController()
         )
         let conversations = templateNavigationController(
-            image: UIImage(named: "ic_mail_outline_white_2x-1"), 
+            image: UIImage(named: "ic_mail_outline_white_2x-1"),
             rootViewController: ConversationsController()
         )
         viewControllers = [feed, explore, notifications, conversations]
@@ -111,8 +111,4 @@ final class MainTabController: UITabBarController {
         nav.modalPresentationStyle = .fullScreen
         self.present(nav, animated: true)
     }
-}
-
-#Preview {
-    MainTabController()
 }

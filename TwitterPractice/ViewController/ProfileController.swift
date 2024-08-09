@@ -24,6 +24,8 @@ final class ProfileController: BaseViewController {
     
     private var tweets = [Tweet]()
     
+    private var option: ProfileFilterOptions = .tweets
+    
     private lazy var tweetCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: createLayout())
         collectionView.backgroundColor = .white
@@ -32,16 +34,25 @@ final class ProfileController: BaseViewController {
         return collectionView
     }()
     
+    // MARK: - Initializer
+    
+    init(user: User?) {
+        self.user = user
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - Set
     
     override func setDefaults(at viewController: UIViewController) {
         configureDataSource()
-        requestUser()
         requestUserTweets()
-        //        fetchLikedTweets()
+        
         //        fetchReplies()
         //        checkIfUserIsFollowed()
-        //        fetchUserStats()
     }
     
     override func setHierarchy(at view: UIView) {
@@ -120,7 +131,7 @@ final class ProfileController: BaseViewController {
 
     func requestUserTweets() {
         Task {
-            guard let userID = UserDefaults.fecthUserID() else { return }
+            guard let userID = self.user?.email else { return }
             self.tweets = try await NetworkManager.tweetCollection.getDocuments().documents.map { try $0.data(as: Tweet.self)
             }.filter { $0.user.email == userID }
             
@@ -131,22 +142,32 @@ final class ProfileController: BaseViewController {
         }
     }
     
-    func requestUserLikedTweets() {
+    func requestTweets() {
         Task {
-            guard let userID = UserDefaults.fecthUserID() else { return }
-            self.tweets = try await NetworkManager.tweetCollection.getDocuments().documents.map { try $0.data(as: Tweet.self)
-            }.filter { $0.likeUsers.contains { $0 == userID } }
+            guard let userID = self.user?.email else { return }
+            switch self.option {
+            case .tweets:
+                self.tweets = try await NetworkManager.tweetCollection.getDocuments().documents.map { try $0.data(as: Tweet.self)
+                }.filter { $0.user.email == userID }
+                var snapshot = NSDiffableDataSourceSnapshot<Section, Tweet>()
+                snapshot.appendSections([.tweet])
+                snapshot.appendItems(self.tweets)
+                await dataSource?.apply(snapshot)
+            case .replies:
+                return
+            case .likes:
+                self.tweets = try await NetworkManager.tweetCollection.getDocuments().documents.map { try $0.data(as: Tweet.self)
+                }.filter { $0.likeUsers.contains { $0 == userID } }
+                var snapshot = NSDiffableDataSourceSnapshot<Section, Tweet>()
+                snapshot.appendSections([.tweet])
+                snapshot.appendItems(self.tweets)
+                await dataSource?.apply(snapshot)
+            }
             
-            var snapshot = NSDiffableDataSourceSnapshot<Section, Tweet>()
-            snapshot.appendSections([.tweet])
-            snapshot.appendItems(self.tweets)
-            await dataSource?.apply(snapshot)
+            
         }
     }
     
-    func fetchLikedTweets() {
-
-    }
     func fetchReplies() {
 //        TweetService.shared.fetchReplies(forUser: user) { tweets in
 //            self.replies = tweets
@@ -155,12 +176,6 @@ final class ProfileController: BaseViewController {
     func checkIfUserIsFollowed() {
 //        UserService.shared.checkIfUserIsFollowed(uid: user.uid) { isFollowed in
 //            self.user.isFollowed = isFollowed
-//            self.collectionView.reloadData()
-//        }
-    }
-    func fetchUserStats() {
-//        UserService.shared.fetchUserStats(uid: user.uid) { stats in
-//            self.user.stats = stats
 //            self.collectionView.reloadData()
 //        }
     }
@@ -177,14 +192,16 @@ extension ProfileController: UICollectionViewDelegate {
 }
 
 extension ProfileController: ProfileHeaderDelegate {
+    
     func didSelect(filter: ProfileFilterOptions) {
-        switch filter {
+        self.option = filter
+        switch option {
         case .tweets:
             requestUserTweets()
         case .replies:
             return
         case .likes:
-            requestUserLikedTweets()
+            requestTweets()
         }
     }
     
@@ -236,9 +253,7 @@ extension ProfileController: EditProfileControllerDelegate {
 
 extension ProfileController: TweetCellDelegate {
     
-    func handleProfileImageTapped(_ cell: TweetCell) {
-        
-    }
+    func handleProfileImageTapped(_ cell: TweetCell) { return }
     
     func handleReplyTapped(_ cell: TweetCell) {
         
@@ -272,7 +287,7 @@ extension ProfileController: TweetCellDelegate {
                 ])
                 print("좋아요 취소 완료")
                 
-                requestUserLikedTweets()
+                requestTweets()
             }
             //좋아요를 취소했다면 해당 트윗의 likeUser에서 삭제하고 , likes - 1
         }
