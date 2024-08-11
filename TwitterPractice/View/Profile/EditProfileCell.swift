@@ -11,13 +11,13 @@ protocol EditProfileCellDelegate: AnyObject {
     func updateUserInfo(_ cell: EditProfileCell)
 }
 
-class EditProfileCell: UITableViewCell {
+final class EditProfileCell: UITableViewCell {
     
     // MARK: - Properties
     
-    var viewModel: EditProfileViewModel? {
-        didSet { configure() }
-    }
+//    var viewModel: EditProfileViewModel? {
+////        didSet { configure() }
+//    }
     
     weak var delegate: EditProfileCellDelegate?
     
@@ -67,6 +67,11 @@ class EditProfileCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    func bind(title: String?, description: String?) {
+        titleLabel.text = title
+        bioTextView.text = description
+    }
     // MARK: - Selectors
     @objc func handleUpdateUserInfo() {
         delegate?.updateUserInfo(self)
@@ -74,16 +79,15 @@ class EditProfileCell: UITableViewCell {
     
     // MARK: - Helpers
 
-    func configure() {
-        guard let viewModel = viewModel else { return }
-        
-        infoTextField.isHidden = viewModel.shouldHideTextField
-        bioTextView.isHidden = viewModel.shouldHideTextView
-        titleLabel.text = viewModel.titleText
-        
-        infoTextField.text = viewModel.optionValue
-        
-        bioTextView.placeholderLabel.isHidden = viewModel.shouldHidePlaceholderLabel
-        bioTextView.text = viewModel.optionValue
-    }
+//    func configure() {
+//        
+//        infoTextField.isHidden = viewModel.shouldHideTextField
+//        bioTextView.isHidden = viewModel.shouldHideTextView
+//        titleLabel.text = viewModel.titleText
+//        
+//        infoTextField.text = viewModel.optionValue
+//        
+//        bioTextView.placeholderLabel.isHidden = viewModel.shouldHidePlaceholderLabel
+//        bioTextView.text = viewModel.optionValue
+//    }
 }

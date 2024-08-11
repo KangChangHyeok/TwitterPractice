@@ -10,6 +10,7 @@ import UIKit
 protocol ProfileHeaderDelegate: AnyObject {
     func backButtonDidTap()
     func didSelect(filter: ProfileFilterOptions)
+    func profileEditButtonDidTap(_ button: UIButton, user: User?)
 }
 
 final class ProfileHeader: UICollectionReusableView {
@@ -186,13 +187,19 @@ final class ProfileHeader: UICollectionReusableView {
     }
 
     @objc func handleEditProfileFollow() {
-        editProfileFollowButton.isSelected.toggle()
         
-        let isUserFollow = editProfileFollowButton.isSelected
         Task {
-            guard let currentLoginUserID = UserDefaults.fecthUserID() else { return }
+            guard let currentLoginUserID = UserDefaults.fecthUserID(),
+                  var user,
+            currentLoginUserID != user.email else {
+                delegate?.profileEditButtonDidTap(editProfileFollowButton, user: user)
+                return
+            }
+            editProfileFollowButton.isSelected.toggle()
+            let isUserFollow = editProfileFollowButton.isSelected
+            
             var currentLoginUser = try await NetworkManager.userCollection.document(currentLoginUserID).getDocument().data(as: User.self)
-            guard var user else { return }
+            
             if isUserFollow {
                 // 팔로우한경우, db 수정후 새로운 user값 가져오기
                 user.following.append(currentLoginUser.email)

@@ -172,6 +172,8 @@ final class LoginViewController: BaseViewController {
                 tab.checkUserIsloggedIn()
                 
                 self.dismiss(animated: true)
+            } catch {
+                print(error)
             }
         }
     }

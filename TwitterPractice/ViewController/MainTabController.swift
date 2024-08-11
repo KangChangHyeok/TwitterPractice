@@ -30,9 +30,12 @@ final class MainTabController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .twitterBlue
-        UserDefaults.standard.set(false, forKey: "userIsLogin")
+//        UserDefaults.standard.set(false, forKey: "userIsLogin")
         configureUI()
         checkUserIsloggedIn()
+        NotificationCenter.default.addObserver(
+            self, selector: #selector(userLogout), name: NSNotification.Name("userLogout"), object: nil
+        )
     }
     
     
@@ -108,6 +111,13 @@ final class MainTabController: UITabBarController {
     @objc func actionButtonDidTap() {
         let controller = UploadTweetViewController(config: .tweet)
         let nav = UINavigationController(rootViewController: controller)
+        nav.modalPresentationStyle = .fullScreen
+        self.present(nav, animated: true)
+    }
+    
+    @objc func userLogout() {
+        self.viewControllers = []
+        let nav = UINavigationController(rootViewController: LoginViewController())
         nav.modalPresentationStyle = .fullScreen
         self.present(nav, animated: true)
     }

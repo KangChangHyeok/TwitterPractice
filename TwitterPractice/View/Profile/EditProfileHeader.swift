@@ -10,10 +10,9 @@ import UIKit
 protocol EditProfileHeaderDelegate: AnyObject {
     func didTapChangeProfilePhoto()
 }
-class EditProfileHeader: UIView {
-    // MARK: - Properties
+final class EditProfileHeader: BaseView {
     
-    private let user: UserInfo
+    // MARK: - Properties
     
     weak var delegate: EditProfileHeaderDelegate?
     
@@ -27,40 +26,29 @@ class EditProfileHeader: UIView {
         return iv
     }()
     
-    private let changePhotoButton: UIButton = {
+    let changePhotoButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Change Profile Photo", for: .normal)
-        button.addTarget(self, action: #selector(handleChangeProfileImage), for: .touchUpInside)
+        button.setTitle("프로필 사진 변경", for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         button.setTitleColor(.white, for: .normal)
         return button
     }()
     
-    // MARK: - Lifecycle
-
-    init(user: UserInfo) {
-        self.user = user
-        super.init(frame: .zero)
-        
+    // MARK: - Set
+    
+    override func setDefaults(at view: UIView) {
         backgroundColor = .twitterBlue
-        
-        addSubview(profileImageView)
+    }
+    
+    override func setHierarchy(at view: UIView) {
+        view.addSubview(profileImageView)
+        view.addSubview(changePhotoButton)
+    }
+    
+    override func setLayout(at view: UIView) {
         profileImageView.center(inView: self, yConstant: -16)
         profileImageView.setDimensions(width: 100, height: 100)
         profileImageView.layer.cornerRadius = 100 / 2
-        
-        addSubview(changePhotoButton)
         changePhotoButton.centerX(inView: self,topAnchor: profileImageView.bottomAnchor, paddingTop: 8)
-        profileImageView.sd_setImage(with: user.profileImageUrl)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    // MARK: - Selectors
-    
-    @objc func handleChangeProfileImage() {
-        delegate?.didTapChangeProfilePhoto()
     }
 }

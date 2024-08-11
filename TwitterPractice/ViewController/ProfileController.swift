@@ -50,9 +50,6 @@ final class ProfileController: BaseViewController {
     override func setDefaults(at viewController: UIViewController) {
         configureDataSource()
         requestUserTweets()
-        
-        //        fetchReplies()
-        //        checkIfUserIsFollowed()
     }
     
     override func setHierarchy(at view: UIView) {
@@ -70,13 +67,14 @@ final class ProfileController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.barStyle = .black
-        navigationController?.navigationBar.isHidden = true
+        navigationController?.setNavigationBarHidden(true, animated: true)
         let mainTab = tabBarController as? MainTabController
         mainTab?.setTweetButtonIsHidden(true)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: true)
         let mainTab = tabBarController as? MainTabController
         mainTab?.setTweetButtonIsHidden(false)
     }
@@ -163,21 +161,7 @@ final class ProfileController: BaseViewController {
                 snapshot.appendItems(self.tweets)
                 await dataSource?.apply(snapshot)
             }
-            
-            
         }
-    }
-    
-    func fetchReplies() {
-//        TweetService.shared.fetchReplies(forUser: user) { tweets in
-//            self.replies = tweets
-//        }
-    }
-    func checkIfUserIsFollowed() {
-//        UserService.shared.checkIfUserIsFollowed(uid: user.uid) { isFollowed in
-//            self.user.isFollowed = isFollowed
-//            self.collectionView.reloadData()
-//        }
     }
 }
 
@@ -192,6 +176,12 @@ extension ProfileController: UICollectionViewDelegate {
 }
 
 extension ProfileController: ProfileHeaderDelegate {
+    
+    func profileEditButtonDidTap(_ button: UIButton, user: User?) {
+        let profileEditNavi = UINavigationController(rootViewController: ProfileEditController(user: user))
+        profileEditNavi.modalPresentationStyle = .overFullScreen
+        self.present(profileEditNavi, animated: true)
+    }
     
     func didSelect(filter: ProfileFilterOptions) {
         self.option = filter
@@ -244,10 +234,6 @@ extension ProfileController: EditProfileControllerDelegate {
             } catch let error {
                 print("DEBUG: Failed to sign out with error \(error.localizedDescription)")
             }
-    }
-    
-    func controller(_ controller: EditProfileController, wantsToUpdate user: UserInfo) {
-        controller.dismiss(animated: true)
     }
 }
 

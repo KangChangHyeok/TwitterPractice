@@ -120,7 +120,7 @@ final class UploadTweetViewController: BaseViewController {
     }
     // MARK: - Selectors
     
-    @objc func handleCancel() {
+    @objc func cancelButtonDidTap() {
         dismiss(animated: true, completion: nil)
     }
     @objc func handleUploadTweet() {
@@ -168,7 +168,7 @@ final class UploadTweetViewController: BaseViewController {
     func configureNavigationBar() {
         navigationController?.navigationBar.barTintColor = .white
         navigationController?.navigationBar.isTranslucent = false
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(handleCancel))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelButtonDidTap))
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: actionButton)
     }
 }
