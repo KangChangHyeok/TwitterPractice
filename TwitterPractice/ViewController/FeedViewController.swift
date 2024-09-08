@@ -54,7 +54,6 @@ final class FeedViewController: BaseViewController {
         imageView.setDimensions(width: 44, height: 44)
         viewController.navigationItem.titleView = imageView
         configureDataSource()
-        requestTweets()
     }
     
     override func setHierarchy(at view: UIView) {
@@ -72,6 +71,7 @@ final class FeedViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         requestUser()
+        requestTweets()
         navigationController?.setNavigationBarHidden(false, animated: true)
         let mainTab = tabBarController as? MainTabController
         mainTab?.setTweetButtonIsHidden(false)
@@ -107,6 +107,7 @@ final class FeedViewController: BaseViewController {
         Task {
             guard let userID = UserDefaults.fecthUserID() else { return }
             self.user = try await NetworkManager.requestUser(userID: userID)
+            
         }
     }
     

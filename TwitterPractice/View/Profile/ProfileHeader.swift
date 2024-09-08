@@ -7,6 +7,8 @@
 
 import UIKit
 
+import Firebase
+
 protocol ProfileHeaderDelegate: AnyObject {
     func backButtonDidTap()
     func didSelect(filter: ProfileFilterOptions)
@@ -52,7 +54,7 @@ final class ProfileHeader: UICollectionReusableView {
     }()
     
     lazy var editProfileFollowButton: UIButton = {
-        let button = UIButton(type: .system)
+        let button = UIButton()
         button.layer.borderColor = UIColor.twitterBlue.cgColor
         button.layer.borderWidth = 1.25
         button.backgroundColor = .clear
@@ -200,9 +202,8 @@ final class ProfileHeader: UICollectionReusableView {
             var currentLoginUser = try await NetworkManager.userCollection.document(currentLoginUserID).getDocument().data(as: User.self)
             
             if isUserFollow {
-                // 팔로우한경우, db 수정후 새로운 user값 가져오기
+
                 user.following.append(currentLoginUser.email)
-                // 내가 누른 해당 유저의 팔로잉에 추가됨
                 try await NetworkManager.userCollection.document(user.email).updateData([
                     "following": user.following
                 ])
@@ -211,6 +212,7 @@ final class ProfileHeader: UICollectionReusableView {
                 try await NetworkManager.userCollection.document(currentLoginUser.email).updateData([
                     "follow": currentLoginUser.follow
                 ])
+                
             } else {
                 // 팔로우 취소한 경우, db 수정후 새로운 user값 가져오기
                 user.following.removeAll { $0 == currentLoginUser.email }
@@ -223,6 +225,19 @@ final class ProfileHeader: UICollectionReusableView {
                     "follow": currentLoginUser.follow
                 ])
             }
+            
+            let documents = try await NetworkManager.tweetCollection.whereField("user.email", isEqualTo: user.email).getDocuments().documents
+            
+            let db = Firestore.firestore()
+            let batch = db.batch()
+            
+            documents.forEach { snapshot in
+                batch.updateData([
+                    "user.follow": user.follow,
+                    "user.following": user.following
+                ], forDocument: snapshot.reference)
+            }
+            try await batch.commit()
         }
         
     }
