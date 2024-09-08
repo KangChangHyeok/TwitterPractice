@@ -72,13 +72,6 @@ final class ProfileController: BaseViewController {
         mainTab?.setTweetButtonIsHidden(true)
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        navigationController?.setNavigationBarHidden(false, animated: true)
-        let mainTab = tabBarController as? MainTabController
-        mainTab?.setTweetButtonIsHidden(false)
-    }
-    
     func configureDataSource() {
         let profileHeaderRegisteration = UICollectionView.SupplementaryRegistration<ProfileHeader>(elementKind: "ProfileHeader") { [weak self] supplementaryView, elementKind, indexPath in
             supplementaryView.bind(user: self?.user)
@@ -222,20 +215,7 @@ extension ProfileController: ProfileHeaderDelegate {
     }
 }
 
-// MARK: - EditProfileControllerDelegate
-
-extension ProfileController: EditProfileControllerDelegate {
-    func handleLogout() {
-            do {
-                try Auth.auth().signOut()
-                let nav = UINavigationController(rootViewController: LoginViewController())
-                nav.modalPresentationStyle = .fullScreen
-                self.present(nav, animated: true)
-            } catch let error {
-                print("DEBUG: Failed to sign out with error \(error.localizedDescription)")
-            }
-    }
-}
+// MARK: - TweetCellDelegate
 
 extension ProfileController: TweetCellDelegate {
     

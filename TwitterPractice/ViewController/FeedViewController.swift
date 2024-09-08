@@ -46,12 +46,14 @@ final class FeedViewController: BaseViewController {
     
     override func setDefaults(at viewController: UIViewController) {
         viewController.view.backgroundColor = .white
+        let appearance = UINavigationBarAppearance()
+        appearance.backgroundColor = .white
+        tabBarController?.navigationController?.navigationBar.standardAppearance = appearance
         let imageView = UIImageView(image: UIImage(named: "twitter_logo_blue"))
         imageView.contentMode = .scaleAspectFit
         imageView.setDimensions(width: 44, height: 44)
         viewController.navigationItem.titleView = imageView
         configureDataSource()
-        requestUser()
         requestTweets()
     }
     
@@ -69,7 +71,10 @@ final class FeedViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.navigationBar.isHidden = false
+        requestUser()
+        navigationController?.setNavigationBarHidden(false, animated: true)
+        let mainTab = tabBarController as? MainTabController
+        mainTab?.setTweetButtonIsHidden(false)
     }
     
     func createTweetCollectionViewLayout() -> UICollectionViewLayout {

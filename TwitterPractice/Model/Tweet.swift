@@ -15,7 +15,7 @@ struct Tweet: Codable, Hashable {
     var likeUsers: [String]
     var likes: Int
     let timeStamp: Date
-    let user: User
+    var user: User
 }
 
 struct TweetInfo {

@@ -11,9 +11,9 @@ struct User: Codable, Hashable {
     
     let email: String
     let password: String
-    let fullName: String
-    let userName: String
-    let profileImage: Data
+    var fullName: String
+    var userName: String
+    var profileImage: Data
     var follow: [String]
     var following: [String]
 }

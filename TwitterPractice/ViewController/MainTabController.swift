@@ -21,7 +21,6 @@ final class MainTabController: UITabBarController {
         button.setImage(.init(named: "new_tweet"), for: .normal)
         button.layer.cornerRadius = 28
         button.addTarget(self, action: #selector(actionButtonDidTap), for: .touchUpInside)
-        //        button.isHidden = true
         return button
     }()
     
@@ -116,6 +115,8 @@ final class MainTabController: UITabBarController {
     }
     
     @objc func userLogout() {
+        UserDefaults.standard.set(false, forKey: "userIsLogin")
+        UserDefaults.standard.removeObject(forKey: "userID")
         self.viewControllers = []
         let nav = UINavigationController(rootViewController: LoginViewController())
         nav.modalPresentationStyle = .fullScreen

@@ -15,10 +15,6 @@ final class EditProfileCell: UITableViewCell {
     
     // MARK: - Properties
     
-//    var viewModel: EditProfileViewModel? {
-////        didSet { configure() }
-//    }
-    
     weak var delegate: EditProfileCellDelegate?
     
     let titleLabel: UILabel = {
@@ -33,7 +29,6 @@ final class EditProfileCell: UITableViewCell {
         tf.font = UIFont.systemFont(ofSize: 14)
         tf.textAlignment = .left
         tf.textColor = .twitterBlue
-        tf.addTarget(self, action: #selector(handleUpdateUserInfo), for: .editingDidEnd)
         return tf
     }()
     
@@ -41,7 +36,6 @@ final class EditProfileCell: UITableViewCell {
         let tv = InputTextView()
         tv.font = UIFont.systemFont(ofSize: 14)
         tv.textColor = .twitterBlue
-        tv.placeholderLabel.text = "Bio"
         return tv
     }()
     
@@ -60,8 +54,6 @@ final class EditProfileCell: UITableViewCell {
         infoTextField.anchor(top: topAnchor, left: titleLabel.rightAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 4, paddingLeft: 16, paddingRight: 8)
         contentView.addSubview(bioTextView)
         bioTextView.anchor(top: topAnchor, left: titleLabel.rightAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 4, paddingLeft: 14, paddingRight: 8)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(handleUpdateUserInfo), name: UITextView.textDidEndEditingNotification, object: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -69,25 +61,9 @@ final class EditProfileCell: UITableViewCell {
     }
     
     func bind(title: String?, description: String?) {
+        guard let title, let description else { return }
         titleLabel.text = title
         bioTextView.text = description
+        bioTextView.placeholderLabel.text = ""
     }
-    // MARK: - Selectors
-    @objc func handleUpdateUserInfo() {
-        delegate?.updateUserInfo(self)
-    }
-    
-    // MARK: - Helpers
-
-//    func configure() {
-//        
-//        infoTextField.isHidden = viewModel.shouldHideTextField
-//        bioTextView.isHidden = viewModel.shouldHideTextView
-//        titleLabel.text = viewModel.titleText
-//        
-//        infoTextField.text = viewModel.optionValue
-//        
-//        bioTextView.placeholderLabel.isHidden = viewModel.shouldHidePlaceholderLabel
-//        bioTextView.text = viewModel.optionValue
-//    }
 }

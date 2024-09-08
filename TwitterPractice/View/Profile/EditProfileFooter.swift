@@ -12,7 +12,7 @@ final class EditProfileFooter: UIView {
     
     lazy var logoutButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Logout", for: .normal)
+        button.setTitle("로그아웃", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
         button.backgroundColor = .red

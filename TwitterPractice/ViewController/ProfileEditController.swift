@@ -7,29 +7,15 @@
 
 import UIKit
 
-private let reuserIdentifier = "EditProfileCell"
+import Firebase
 
-protocol EditProfileControllerDelegate: AnyObject {
-    func handleLogout()
-}
+private let reuserIdentifier = "EditProfileCell"
 
 final class ProfileEditController: UITableViewController {
     
     // MARK: - Properties
     
     private var user: User?
-    
-    private var userInfoChanged = false
-    
-    weak var delegate: EditProfileControllerDelegate?
-    
-    private var imageChanged: Bool {
-        return selectedImage != nil
-    }
-    
-    private var selectedImage: UIImage? {
-        didSet { headerView.profileImageView.image = selectedImage }
-    }
     
     // MARK: - UI
     
@@ -66,6 +52,11 @@ final class ProfileEditController: UITableViewController {
         configureTableView()
         configureProfileImage()
     }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        UINavigationBarAppearance().backgroundColor = .white
+    }
 }
 
 // MARK: - Private
@@ -82,8 +73,8 @@ private extension ProfileEditController {
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = UIColor.twitterBlue
         appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
-        UINavigationBar.appearance().standardAppearance = appearance
-        UINavigationBar.appearance().scrollEdgeAppearance = appearance
+        self.navigationController?.navigationBar.standardAppearance = appearance
+        self.navigationController?.navigationBar.scrollEdgeAppearance = appearance
         navigationController?.setNavigationBarHidden(false, animated: true)
         navigationController?.navigationBar.barStyle = .black
         navigationController?.navigationBar.isTranslucent = false
@@ -106,23 +97,6 @@ private extension ProfileEditController {
         tableView.register(EditProfileCell.self, forCellReuseIdentifier: reuserIdentifier)
     }
     
-    func updateUserData() {
-        if imageChanged && !userInfoChanged {
-        }
-        
-        if userInfoChanged && !imageChanged {
-//            UserService.shared.saveUserData(user: user) { err, ref in
-//                self.delegate?.controller(self, wantsToUpdate: self.user)
-//            }
-        }
-        
-        if userInfoChanged && imageChanged {
-//            UserService.shared.saveUserData(user: user) { err, ref in
-//                self.updateProfileImage()
-//            }
-        }
-    }
-    
     func configureProfileImage() {
         guard let user else { return }
         headerView.profileImageView.image = .init(data: user.profileImage)
@@ -138,10 +112,43 @@ private extension ProfileEditController {
     }
     
     @objc func doneButtonDidTap() {
-        self.dismiss(animated: true)
         view.endEditing(true)
-        guard imageChanged || userInfoChanged else { return }
-        updateUserData()
+        
+        guard let fullName = (tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? EditProfileCell)?.bioTextView.text else { return }
+        guard let userName = (tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? EditProfileCell)?.bioTextView.text else { return }
+        guard let userEmail = user?.email else { return }
+        guard let profileImage = headerView.profileImageView.image?.jpegData(compressionQuality: 0.5) else {
+            return
+        }
+        Task {
+            do {
+                try await NetworkManager.userCollection.document(userEmail).updateData([
+                    "fullName": fullName,
+                    "userName": userName,
+                    "profileImage": profileImage
+                ])
+                
+                let documents = try await NetworkManager.tweetCollection.whereField("user.email", isEqualTo: userEmail).getDocuments().documents
+                
+                print(documents)
+                let db = Firestore.firestore()
+                let batch = db.batch()
+                
+                
+                documents.forEach { snapshot in
+                    batch.updateData([
+                        "user.fullName": fullName,
+                        "user.userName": userName,
+                        "user.profileImage": profileImage
+                    ], forDocument: snapshot.reference)
+                }
+                
+                try await batch.commit()
+            } catch {
+                print(error)
+            }
+            self.dismiss(animated: true)
+        }
     }
     
     @objc func profileButtonDidTap() {
@@ -202,7 +209,7 @@ extension ProfileEditController: UIImagePickerControllerDelegate, UINavigationCo
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         
         guard let image = info[.editedImage] as? UIImage else { return }
-        self.selectedImage = image
+        headerView.profileImageView.image = image
         dismiss(animated: true)
     }
 }
@@ -210,37 +217,5 @@ extension ProfileEditController: UIImagePickerControllerDelegate, UINavigationCo
 
 extension ProfileEditController: EditProfileCellDelegate {
     func updateUserInfo(_ cell: EditProfileCell) {
-//        guard let viewModel = cell.viewModel else { return }
-//        userInfoChanged = true
-//        navigationItem.rightBarButtonItem?.isEnabled = true
-        
-//        switch viewModel.option {
-//            
-//        case .fullname:
-//            guard let fullname = cell.infoTextField.text else { return }
-//            user?.fullName = fullname
-//        case .username:
-//            guard let username = cell.infoTextField.text else { return }
-//            user.username = username
-//        case .bio:
-//            user.bio = cell.bioTextView.text
-//        }
     }
 }
-
-//extension ProfileEditController: EditProfileFooterDelegate {
-//    
-//    func handleLogout() {
-//        let alret = UIAlertController(title: nil, message: "Are you sure you want to log out?", preferredStyle: .actionSheet)
-//        alret.addAction(UIAlertAction(title: "Log out", style: .destructive, handler: { _ in
-//            self.dismiss(animated: true) {
-//                self.delegate?.handleLogout()
-//            }
-//        }))
-//        
-//        alret.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-//        
-//        present(alret, animated: true)
-//    }
-//    
-//}

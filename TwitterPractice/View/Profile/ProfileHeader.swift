@@ -169,6 +169,7 @@ final class ProfileHeader: UICollectionReusableView {
         followLabel.text = "\(user.follow.count)" + " 팔로우"
         followingLabel.text = "\(user.following.count)" + " 팔로잉"
         guard let currentLoginUserID = UserDefaults.fecthUserID() else { return }
+        
         if user.email == currentLoginUserID {
             editProfileFollowButton.setTitle("프로필 수정", for: .normal)
         } else {
@@ -178,8 +179,6 @@ final class ProfileHeader: UICollectionReusableView {
                 editProfileFollowButton.isSelected = false
             }
         }
-        
-        //        bioLabel.text = user.bio
     }
     // MARK: - Selectors
     @objc func backButtonDidTap() {
