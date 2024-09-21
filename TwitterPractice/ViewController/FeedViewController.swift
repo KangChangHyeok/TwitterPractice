@@ -107,7 +107,6 @@ final class FeedViewController: BaseViewController {
         Task {
             guard let userID = UserDefaults.fecthUserID() else { return }
             self.user = try await NetworkManager.requestUser(userID: userID)
-            
         }
     }
     
@@ -117,9 +116,11 @@ final class FeedViewController: BaseViewController {
         Task {
             refreshControl.beginRefreshing()
             let tweets = try await NetworkManager.tweetCollection.getDocuments().documents.map { try $0.data(as: Tweet.self) }
+            
             var snapShot = NSDiffableDataSourceSnapshot<Section, Tweet>()
             snapShot.appendSections([.main])
             snapShot.appendItems(tweets)
+            
             await dataSource?.apply(snapShot, animatingDifferences: true)
             refreshControl.endRefreshing()
         }
@@ -170,20 +171,15 @@ final class FeedViewController: BaseViewController {
 
 extension FeedViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        let controller = TweetController(tweet: tweets[indexPath.row])
-//        navigationController?.pushViewController(controller, animated: true)
+        guard let tweet = dataSource?.snapshot().itemIdentifiers[indexPath.row] else { return }
+        let controller = TweetController(tweet: tweet)
+        navigationController?.pushViewController(controller, animated: true)
     }
 }
 
 // MARK: - TweetCellDelegate
 
 extension FeedViewController: TweetCellDelegate {
-    func handleFetchUser(withUsername username: String) {
-//        UserService.shared.fetchUser(WithUsername: username) { user in
-//            let controller = ProfileController(user: user)
-//            self.navigationController?.pushViewController(controller, animated: true)
-//        }
-    }
     
     func handleLikeTapped(_ cell: TweetCell, likeCanceled: Bool) {
         guard let indexPath = cell.indexPath,
@@ -223,11 +219,13 @@ extension FeedViewController: TweetCellDelegate {
         let controller = ProfileController(user: selectedTweetUser)
         navigationController?.pushViewController(controller, animated: true)
     }
+    
     func handleReplyTapped(_ cell: TweetCell) {
-//        guard let tweet = cell.tweet else { return }
-//        let controller = UploadTweetViewController(user: tweet.user, config: .reply(tweet))
-//        let nav = UINavigationController(rootViewController: controller)
-//        nav.modalPresentationStyle = .fullScreen
-//        present(nav, animated: true)
+        guard let indexPath = cell.indexPath,
+              let tweet = dataSource?.snapshot().itemIdentifiers[indexPath.row]  else { return }
+        let uploadTweetViewController = UploadTweetViewController(config: .reply(tweet))
+        let nav = UINavigationController(rootViewController: uploadTweetViewController)
+        nav.modalPresentationStyle = .fullScreen
+        present(nav, animated: true)
     }
 }

@@ -11,14 +11,18 @@ private let reuserIdentifier = "ActionSheetCell"
 protocol ActionSheetLaunCherDelegate: AnyObject {
     func didSelect(option: ActionSheetOptions)
 }
-class ActionSheetLauncher: NSObject {
+
+final class ActionSheetLauncher: NSObject {
+    
     // MARK: - Properties
-    private let user: UserInfo
+    
+    private let user: User
     private let tableView = UITableView()
     private var window: UIWindow?
     private lazy var viewModel = ActionSheetViewModel(user: user)
     weak var delegate: ActionSheetLaunCherDelegate?
     private var tableViewHeight: CGFloat?
+    
     private lazy var blackView: UIView = {
         let view = UIView()
         view.alpha = 0
@@ -27,6 +31,7 @@ class ActionSheetLauncher: NSObject {
         view.addGestureRecognizer(tap)
         return view
     }()
+    
     private lazy var footerView: UIView = {
         let view = UIView()
         view.addSubview(cancelButton)
@@ -36,6 +41,7 @@ class ActionSheetLauncher: NSObject {
         cancelButton.layer.cornerRadius = 50 / 2
         return view
     }()
+    
     private lazy var cancelButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Cancel", for: .normal)
@@ -45,8 +51,10 @@ class ActionSheetLauncher: NSObject {
         button.addTarget(self, action: #selector(handleDismissal), for: .touchUpInside)
         return button
     }()
+    
     // MARK: - Lifecycle
-    init(user: UserInfo) {
+    
+    init(user: User) {
         self.user = user
         super.init()
         configureTableView()
@@ -91,7 +99,8 @@ class ActionSheetLauncher: NSObject {
         tableView.register(ActionSheetCell.self, forCellReuseIdentifier: reuserIdentifier)
     }
 }
-// MARK: - UITableViewDataSource
+
+//MARK: - UITableViewDataSource
 
 extension ActionSheetLauncher: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -114,12 +123,12 @@ extension ActionSheetLauncher: UITableViewDelegate {
         return 60
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let option = viewModel.options[indexPath.row]
+//        let option = viewModel.options[indexPath.row]
         UIView.animate(withDuration: 0.5) {
             self.blackView.alpha = 0
             self.showTableView(false)
         } completion: { _ in
-            self.delegate?.didSelect(option: option)
+//            self.delegate?.didSelect(option: option)
         }
     }
 }

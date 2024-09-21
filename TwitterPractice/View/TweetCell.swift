@@ -11,7 +11,6 @@ protocol TweetCellDelegate: AnyObject {
     func handleProfileImageTapped(_ cell: TweetCell)
     func handleReplyTapped(_ cell: TweetCell)
     func handleLikeTapped(_ cell: TweetCell, likeCanceled: Bool)
-    func handleFetchUser(withUsername username: String)
 }
 
 final class TweetCell: BaseCVCell {
@@ -177,5 +176,11 @@ final class TweetCell: BaseCVCell {
         likeButton.isSelected = !tweet.likeUsers.filter({ $0 == userID }).isEmpty
     //        replyLabel.isHidden = viewModel.shouldHideReplyLabel
     //        replyLabel.text = viewModel.replyText
+    }
+    
+    func bind(_ retweet: Retweet) {
+        captionLabel.text = retweet.caption
+        profileImageView.image = UIImage(data: retweet.user.profileImage)
+        infoLabel.text = retweet.user.userName
     }
 }

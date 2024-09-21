@@ -24,13 +24,13 @@ struct TweetService {
                 guard let tweetID = ref.key else { return }
                 userTweetsRef.child(uid).updateChildValues([tweetID: 1], withCompletionBlock: completion)
             }
-        case .reply(let tweet):
-            values["replyingTo"] = tweet.user.username
-            tweetRepliesRef.child(tweet.tweetID).childByAutoId()
-                .updateChildValues(values) { _, ref in
-                    guard let replyKey = ref.key else { return }
-                    userRepliesRef.child(uid).updateChildValues([tweet.tweetID: replyKey], withCompletionBlock: completion)
-                }
+        case .reply(let tweet): break
+//            values["replyingTo"] = tweet.user.username
+//            tweetRepliesRef.child(tweet.tweetID).childByAutoId()
+//                .updateChildValues(values) { _, ref in
+//                    guard let replyKey = ref.key else { return }
+//                    userRepliesRef.child(uid).updateChildValues([tweet.tweetID: replyKey], withCompletionBlock: completion)
+//                }
         }
     }
     func fetchTweets(completion: @escaping([TweetInfo]) -> Void) {

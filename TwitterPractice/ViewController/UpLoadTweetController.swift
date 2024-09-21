@@ -6,10 +6,11 @@
 //
 
 import UIKit
+import Firebase
 
 enum UPloadTweetConfiguration {
     case tweet
-    case reply(TweetInfo)
+    case reply(Tweet)
 }
 
 final class UploadTweetViewController: BaseViewController {
@@ -107,15 +108,13 @@ final class UploadTweetViewController: BaseViewController {
         switch config {
         case .tweet:
             actionButton.setTitle("Tweet", for: .normal)
-            captionTextView.placeholderLabel.text = "What's happening"
+            captionTextView.placeholderLabel.text = "무슨 일이 일어났나요?"
             replyLabel.isHidden = true
         case .reply(let tweet):
             actionButton.setTitle("Reply", for: .normal)
-            captionTextView.placeholderLabel.text = "Tweet your reply"
+            captionTextView.placeholderLabel.text = "리트윗을 작성해 주세요."
             replyLabel.isHidden = false
-            #warning("나중에 reply config 설정시 추가하기")
-//            replyText = "Replying to @\(tweet.user.username)"
-//            replyLabel.text = replyText
+            replyLabel.text = "Replying to @\(tweet.user.userName)"
         }
     }
     // MARK: - Selectors
@@ -124,36 +123,66 @@ final class UploadTweetViewController: BaseViewController {
         dismiss(animated: true, completion: nil)
     }
     @objc func handleUploadTweet() {
-        guard let caption = captionTextView.text else { return }
-        Task {
-            guard let userID = UserDefaults.fecthUserID() else { return }
-            let user = try await NetworkManager.requestUser(userID: userID)
-            let id = UUID().uuidString
-            try await NetworkManager.tweetCollection.document(id).setData([
-                "caption": caption,
-                "likes": 0,
-                "timeStamp": Date(),
-                "likeUsers": [],
-                "id": id,
-                "user": [
-                    "email": user.email,
-                    "fullName": user.fullName,
-                    "password": user.password,
-                    "profileImage": user.profileImage,
-                    "userName": user.userName,
-                    "follow": [],
-                    "following": []
-                ]
-            ])
-            self.dismiss(animated: true)
+        switch config {
+        case .tweet:
+            guard let caption = captionTextView.text else { return }
+            Task {
+                guard let userID = UserDefaults.fecthUserID() else { return }
+                let user = try await NetworkManager.requestUser(userID: userID)
+                let id = UUID().uuidString
+                try await NetworkManager.tweetCollection.document(id).setData([
+                    "caption": caption,
+                    "likes": 0,
+                    "timeStamp": Date(),
+                    "retweets": [],
+                    "likeUsers": [],
+                    "id": id,
+                    "user": [
+                        "email": user.email,
+                        "fullName": user.fullName,
+                        "password": user.password,
+                        "profileImage": user.profileImage,
+                        "userName": user.userName,
+                        "follow": [],
+                        "following": []
+                    ]
+                ])
+                self.dismiss(animated: true)
+            }
+        case .reply(let tweet):
+            guard let caption = captionTextView.text else { return }
+            Task {
+                guard let userID = UserDefaults.fecthUserID() else { return }
+                let user = try await NetworkManager.requestUser(userID: userID)
+                do {
+                    let retweet = [[
+                        "caption": caption,
+                        "id": UUID().uuidString,
+                        "likeUsers": [],
+                        "likes": 0,
+                        "timeStamp": Date(),
+                        "user": [
+                            "email": user.email,
+                            "fullName": user.fullName,
+                            "password": user.password,
+                            "profileImage": user.profileImage,
+                            "userName": user.userName,
+                            "follow": [],
+                            "following": []
+                        ]
+                    ]]
+                    try await NetworkManager.tweetCollection.document(tweet.id).updateData(
+                        ["retweets": FieldValue.arrayUnion(retweet)]
+                    )
+                } catch {
+                    print(error)
+                }
+                
+                self.dismiss(animated: true)
+            }
         }
+        
     }
-    #warning("나중에 리트윗 기능넣을때 고려할것")
-    //            if case .reply(let tweet) = self.config {
-    //                NotificationService.shared.uploadNotification(toUser: tweet.user,
-    //                                                              type: .reply,
-    //                                                              tweetID: tweet.tweetID)
-    //            }
     // MARK: - API
     
     func requestUser() {

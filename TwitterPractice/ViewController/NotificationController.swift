@@ -86,10 +86,10 @@ extension NotificationController {
         let notification = notifications[indexPath.row]
         guard let tweetID = notification.tweetID else { return }
         
-        TweetService.shared.fetchTweet(withTweetID: tweetID) { tweet in
-            let controller = TweetController(tweet: tweet)
-            self.navigationController?.pushViewController(controller, animated: true)
-        }
+//        TweetService.shared.fetchTweet(withTweetID: tweetID) { tweet in
+////            let controller = TweetController(tweet: tweet)
+//            self.navigationController?.pushViewController(controller, animated: true)
+//        }
     }
 }
 // MARK: - NotificationCellDelegate

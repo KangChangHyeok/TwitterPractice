@@ -14,8 +14,19 @@ struct Tweet: Codable, Hashable {
     let caption: String
     var likeUsers: [String]
     var likes: Int
+    let retweets: [Retweet]
     let timeStamp: Date
     var user: User
+}
+
+
+struct Retweet: Codable, Hashable {
+    let user: User
+    let id: String
+    let caption: String
+    var likeUsers: [String]
+    var likes: Int
+    let timeStamp: Date
 }
 
 struct TweetInfo {

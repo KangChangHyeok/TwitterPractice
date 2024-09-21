@@ -13,8 +13,6 @@ extension UIButton {
         self.setImage(.init(named: imageName), for: .normal)
         self.tintColor = .darkGray
     }
-    
-    
 }
 
 

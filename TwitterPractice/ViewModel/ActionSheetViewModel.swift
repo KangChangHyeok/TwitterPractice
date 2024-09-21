@@ -8,35 +8,37 @@
 import UIKit
 
 struct ActionSheetViewModel {
-    private let user: UserInfo
+    private let user: User
     var options: [ActionSheetOptions] {
         var results = [ActionSheetOptions]()
-        if user.isCurrentUser {
+        
+        guard let userID = UserDefaults.fecthUserID() else { return [.blockUser] }
+        if user.email == userID {
             results.append(.delete)
         } else {
-            let followOption: ActionSheetOptions = user.isFollowed ? .unfollow(user) : .follow(user)
-            results.append(followOption)
+//            let followOption: ActionSheetOptions = user.isFollowed ? .unfollow(user) : .follow(user)
+//            results.append(followOption)
         }
         results.append(.report)
     return results
     }
-    init(user: UserInfo) {
+    init(user: User) {
         self.user = user
     }
 }
 
 enum ActionSheetOptions {
-    case follow(UserInfo)
-    case unfollow(UserInfo)
+    case follow(User)
+    case unfollow(User)
     case report
     case delete
     case blockUser
     var description: String {
         switch self {
         case .follow(let user):
-            return "Follow @\(user.username)"
+            return "Follow @\(user.userName)"
         case .unfollow(let user):
-            return "UnFollow @\(user.username)"
+            return "UnFollow @\(user.userName)"
         case .report:
             return "Report Tweet"
         case .delete:
