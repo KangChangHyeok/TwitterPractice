@@ -5,10 +5,6 @@
 | 유저 검색 | 유저 프로필 | 유저 목록 |  
 <img src = "https://github.com/user-attachments/assets/9bbce1b8-4cea-437c-8338-39b4520e5e6e" witdh = 200> | ![유저 프로필](https://github.com/KangChangHyeok/TwitterPractice/assets/89637673/3b934872-dd5e-4801-80af-d5e8cbcc2d96) | ![유저 목록, 검색](https://github.com/KangChangHyeok/TwitterPractice/assets/89637673/8dfc1097-9638-418f-8b55-9d85cbb75a5e)
 
-![Simulator Screen Recording - iPhone 16 - 2024-11-12 at 22 56 14]()
-https://github.com/user-attachments/assets/9bbce1b8-4cea-437c-8338-39b4520e5e6e
-
-
 ## 개요
 - [유데미 트위터 클론코딩 강의](https://www.udemy.com/course/twitter-ios-clone-swift)를 보고 따라하면서 만든 프로젝트.
 - 클론하며 따라 쳤지만, 코딩 이후 코드를 읽으면서 이해하기 위해 노력했습니다.
