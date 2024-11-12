@@ -1,10 +1,9 @@
 ## 트위터 클론 프로젝트
 | 로그인 | 회원가입 | 트윗 작성 | 
-| :---: | :--: | :--: |
-| <img src = "https://github.com/KangChangHyeok/TwitterPractice/assets/89637673/f5dfc1ff-af5a-4d03-b75f-60ac9d1506be" width = 200 height = 400> | <img src = https://github.com/KangChangHyeok/TwitterPractice/assets/89637673/e4160f90-eaa2-4964-8376-abfe99bd5b88 width = 200 height = 400> | <img src = "https://github.com/user-attachments/assets/aa5ac40f-16c7-4c15-ae37-2e6ad869ef9d" width = 200 height = 400> |
-| 트윗 보내기 | 유저 프로필 | 유저 목록 |  
 | :--: | :--: | :--: |
-(https://github.com/KangChangHyeok/TwitterPractice/assets/89637673/c842eee5-b517-4ee7-b5f2-e4592360a329) | ![유저 프로필](https://github.com/KangChangHyeok/TwitterPractice/assets/89637673/3b934872-dd5e-4801-80af-d5e8cbcc2d96) | ![유저 목록, 검색](https://github.com/KangChangHyeok/TwitterPractice/assets/89637673/8dfc1097-9638-418f-8b55-9d85cbb75a5e)
+| <img src = "https://github.com/user-attachments/assets/aa5ac40f-16c7-4c15-ae37-2e6ad869ef9d" witdh = 200> | <img src = https://github.com/KangChangHyeok/TwitterPractice/assets/89637673/e4160f90-eaa2-4964-8376-abfe99bd5b88> | <img src = "https://github.com/user-attachments/assets/aa5ac40f-16c7-4c15-ae37-2e6ad869ef9d"> |
+| 트윗 보내기 | 유저 프로필 | 유저 목록 |  
+<img src = "https://github.com/user-attachments/assets/aa5ac40f-16c7-4c15-ae37-2e6ad869ef9d" witdh = 200> | ![유저 프로필](https://github.com/KangChangHyeok/TwitterPractice/assets/89637673/3b934872-dd5e-4801-80af-d5e8cbcc2d96) | ![유저 목록, 검색](https://github.com/KangChangHyeok/TwitterPractice/assets/89637673/8dfc1097-9638-418f-8b55-9d85cbb75a5e)
 
 
 
