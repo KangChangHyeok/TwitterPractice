@@ -1,9 +1,9 @@
 ## 트위터 클론 프로젝트
 | 로그인 | 회원가입 | 트윗 작성 | 
 | :--: | :--: | :--: |
-| <img src = "https://github.com/user-attachments/assets/a41fc939-029d-4c33-bbe4-7bbe0c8a15f6"> | <img src = https://github.com/KangChangHyeok/TwitterPractice/assets/89637673/e4160f90-eaa2-4964-8376-abfe99bd5b88> | <img src = "https://github.com/user-attachments/assets/aa5ac40f-16c7-4c15-ae37-2e6ad869ef9d"> |
-| 유저 검색 | 유저 프로필 | 유저 목록 |  
-<img src = "https://github.com/user-attachments/assets/9bbce1b8-4cea-437c-8338-39b4520e5e6e" witdh = 200> | ![유저 프로필](https://github.com/KangChangHyeok/TwitterPractice/assets/89637673/3b934872-dd5e-4801-80af-d5e8cbcc2d96) | ![유저 목록, 검색](https://github.c![Simulator Screen Recording - 
+| <img src = "https://github.com/user-attachments/assets/a41fc939-029d-4c33-bbe4-7bbe0c8a15f6"> | <img src = "https://github.com/user-attachments/assets/bac62146-6200-4f48-a1df-6075badc87fc"> | <img src = "https://github.com/user-attachments/assets/aa5ac40f-16c7-4c15-ae37-2e6ad869ef9d"> |
+| 유저 검색 | 유저 프로필 |  |  
+<img src = "https://github.com/user-attachments/assets/9bbce1b8-4cea-437c-8338-39b4520e5e6e" witdh = 200> | ![유저 프로필](https://github.com/user-attachments/assets/e6d6b556-8288-441b-a910-af0518c0e24d) | ![유저 목록, 검색](https://github.c![Simulator Screen Recording - 
 
 ## 개요
 - [유데미 트위터 클론코딩 강의](https://www.udemy.com/course/twitter-ios-clone-swift)를 보고 따라하면서 만든 프로젝트.
@@ -25,6 +25,7 @@
 - MVVM
 
 
+![Simulator Screen Recording - iPhone 16 - 2024-11-13 at 21 25 22]()
 
 
 
