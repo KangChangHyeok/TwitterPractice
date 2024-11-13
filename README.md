@@ -1,9 +1,9 @@
 ## 트위터 클론 프로젝트
 | 로그인 | 회원가입 | 트윗 작성 | 
 | :--: | :--: | :--: |
-| <img src = "https://github.com/user-attachments/assets/aa5ac40f-16c7-4c15-ae37-2e6ad869ef9d" witdh = 200> | <img src = https://github.com/KangChangHyeok/TwitterPractice/assets/89637673/e4160f90-eaa2-4964-8376-abfe99bd5b88> | <img src = "https://github.com/user-attachments/assets/aa5ac40f-16c7-4c15-ae37-2e6ad869ef9d"> |
+| <img src = "https://github.com/user-attachments/assets/a41fc939-029d-4c33-bbe4-7bbe0c8a15f6"> | <img src = https://github.com/KangChangHyeok/TwitterPractice/assets/89637673/e4160f90-eaa2-4964-8376-abfe99bd5b88> | <img src = "https://github.com/user-attachments/assets/aa5ac40f-16c7-4c15-ae37-2e6ad869ef9d"> |
 | 유저 검색 | 유저 프로필 | 유저 목록 |  
-<img src = "https://github.com/user-attachments/assets/9bbce1b8-4cea-437c-8338-39b4520e5e6e" witdh = 200> | ![유저 프로필](https://github.com/KangChangHyeok/TwitterPractice/assets/89637673/3b934872-dd5e-4801-80af-d5e8cbcc2d96) | ![유저 목록, 검색](https://github.com/KangChangHyeok/TwitterPractice/assets/89637673/8dfc1097-9638-418f-8b55-9d85cbb75a5e)
+<img src = "https://github.com/user-attachments/assets/9bbce1b8-4cea-437c-8338-39b4520e5e6e" witdh = 200> | ![유저 프로필](https://github.com/KangChangHyeok/TwitterPractice/assets/89637673/3b934872-dd5e-4801-80af-d5e8cbcc2d96) | ![유저 목록, 검색](https://github.c![Simulator Screen Recording - 
 
 ## 개요
 - [유데미 트위터 클론코딩 강의](https://www.udemy.com/course/twitter-ios-clone-swift)를 보고 따라하면서 만든 프로젝트.
