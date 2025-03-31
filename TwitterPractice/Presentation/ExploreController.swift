@@ -43,7 +43,7 @@ final class ExploreController: BaseViewController {
     
     // MARK: - Set
     
-    override func setDefaults(at viewController: UIViewController) {
+    override func setupDefaults(at viewController: UIViewController) {
         viewController.view.backgroundColor = .white
         viewController.navigationItem.title = "Explore"
         navigationItem.searchController = searchController
@@ -52,11 +52,11 @@ final class ExploreController: BaseViewController {
         fetchUsers()
     }
     
-    override func setHierarchy(at view: UIView) {
+    override func setupHierarchy(at view: UIView) {
         view.addSubview(userCollectionView)
     }
     
-    override func setLayout(at view: UIView) {
+    override func setupLayout(at view: UIView) {
         userCollectionView.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
             make.bottom.equalTo(view.safeAreaLayoutGuide)

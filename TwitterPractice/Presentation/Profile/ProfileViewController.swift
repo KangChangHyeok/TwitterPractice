@@ -10,7 +10,7 @@ import FirebaseAuth
 
 private let headerIdentifier = "ProfileHeader"
 
-final class ProfileController: BaseViewController {
+final class ProfileViewController: BaseViewController {
     
     // MARK: - Properties
     
@@ -47,19 +47,19 @@ final class ProfileController: BaseViewController {
     
     // MARK: - Set
     
-    override func setDefaults(at viewController: UIViewController) {
+    override func setupDefaults(at viewController: UIViewController) {
         configureDataSource()
         requestUserTweets()
     }
     
-    override func setHierarchy(at view: UIView) {
+    override func setupHierarchy(at view: UIView) {
         view.addSubview(tweetCollectionView)
     }
     
-    override func setLayout(at view: UIView) {
+    override func setupLayout(at view: UIView) {
         tweetCollectionView.snp.makeConstraints { make in
             make.top.equalToSuperview()
-            make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.leading.trailing.bottom.equalToSuperview()
         }
     }
     // MARK: - LifeCycle
@@ -68,12 +68,20 @@ final class ProfileController: BaseViewController {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.barStyle = .black
         navigationController?.setNavigationBarHidden(true, animated: true)
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+        navigationController?.interactivePopGestureRecognizer?.delegate = self
         let mainTab = tabBarController as? MainTabController
         mainTab?.setTweetButtonIsHidden(true)
+        tabBarController?.tabBar.isHidden = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.interactivePopGestureRecognizer?.delegate = nil
     }
     
     func configureDataSource() {
-        let profileHeaderRegisteration = UICollectionView.SupplementaryRegistration<ProfileHeader>(elementKind: "ProfileHeader") { [weak self] supplementaryView, elementKind, indexPath in
+        let profileHeaderRegisteration = UICollectionView.SupplementaryRegistration<ProfileHeaderView>(elementKind: "ProfileHeader") { [weak self] supplementaryView, elementKind, indexPath in
             supplementaryView.bind(user: self?.user)
             supplementaryView.delegate = self
         }
@@ -160,7 +168,7 @@ final class ProfileController: BaseViewController {
 
 // MARK: - UICollectionViewDelegate
 
-extension ProfileController: UICollectionViewDelegate {
+extension ProfileViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 //        let controller = TweetController(tweet: currentDataSource[indexPath.row])
@@ -168,15 +176,13 @@ extension ProfileController: UICollectionViewDelegate {
     }
 }
 
-extension ProfileController: ProfileHeaderDelegate {
+extension ProfileViewController: ProfileHeaderViewDelegate {
     
-    func profileEditButtonDidTap(_ button: UIButton, user: User?) {
-        let profileEditNavi = UINavigationController(rootViewController: ProfileEditController(user: user))
-        profileEditNavi.modalPresentationStyle = .overFullScreen
-        self.present(profileEditNavi, animated: true)
+    func backButtonDidTap(_ button: UIButton) {
+        navigationController?.popViewController(animated: true)
     }
     
-    func didSelect(filter: ProfileFilterOptions) {
+    func filterDidTap(_ filter: ProfileFilterOptions) {
         self.option = filter
         switch option {
         case .tweets:
@@ -188,36 +194,22 @@ extension ProfileController: ProfileHeaderDelegate {
         }
     }
     
-    func handleEditProfileFollow(_ header: ProfileHeader) {
-//        if user.isCurrentUser {
-//            let controller = EditProfileController(user: user)
-//            controller.delegate = self
-//            let nav = UINavigationController(rootViewController: controller)
-//            nav.modalPresentationStyle = .fullScreen
-//            present(nav, animated: true)
-//            return
-//        }
-//        if user.isFollowed {
-//            UserService.shared.unfollowUser(uid: user.uid) { _, _ in
-//                self.user.isFollowed = false
-//                self.collectionView.reloadData()
-//            }
-//        } else {
-//            UserService.shared.followUser(uid: user.uid) { _, _ in
-//                self.user.isFollowed = true
-//                self.collectionView.reloadData()
-//                NotificationService.shared.uploadNotification(toUser: self.user, type: .follow)
-//            }
-//        }
+    func profileEditButtonDidTap(_ button: UIButton, user: User?) {
+        let profileEditNavi = UINavigationController(rootViewController: ProfileEditController(user: user))
+        profileEditNavi.modalPresentationStyle = .overFullScreen
+        self.present(profileEditNavi, animated: true)
     }
-    func backButtonDidTap() {
-        navigationController?.popViewController(animated: true)
+    
+    
+    
+    func handleEditProfileFollow(_ header: ProfileHeaderView) {
     }
+    
 }
 
 // MARK: - TweetCellDelegate
 
-extension ProfileController: TweetCellDelegate {
+extension ProfileViewController: TweetCellDelegate {
     
     func handleProfileImageTapped(_ cell: TweetCell) { return }
     
@@ -261,5 +253,11 @@ extension ProfileController: TweetCellDelegate {
     
     func handleFetchUser(withUsername username: String) {
         
+    }
+}
+
+extension ProfileViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }

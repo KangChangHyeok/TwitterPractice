@@ -39,16 +39,16 @@ final class TweetController: BaseViewController {
     
     // MARK: - Set
     
-    override func setDefaults(at viewController: UIViewController) {
+    override func setupDefaults(at viewController: UIViewController) {
         configureDataSource()
         applySnapShot()
     }
     
-    override func setHierarchy(at view: UIView) {
+    override func setupHierarchy(at view: UIView) {
         view.addSubview(retweetsCollectionView)
     }
     
-    override func setLayout(at view: UIView) {
+    override func setupLayout(at view: UIView) {
         retweetsCollectionView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.leading.trailing.equalToSuperview()

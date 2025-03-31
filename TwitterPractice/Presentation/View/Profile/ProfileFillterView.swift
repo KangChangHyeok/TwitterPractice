@@ -10,12 +10,13 @@ import UIKit
 private let reuseIdentifier = "ProfileFilterCell"
 
 protocol ProfileFilterViewDelegate: AnyObject {
-    func filterView(_ view: ProfileFillterView, didSelect index: Int)
+    func filterViewDidTap(_ view: ProfileFillterView, didSelect index: Int)
 }
 
-class ProfileFillterView: UIView {
+final class ProfileFillterView: UIView {
     // MARK: - Properties
     weak var delegate: ProfileFilterViewDelegate?
+    
     lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)

@@ -11,18 +11,18 @@ class BaseReusableView: UICollectionReusableView {
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        setDefaults(at: self)
-        setHierarchy(at: self)
-        setLayout(at: self)
+        setupDefaults()
+        setupHierarchy()
+        setupLayout()
     }
     
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    open func setDefaults(at view: UIView) {}
+    open func setupDefaults() {}
     
-    open func setHierarchy(at view: UIView) {}
+    open func setupHierarchy() {}
     
-    open func setLayout(at view: UIView) {}
+    open func setupLayout() {}
 }

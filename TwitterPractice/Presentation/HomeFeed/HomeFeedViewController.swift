@@ -9,7 +9,7 @@ import UIKit
 import SwiftUI
 import SDWebImage
 
-final class FeedViewController: BaseViewController {
+final class HomeFeedViewController: BaseViewController {
     
     private enum Section {
         case main
@@ -44,7 +44,7 @@ final class FeedViewController: BaseViewController {
     
     // MARK: - Set
     
-    override func setDefaults(at viewController: UIViewController) {
+    override func setupDefaults(at viewController: UIViewController) {
         viewController.view.backgroundColor = .white
         let appearance = UINavigationBarAppearance()
         appearance.backgroundColor = .white
@@ -56,11 +56,11 @@ final class FeedViewController: BaseViewController {
         configureDataSource()
     }
     
-    override func setHierarchy(at view: UIView) {
+    override func setupHierarchy(at view: UIView) {
         view.addSubview(tweetCollectionView)
     }
     
-    override func setLayout(at view: UIView) {
+    override func setupLayout(at view: UIView) {
         tweetCollectionView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
@@ -75,6 +75,7 @@ final class FeedViewController: BaseViewController {
         navigationController?.setNavigationBarHidden(false, animated: true)
         let mainTab = tabBarController as? MainTabController
         mainTab?.setTweetButtonIsHidden(false)
+        tabBarController?.tabBar.isHidden = false
     }
     
     func createTweetCollectionViewLayout() -> UICollectionViewLayout {
@@ -107,6 +108,7 @@ final class FeedViewController: BaseViewController {
         Task {
             guard let userID = UserDefaults.fecthUserID() else { return }
             self.user = try await NetworkManager.requestUser(userID: userID)
+            print(self.user)
         }
     }
     
@@ -127,7 +129,8 @@ final class FeedViewController: BaseViewController {
     }
     
     @objc func handleProfileImageTap() {
-        let controller = ProfileController(user: self.user)
+        let controller = ProfileViewController(user: self.user)
+        tabBarController?.tabBar.isHidden = true
         navigationController?.pushViewController(controller, animated: true)
     }
     
@@ -169,7 +172,7 @@ final class FeedViewController: BaseViewController {
 
 // MARK: - UICollectionViewDelegate/DataSource
 
-extension FeedViewController: UICollectionViewDelegate {
+extension HomeFeedViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let tweet = dataSource?.snapshot().itemIdentifiers[indexPath.row] else { return }
         let controller = TweetController(tweet: tweet)
@@ -179,7 +182,7 @@ extension FeedViewController: UICollectionViewDelegate {
 
 // MARK: - TweetCellDelegate
 
-extension FeedViewController: TweetCellDelegate {
+extension HomeFeedViewController: TweetCellDelegate {
     
     func handleLikeTapped(_ cell: TweetCell, likeCanceled: Bool) {
         guard let indexPath = cell.indexPath,
@@ -216,7 +219,7 @@ extension FeedViewController: TweetCellDelegate {
         // 내 트윗을 눌렀으면 내 유저 객체 보내주고 아니면 해당 트윗의 유저 정보 보내주기
         guard let indexPath = cell.indexPath else { return }
         let selectedTweetUser = dataSource?.snapshot().itemIdentifiers[indexPath.row].user
-        let controller = ProfileController(user: selectedTweetUser)
+        let controller = ProfileViewController(user: selectedTweetUser)
         navigationController?.pushViewController(controller, animated: true)
     }
     

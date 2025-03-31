@@ -9,16 +9,16 @@ import UIKit
 
 import Firebase
 
-protocol ProfileHeaderDelegate: AnyObject {
-    func backButtonDidTap()
-    func didSelect(filter: ProfileFilterOptions)
+protocol ProfileHeaderViewDelegate: AnyObject {
+    func backButtonDidTap(_ button: UIButton)
+    func filterDidTap(_ filter: ProfileFilterOptions)
     func profileEditButtonDidTap(_ button: UIButton, user: User?)
 }
 
-final class ProfileHeader: UICollectionReusableView {
+final class ProfileHeaderView: BaseReusableView {
     // MARK: - Properties
     
-    weak var delegate: ProfileHeaderDelegate?
+    weak var delegate: ProfileHeaderViewDelegate?
     
     private var user: User?
     
@@ -43,14 +43,14 @@ final class ProfileHeader: UICollectionReusableView {
     }()
     
     private let profileImageView: UIImageView = {
-        let iv = UIImageView()
-        iv.contentMode = .scaleAspectFit
-        iv.clipsToBounds = true
-        iv.layer.cornerRadius = 48 / 2
-        iv.backgroundColor = .lightGray
-        iv.layer.borderColor = UIColor.white.cgColor
-        iv.layer.borderWidth = 4
-        return iv
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 48 / 2
+        imageView.backgroundColor = .lightGray
+        imageView.layer.borderColor = UIColor.white.cgColor
+        imageView.layer.borderWidth = 4
+        return imageView
     }()
     
     lazy var editProfileFollowButton: UIButton = {
@@ -67,6 +67,14 @@ final class ProfileHeader: UICollectionReusableView {
         button.setTitle("팔로잉", for: .selected)
         return button
     }()
+    
+    private lazy var userDetailStackView = UIStackView(
+        arrangedSubviews: [fullnameLabel, usernameLabel, bioLabel]
+    ).configure {
+        $0.axis = .vertical
+        $0.distribution = .fillProportionally
+        $0.spacing = 4
+    }
     
     private let fullnameLabel: UILabel = {
         let label = UILabel()
@@ -88,34 +96,50 @@ final class ProfileHeader: UICollectionReusableView {
         return label
     }()
     
+    private lazy var followStackView = UIStackView(arrangedSubviews: [followLabel, followingLabel]).configure {
+        $0.axis = .horizontal
+        $0.spacing = 8
+        $0.distribution = .fillEqually
+    }
+    
     private lazy var followLabel: UILabel = {
         let label = UILabel()
         label.text = "0 팔로우"
         return label
     }()
+    
     private lazy var followingLabel: UILabel = {
         let label = UILabel()
         label.text = "0 팔로잉"
         return label
     }()
     
-    // MARK: - LifeCycle
+    //MARK: - Setup
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override func setupDefaults() {
         filterBar.delegate = self
+    }
+    
+    override func setupHierarchy() {
         addSubview(filterBar)
+        addSubview(containerView)
+        addSubview(profileImageView)
+        addSubview(editProfileFollowButton)
+        addSubview(userDetailStackView)
+        addSubview(followStackView)
+    }
+    
+    override func setupLayout() {
         filterBar.anchor(left: leftAnchor,
                          bottom: bottomAnchor,
-                         right: rightAnchor, 
+                         right: rightAnchor,
                          height: 50)
         
-        addSubview(containerView)
         containerView.anchor(top: topAnchor,
                              left: leftAnchor,
                              right: rightAnchor,
                              height: 108)
-        addSubview(profileImageView)
+        
         
         profileImageView.anchor(top: containerView.bottomAnchor,
                                 left: leftAnchor,
@@ -124,7 +148,6 @@ final class ProfileHeader: UICollectionReusableView {
         profileImageView.setDimensions(width: 80, height: 80)
         profileImageView.layer.cornerRadius = 80 / 2
         
-        addSubview(editProfileFollowButton)
         editProfileFollowButton.anchor(top: containerView.bottomAnchor,
                                        right: rightAnchor,
                                        paddingTop: 12,
@@ -132,35 +155,22 @@ final class ProfileHeader: UICollectionReusableView {
         editProfileFollowButton.setDimensions(width: 100, height: 36)
         editProfileFollowButton.layer.cornerRadius = 36 / 2
         
-        let userDetailStack = UIStackView(arrangedSubviews: [fullnameLabel,
-                                                             usernameLabel,
-                                                             bioLabel])
-        userDetailStack.axis = .vertical
-        userDetailStack.distribution = .fillProportionally
-        userDetailStack.spacing = 4
-        addSubview(userDetailStack)
-        userDetailStack.anchor(top: profileImageView.bottomAnchor,
+        userDetailStackView.anchor(top: profileImageView.bottomAnchor,
                                left: leftAnchor,
                                right: rightAnchor,
                                paddingTop: 8,
                                paddingLeft: 12,
                                paddingRight: 12)
         
-        let followStack = UIStackView(arrangedSubviews: [followLabel,
-                                                         followingLabel])
-        followStack.axis = .horizontal
-        followStack.spacing = 8
-        followStack.distribution = .fillEqually
-        addSubview(followStack)
-        followStack.anchor(top: userDetailStack.bottomAnchor,
+        
+        
+        followStackView.anchor(top: userDetailStackView.bottomAnchor,
                            left: leftAnchor,
                            paddingTop: 8,
                            paddingLeft: 12)
-        
     }
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    
+    //MARK: - Bind
     
     func bind(user: User?) {
         guard let user = user else { return }
@@ -183,8 +193,8 @@ final class ProfileHeader: UICollectionReusableView {
         }
     }
     // MARK: - Selectors
-    @objc func backButtonDidTap() {
-        delegate?.backButtonDidTap()
+    @objc func backButtonDidTap(sender: UIButton) {
+        delegate?.backButtonDidTap(sender)
     }
 
     @objc func handleEditProfileFollow() {
@@ -245,9 +255,9 @@ final class ProfileHeader: UICollectionReusableView {
 
 // MARK: - ProfileFilterViewDelegate
 
-extension ProfileHeader: ProfileFilterViewDelegate {
-    func filterView(_ view: ProfileFillterView, didSelect index: Int) {
+extension ProfileHeaderView: ProfileFilterViewDelegate {
+    func filterViewDidTap(_ view: ProfileFillterView, didSelect index: Int) {
         guard let filter = ProfileFilterOptions(rawValue: index) else { return }
-        delegate?.didSelect(filter: filter)
+        delegate?.filterDidTap(filter)
     }
 }
