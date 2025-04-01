@@ -77,7 +77,7 @@ extension ProfileFillterView: UICollectionViewDelegate {
         UIView.animate(withDuration: 0.3) {
             self.underlineView.frame.origin.x = xPosition
         }
-        delegate?.filterView(self, didSelect: indexPath.row)
+        delegate?.filterViewDidTap(self, didSelect: indexPath.row)
     }
 }
 

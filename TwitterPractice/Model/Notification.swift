@@ -19,7 +19,6 @@ struct Notification {
     var tweetID: String?
     var timestamp: Date!
     var user: UserInfo
-    var tweet: TweetInfo?
     var type: NotificationType!
     init(user: UserInfo, dictionary: [String: AnyObject]) {
         self.user = user

@@ -23,7 +23,7 @@ final class HomeFeedViewController: BaseViewController {
         }
     }
     
-    private var dataSource: UICollectionViewDiffableDataSource<Section, Tweet>?
+    private var dataSource: UICollectionViewDiffableDataSource<Section, TweetDTO>?
     
     // MARK: - UI
     
@@ -93,12 +93,12 @@ final class HomeFeedViewController: BaseViewController {
     }
     
     func configureDataSource() {
-        let tweetCellRegisteration = UICollectionView.CellRegistration<TweetCell, Tweet> { cell, indexPath, tweet in
+        let tweetCellRegisteration = UICollectionView.CellRegistration<TweetCell, TweetDTO> { cell, indexPath, tweet in
             cell.bind(tweet: tweet)
             cell.delegate = self
         }
         
-        let dataSource = UICollectionViewDiffableDataSource<Section, Tweet>(collectionView: tweetCollectionView) { collectionView, indexPath, tweet in
+        let dataSource = UICollectionViewDiffableDataSource<Section, TweetDTO>(collectionView: tweetCollectionView) { collectionView, indexPath, tweet in
             return collectionView.dequeueConfiguredReusableCell(using: tweetCellRegisteration, for: indexPath, item: tweet)
         }
         self.dataSource = dataSource
@@ -108,7 +108,6 @@ final class HomeFeedViewController: BaseViewController {
         Task {
             guard let userID = UserDefaults.fecthUserID() else { return }
             self.user = try await NetworkManager.requestUser(userID: userID)
-            print(self.user)
         }
     }
     
@@ -117,9 +116,10 @@ final class HomeFeedViewController: BaseViewController {
     @objc func handleRefresh() {
         Task {
             refreshControl.beginRefreshing()
-            let tweets = try await NetworkManager.tweetCollection.getDocuments().documents.map { try $0.data(as: Tweet.self) }
-            
-            var snapShot = NSDiffableDataSourceSnapshot<Section, Tweet>()
+            let tweets = try await NetworkManager.tweetCollection.getDocuments().documents
+                .map { try $0.data(as: TweetDTO.self) }
+                .sorted { $0.timeStamp > $1.timeStamp }
+            var snapShot = NSDiffableDataSourceSnapshot<Section, TweetDTO>()
             snapShot.appendSections([.main])
             snapShot.appendItems(tweets)
             
@@ -147,7 +147,7 @@ final class HomeFeedViewController: BaseViewController {
         profileImageView.addGestureRecognizer(tap)
         
         profileImageView.image = .init(data: user.profileImage)
-
+        
         navigationController?.navigationBar.barStyle = .default
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: profileImageView)
     }
@@ -155,8 +155,10 @@ final class HomeFeedViewController: BaseViewController {
     func requestTweets() {
         Task {
             do {
-                let tweets = try await NetworkManager.tweetCollection.getDocuments().documents.map { try $0.data(as: Tweet.self) }
-                var snapShot = NSDiffableDataSourceSnapshot<Section, Tweet>()
+                let tweets = try await NetworkManager.tweetCollection.getDocuments().documents
+                    .map { try $0.data(as: TweetDTO.self) }
+                    .sorted { $0.timeStamp > $1.timeStamp }
+                var snapShot = NSDiffableDataSourceSnapshot<Section, TweetDTO>()
                 snapShot.appendSections([.main])
                 snapShot.appendItems(tweets)
                 await dataSource?.apply(snapShot, animatingDifferences: true)

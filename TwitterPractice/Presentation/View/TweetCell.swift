@@ -167,7 +167,7 @@ final class TweetCell: BaseCVCell {
     @objc func handleShareTapped() { }
     // MARK: - Helpers
 
-    func bind(tweet: Tweet) {
+    func bind(tweet: TweetDTO) {
         captionLabel.text = tweet.caption
         profileImageView.image = UIImage(data: tweet.user.profileImage)
         infoLabel.text = tweet.user.userName
@@ -178,7 +178,7 @@ final class TweetCell: BaseCVCell {
     //        replyLabel.text = viewModel.replyText
     }
     
-    func bind(_ retweet: Retweet) {
+    func bind(_ retweet: TweetDTO) {
         captionLabel.text = retweet.caption
         profileImageView.image = UIImage(data: retweet.user.profileImage)
         infoLabel.text = retweet.user.userName

@@ -15,9 +15,9 @@ final class TweetController: BaseViewController {
 
     // MARK: - Properties
     
-    private let tweet: Tweet
+    private let tweet: TweetDTO
     private var actionSheetLauncher: ActionSheetLauncher!
-    private var dataSource: UICollectionViewDiffableDataSource<Int, Retweet>?
+    private var dataSource: UICollectionViewDiffableDataSource<Int, TweetDTO>?
     // MARK: - UI
     
     private lazy var retweetsCollectionView: UICollectionView = {
@@ -28,7 +28,7 @@ final class TweetController: BaseViewController {
     
     // MARK: - Initializer
     
-    init(tweet: Tweet) {
+    init(tweet: TweetDTO) {
         self.tweet = tweet
         super.init(nibName: nil, bundle: nil)
     }
@@ -37,7 +37,7 @@ final class TweetController: BaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Set
+    // MARK: - Setup
     
     override func setupDefaults(at viewController: UIViewController) {
         configureDataSource()
@@ -61,13 +61,11 @@ final class TweetController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = false
-        navigationController?.navigationBar.barStyle = .default
+        tabBarController?.tabBar.isHidden = true
     }
     
-    // MARK: - Helpers
-    
     func configureDataSource() {
-        let tweetCellRegisteration = UICollectionView.CellRegistration<TweetCell, Retweet> { cell, indexPath, retweet in
+        let tweetCellRegisteration = UICollectionView.CellRegistration<TweetCell, TweetDTO> { cell, indexPath, retweet in
             cell.bind(retweet)
         }
         
@@ -76,7 +74,7 @@ final class TweetController: BaseViewController {
             header.delegate = self
         }
         
-        dataSource = UICollectionViewDiffableDataSource<Int, Retweet>(
+        dataSource = UICollectionViewDiffableDataSource<Int, TweetDTO>(
             collectionView: retweetsCollectionView) { collectionView, indexPath, retweet in
                 return collectionView.dequeueConfiguredReusableCell(using: tweetCellRegisteration, for: indexPath, item: retweet)
         }
@@ -87,9 +85,9 @@ final class TweetController: BaseViewController {
     }
     
     func applySnapShot() {
-        var snapShot = NSDiffableDataSourceSnapshot<Int, Retweet>()
+        var snapShot = NSDiffableDataSourceSnapshot<Int, TweetDTO>()
         snapShot.appendSections([0])
-        snapShot.appendItems(tweet.retweets)
+        snapShot.appendItems(tweet.retweets ?? [])
         Task {
             await dataSource?.apply(snapShot)
         }
@@ -115,47 +113,29 @@ final class TweetController: BaseViewController {
         return layout
     }
     
-    fileprivate func showActionSheet(foruser user: User) {
+    fileprivate func presentActionSheet(foruser user: User) {
         actionSheetLauncher = ActionSheetLauncher(user: user)
         self.actionSheetLauncher.delegate = self
-        self.actionSheetLauncher.show()
+        self.actionSheetLauncher.present()
     }
 }
 
-// MARK: - UICollectionViewDataSource
-
-//extension TweetController {
-//    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        return replies.count
-//    }
-//    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as? TweetCell
-//        guard let cell = cell else { return UICollectionViewCell() }
-////        cell.tweet = replies[indexPath.row]
-//        return cell
-//    }
-//}
-
-// MARK: - UICollectionViewDelegate
-
-//extension TweetController {
-//    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-//        guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerIdentifier, for: indexPath) as? TweetHeader else { return UICollectionReusableView() }
-//        header.bind(tweet)
-//        header.delegate = self
-//        return header
-//    }
-//}
 
 // MARK: - UICollectionViewDelegateFlowLayout
 
 extension TweetController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-//        let viewModel = TweetViewModel(tweet: tweet)
-//        let captionHeight = viewModel.size(forwidth: view.frame.width).height
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        referenceSizeForHeaderInSection section: Int
+    ) -> CGSize {
         return CGSize(width: view.frame.width, height: 260)
     }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
         return CGSize(width: view.frame.width, height: 120)
     }
 }
@@ -169,17 +149,8 @@ extension TweetController: TweetHeaderDelegate {
 //        }
     }
     
-    func showActionSheet() {
-        showActionSheet(foruser: tweet.user)
-//        if tweet.user.isCurrentUser {
-//            showActionSheet(foruser: tweet.user)
-//        } else {
-//            UserService.shared.checkIfUserIsFollowed(uid: tweet.user.uid) { isFollowed in
-//                var user = self.tweet.user
-//                user.isFollowed = isFollowed
-//                self.showActionSheet(foruser: user)
-//            }
-//        }
+    func optionButtonDidTap(_ sender: UIButton) {
+        presentActionSheet(foruser: tweet.user)
     }
 }
 
@@ -195,7 +166,14 @@ extension TweetController: ActionSheetLaunCherDelegate {
         case .report:
             print("Report tweet..")
         case .delete:
-            print("Delete tweet..")
+            Task {
+                do {
+                    try await NetworkManager.tweetCollection.document(tweet.id).delete()
+                    self.navigationController?.popViewController(animated: true)
+                } catch {
+                    print(error)
+                }
+            }
         case .blockUser:
             print("Block User..")
         }

@@ -14,11 +14,11 @@ enum ProfileFilterOptions: Int, CaseIterable {
     var description: String {
         switch self {
         case .tweets:
-            return "Tweets"
+            return "트윗"
         case .replies:
-            return "Tweets & Replies"
+            return "리트윗"
         case .likes:
-            return "Likes"
+            return "좋아요"
         }
     }
 }

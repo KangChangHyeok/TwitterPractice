@@ -33,12 +33,12 @@ class NotificationController: UITableViewController {
     // MARK: - API
     func fetchNotifications() {
         refreshControl?.beginRefreshing()
-        NotificationService.shared.fetchNotification { notifications in
-            
-            self.refreshControl?.endRefreshing()
-            self.notifications = notifications
-            self.checkIfUserIsFollowed(notifications: notifications)
-        }
+//        NotificationService.shared.fetchNotification { notifications in
+//            
+//            self.refreshControl?.endRefreshing()
+//            self.notifications = notifications
+//            self.checkIfUserIsFollowed(notifications: notifications)
+//        }
     }
     func checkIfUserIsFollowed(notifications: [Notification]) {
         guard !notifications.isEmpty else { return }

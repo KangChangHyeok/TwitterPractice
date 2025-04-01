@@ -9,7 +9,7 @@ import UIKit
 
 import SnapKit
 
-final class ExploreController: BaseViewController {
+final class ExploreViewController: BaseViewController {
     
     private enum Section {
         case main
@@ -36,10 +36,9 @@ final class ExploreController: BaseViewController {
     
     // MARK: - UI
     
-    private lazy var userCollectionView: UICollectionView = {
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: createUserCollectionViewLayout())
-        return collectionView
-    }()
+    private lazy var userCollectionView = UICollectionView(frame: .zero, collectionViewLayout: createUserCollectionViewLayout()).configure {
+        $0.delegate = self
+    }
     
     // MARK: - Set
     
@@ -67,7 +66,8 @@ final class ExploreController: BaseViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.navigationBar.isHidden = false
+        navigationController?.setNavigationBarHidden(false, animated: true)
+        tabBarController?.tabBar.isHidden = false
     }
     
     func configureDataSource() {
@@ -113,7 +113,7 @@ final class ExploreController: BaseViewController {
 
 // MARK: - UISearchResultsUpdating
 
-extension ExploreController: UISearchResultsUpdating {
+extension ExploreViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         
         guard searchController.searchBar.text != "",
@@ -134,5 +134,14 @@ extension ExploreController: UISearchResultsUpdating {
         snapShot.appendSections([.main])
         snapShot.appendItems(filteredUsers)
         dataSource?.apply(snapShot)
+    }
+}
+
+extension ExploreViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let user = users?[indexPath.row]
+        let controller = ProfileViewController(user: user)
+        navigationController?.pushViewController(controller, animated: true)
     }
 }

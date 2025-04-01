@@ -10,7 +10,7 @@ import Firebase
 
 enum UPloadTweetConfiguration {
     case tweet
-    case reply(Tweet)
+    case reply(TweetDTO)
 }
 
 final class UploadTweetViewController: BaseViewController {
@@ -158,6 +158,7 @@ final class UploadTweetViewController: BaseViewController {
                     let retweet = [[
                         "caption": caption,
                         "id": UUID().uuidString,
+                        "retweets": [],
                         "likeUsers": [],
                         "likes": 0,
                         "timeStamp": Date(),

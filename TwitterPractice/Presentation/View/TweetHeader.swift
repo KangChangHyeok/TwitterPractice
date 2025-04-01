@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 
 protocol TweetHeaderDelegate: AnyObject {
-    func showActionSheet()
+    func optionButtonDidTap(_ button: UIButton)
     func handleFetchUser(withUsername username: String)
 }
 
@@ -156,7 +156,7 @@ final class TweetHeader: BaseReusableView {
     
     // MARK: - Set
     
-    override func setHierarchy(at view: UIView) {
+    override func setupHierarchy() {
         addSubview(mainStackView)
         addSubview(captionLabel)
         addSubview(dateLabel)
@@ -166,7 +166,7 @@ final class TweetHeader: BaseReusableView {
         addSubview(bottomDivider)
     }
     
-    override func setLayout(at view: UIView) {
+    override func setupLayout() {
         mainStackView.snp.makeConstraints { make in
             make.top.leading.equalToSuperview().inset(16)
         }
@@ -205,8 +205,8 @@ final class TweetHeader: BaseReusableView {
     // MARK: - Selectors
     @objc func handleProfileImageTapped() {
     }
-    @objc func showActionSheet() {
-        delegate?.showActionSheet()
+    @objc func showActionSheet(sender: UIButton) {
+        delegate?.optionButtonDidTap(sender)
     }
     @objc func handleCommentTapped() {
     }
@@ -217,7 +217,7 @@ final class TweetHeader: BaseReusableView {
     @objc func handleShareTapped() {
     }
     // MARK: - Helpers
-    func bind(_ tweet: Tweet?) {
+    func bind(_ tweet: TweetDTO?) {
         guard let tweet else { return }
         profileImageView.image = UIImage(data: tweet.user.profileImage)
         fullnameLabel.text = tweet.user.fullName
@@ -230,7 +230,7 @@ final class TweetHeader: BaseReusableView {
         dateLabel.text = dateFormatter.string(from: tweet.timeStamp)
         let userID = UserDefaults.fecthUserID()
         likeButton.isSelected = !tweet.likeUsers.filter({ $0 == userID }).isEmpty
-        retweetsLabel.text = "리트윗 \(tweet.retweets.count)"
+        retweetsLabel.text = "리트윗 \(tweet.retweets?.count ?? 0)"
         likesLabel.text = "좋아요 \(tweet.likes)"
     }
     func createButton(withImageName imageName: String) -> UIButton {

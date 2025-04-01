@@ -8,6 +8,7 @@
 import UIKit
 
 private let reuserIdentifier = "ActionSheetCell"
+
 protocol ActionSheetLaunCherDelegate: AnyObject {
     func didSelect(option: ActionSheetOptions)
 }
@@ -74,7 +75,7 @@ final class ActionSheetLauncher: NSObject {
         let xxy = shouldShow ? window.frame.height - height : window.frame.height
         tableView.frame.origin.y = xxy
     }
-    func show() {
+    func present() {
         guard let window = UIApplication.shared.windows.first(where: {$0.isKeyWindow}) else { return }
         self.window = window
         window.addSubview(blackView)
@@ -123,12 +124,12 @@ extension ActionSheetLauncher: UITableViewDelegate {
         return 60
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let option = viewModel.options[indexPath.row]
+        let option = viewModel.options[indexPath.row]
         UIView.animate(withDuration: 0.5) {
             self.blackView.alpha = 0
             self.showTableView(false)
         } completion: { _ in
-//            self.delegate?.didSelect(option: option)
+            self.delegate?.didSelect(option: option)
         }
     }
 }

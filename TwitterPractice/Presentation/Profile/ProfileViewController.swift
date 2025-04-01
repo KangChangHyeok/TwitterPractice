@@ -20,9 +20,9 @@ final class ProfileViewController: BaseViewController {
     
     private var user: User?
     
-    private var dataSource: UICollectionViewDiffableDataSource<Section, Tweet>?
+    private var dataSource: UICollectionViewDiffableDataSource<Section, TweetDTO>?
     
-    private var tweets = [Tweet]()
+    private var tweets = [TweetDTO]()
     
     private var option: ProfileFilterOptions = .tweets
     
@@ -86,13 +86,13 @@ final class ProfileViewController: BaseViewController {
             supplementaryView.delegate = self
         }
         
-        let tweetCellRegisteration = UICollectionView.CellRegistration<TweetCell, Tweet> { [weak self]
+        let tweetCellRegisteration = UICollectionView.CellRegistration<TweetCell, TweetDTO> { [weak self]
             cell, indexPath, tweet in
             cell.bind(tweet: tweet)
             cell.delegate = self
         }
         
-        self.dataSource = UICollectionViewDiffableDataSource<Section, Tweet>(collectionView: self.tweetCollectionView) { collectionView, indexPath, tweet in
+        self.dataSource = UICollectionViewDiffableDataSource<Section, TweetDTO>(collectionView: self.tweetCollectionView) { collectionView, indexPath, tweet in
             return collectionView.dequeueConfiguredReusableCell(using: tweetCellRegisteration, for: indexPath, item: tweet)
         }
         
@@ -131,38 +131,44 @@ final class ProfileViewController: BaseViewController {
     func requestUserTweets() {
         Task {
             guard let userID = self.user?.email else { return }
-            self.tweets = try await NetworkManager.tweetCollection.getDocuments().documents.map { try $0.data(as: Tweet.self)
-            }.filter { $0.user.email == userID }
+            self.tweets = try await NetworkManager.tweetCollection.getDocuments().documents
+                .map { try $0.data(as: TweetDTO.self) }
+                .filter { $0.user.email == userID }
             
-            var snapshot = NSDiffableDataSourceSnapshot<Section, Tweet>()
+            var snapshot = NSDiffableDataSourceSnapshot<Section, TweetDTO>()
             snapshot.appendSections([.tweet])
             snapshot.appendItems(self.tweets)
             await dataSource?.apply(snapshot)
         }
     }
     
-    func requestTweets() {
+    func fetchUserRetweets() {
         Task {
-            guard let userID = self.user?.email else { return }
-            switch self.option {
-            case .tweets:
-                self.tweets = try await NetworkManager.tweetCollection.getDocuments().documents.map { try $0.data(as: Tweet.self)
-                }.filter { $0.user.email == userID }
-                var snapshot = NSDiffableDataSourceSnapshot<Section, Tweet>()
-                snapshot.appendSections([.tweet])
-                snapshot.appendItems(self.tweets)
-                await dataSource?.apply(snapshot)
-            case .replies:
-                return
-            case .likes:
-                self.tweets = try await NetworkManager.tweetCollection.getDocuments().documents.map { try $0.data(as: Tweet.self)
-                }.filter { $0.likeUsers.contains { $0 == userID } }
-                var snapshot = NSDiffableDataSourceSnapshot<Section, Tweet>()
-                snapshot.appendSections([.tweet])
-                snapshot.appendItems(self.tweets)
-                await dataSource?.apply(snapshot)
-            }
+            self.tweets = try await NetworkManager.tweetCollection.getDocuments().documents
+                .map { try $0.data(as: TweetDTO.self) }
+                .flatMap( { $0.retweets ?? [] })
+                .filter({ $0.user.email == self.user?.email })
+            
+            var snapshot = NSDiffableDataSourceSnapshot<Section, TweetDTO>()
+            snapshot.appendSections([.tweet])
+            snapshot.appendItems(self.tweets)
+            await dataSource?.apply(snapshot)
         }
+    }
+    
+    func fetchUserLikedTweets() {
+        guard let userID = self.user?.email else { return }
+        Task {
+            self.tweets = try await NetworkManager.tweetCollection.getDocuments().documents
+                .map { try $0.data(as: TweetDTO.self) }
+                .filter { $0.likeUsers.contains { $0 == userID } }
+            
+            var snapshot = NSDiffableDataSourceSnapshot<Section, TweetDTO>()
+            snapshot.appendSections([.tweet])
+            snapshot.appendItems(self.tweets)
+            await dataSource?.apply(snapshot)
+        }
+        
     }
 }
 
@@ -188,16 +194,16 @@ extension ProfileViewController: ProfileHeaderViewDelegate {
         case .tweets:
             requestUserTweets()
         case .replies:
-            return
+            fetchUserRetweets()
         case .likes:
-            requestTweets()
+            fetchUserLikedTweets()
         }
     }
     
     func profileEditButtonDidTap(_ button: UIButton, user: User?) {
-        let profileEditNavi = UINavigationController(rootViewController: ProfileEditController(user: user))
-        profileEditNavi.modalPresentationStyle = .overFullScreen
-        self.present(profileEditNavi, animated: true)
+        let navigationController = UINavigationController(rootViewController: ProfileEditController(user: user))
+        navigationController.modalPresentationStyle = .overFullScreen
+        self.present(navigationController, animated: true)
     }
     
     
@@ -245,7 +251,7 @@ extension ProfileViewController: TweetCellDelegate {
                 ])
                 print("좋아요 취소 완료")
                 
-                requestTweets()
+                requestUserTweets()
             }
             //좋아요를 취소했다면 해당 트윗의 likeUser에서 삭제하고 , likes - 1
         }
