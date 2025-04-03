@@ -15,23 +15,19 @@ protocol NotificationCellDelegate: AnyObject {
 class NotificationCell: UITableViewCell {
     // MARK: - Properties
     
-    var notification: Notification? {
-        didSet { configure() }
-    }
-    
     weak var delegate: NotificationCellDelegate?
     
     private lazy var profileImageView: UIImageView = {
-        let iv = UIImageView()
-        iv.contentMode = .scaleAspectFill
-        iv.clipsToBounds = true
-        iv.setDimensions(width: 40, height: 40)
-        iv.layer.cornerRadius = 40 / 2
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.setDimensions(width: 40, height: 40)
+        imageView.layer.cornerRadius = 40 / 2
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleProfileImageTapped))
-        iv.addGestureRecognizer(tap)
-        iv.isUserInteractionEnabled = true
-        iv.backgroundColor = .twitterBlue
-        return iv
+        imageView.addGestureRecognizer(tap)
+        imageView.isUserInteractionEnabled = true
+        imageView.backgroundColor = .twitterBlue
+        return imageView
     }()
     
     private lazy var followButton: UIButton = {
@@ -72,21 +68,13 @@ class NotificationCell: UITableViewCell {
     // MARK: - Selector
     @objc func handleProfileImageTapped() {
         delegate?.didTapProfileImage(self)
-        print("??")
     }
     @objc func handleFollowTapped() {
         delegate?.didTapFollow(self)
     }
     
-    // MARK: - Helpers
-    
-    func configure() {
-        guard let notification = notification else { return }
-        let viewModel = NotificationViewModel(notification: notification)
-        profileImageView.sd_setImage(with: viewModel.profileImageUrl)
-        notificationLabel.attributedText = viewModel.notificationText
-        
-        followButton.isHidden = viewModel.shouldHideFollowButton
-        followButton.setTitle(viewModel.followButtonText, for: .normal)
+    func bind(_ notification: NotificationDTO) {
+        profileImageView.image = UIImage(data: notification.user.profileImage)
+        notificationLabel.text = notification.caption
     }
 }

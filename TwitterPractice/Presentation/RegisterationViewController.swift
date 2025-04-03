@@ -119,14 +119,14 @@ final class RegisterationViewController: BaseViewController {
             
             Task {
                 do {
-                    let user = try await NetworkManager.userCollection.document(userInfo.email).getDocument()
+                    let user = try await NetworkService.userCollection.document(userInfo.email).getDocument()
                     
                     guard user.exists == false else {
                         UIAlertController.presentAlert(title: "이미 가입된 계정입니다.", messages: nil, self)
                         return
                     }
                     // 등록되지 않은 email이라면 회원가입 처리하기
-                    try await NetworkManager.userCollection.document(userInfo.email).setData([
+                    try await NetworkService.userCollection.document(userInfo.email).setData([
                         "email": userInfo.email,
                         "password": userInfo.password,
                         "fullName": userInfo.fullName,

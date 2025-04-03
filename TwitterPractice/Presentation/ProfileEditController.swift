@@ -122,13 +122,13 @@ private extension ProfileEditController {
         }
         Task {
             do {
-                try await NetworkManager.userCollection.document(userEmail).updateData([
+                try await NetworkService.userCollection.document(userEmail).updateData([
                     "fullName": fullName,
                     "userName": userName,
                     "profileImage": profileImage
                 ])
                 
-                let documents = try await NetworkManager.tweetCollection.whereField("user.email", isEqualTo: userEmail).getDocuments().documents
+                let documents = try await NetworkService.tweetCollection.whereField("user.email", isEqualTo: userEmail).getDocuments().documents
                 
                 print(documents)
                 let db = Firestore.firestore()

@@ -142,7 +142,7 @@ final class LoginViewController: BaseViewController {
         // email, password 모두 입력시 db 조회해서 email - password 일치 확인
         Task {
             do {
-                let userRef = NetworkManager.userCollection.document(email)
+                let userRef = NetworkService.userCollection.document(email)
                 let userDocument = try await userRef.getDocument()
                 
                 //email 검증

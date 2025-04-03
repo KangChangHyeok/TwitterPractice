@@ -31,6 +31,7 @@ final class ProfileViewController: BaseViewController {
         collectionView.backgroundColor = .white
         collectionView.contentInsetAdjustmentBehavior = .never
         collectionView.bounces = false
+        collectionView.delegate = self
         return collectionView
     }()
     
@@ -86,8 +87,7 @@ final class ProfileViewController: BaseViewController {
             supplementaryView.delegate = self
         }
         
-        let tweetCellRegisteration = UICollectionView.CellRegistration<TweetCell, TweetDTO> { [weak self]
-            cell, indexPath, tweet in
+        let tweetCellRegisteration = UICollectionView.CellRegistration<TweetCell, TweetDTO> { [weak self] cell, indexPath, tweet in
             cell.bind(tweet: tweet)
             cell.delegate = self
         }
@@ -124,14 +124,14 @@ final class ProfileViewController: BaseViewController {
     func requestUser() {
         Task {
             guard let userID = UserDefaults.fecthUserID() else { return }
-            self.user = try await NetworkManager.requestUser(userID: userID)
+            self.user = try await NetworkService.fetchUser(userID: userID)
         }
     }
 
     func requestUserTweets() {
         Task {
             guard let userID = self.user?.email else { return }
-            self.tweets = try await NetworkManager.tweetCollection.getDocuments().documents
+            self.tweets = try await NetworkService.tweetCollection.getDocuments().documents
                 .map { try $0.data(as: TweetDTO.self) }
                 .filter { $0.user.email == userID }
             
@@ -144,10 +144,12 @@ final class ProfileViewController: BaseViewController {
     
     func fetchUserRetweets() {
         Task {
-            self.tweets = try await NetworkManager.tweetCollection.getDocuments().documents
+            let retweetIDs = try await NetworkService.tweetCollection.getDocuments().documents
                 .map { try $0.data(as: TweetDTO.self) }
-                .flatMap( { $0.retweets ?? [] })
-                .filter({ $0.user.email == self.user?.email })
+                .flatMap({ $0.retweetIDs })
+            
+            
+            self.tweets = try await NetworkService.fetchRetweets(retweetIDs: retweetIDs)
             
             var snapshot = NSDiffableDataSourceSnapshot<Section, TweetDTO>()
             snapshot.appendSections([.tweet])
@@ -159,7 +161,7 @@ final class ProfileViewController: BaseViewController {
     func fetchUserLikedTweets() {
         guard let userID = self.user?.email else { return }
         Task {
-            self.tweets = try await NetworkManager.tweetCollection.getDocuments().documents
+            self.tweets = try await NetworkService.tweetCollection.getDocuments().documents
                 .map { try $0.data(as: TweetDTO.self) }
                 .filter { $0.likeUsers.contains { $0 == userID } }
             
@@ -177,8 +179,9 @@ final class ProfileViewController: BaseViewController {
 extension ProfileViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        let controller = TweetController(tweet: currentDataSource[indexPath.row])
-//        navigationController?.pushViewController(controller, animated: true)
+        guard let selectedTweet = dataSource?.snapshot().itemIdentifiers[indexPath.row] else { return }
+        let controller = TweetController(tweet: selectedTweet)
+        navigationController?.pushViewController(controller, animated: true)
     }
 }
 
@@ -217,49 +220,52 @@ extension ProfileViewController: ProfileHeaderViewDelegate {
 
 extension ProfileViewController: TweetCellDelegate {
     
-    func handleProfileImageTapped(_ cell: TweetCell) { return }
+    func profileImageViewDidTap(_ cell: TweetCell) {
+        guard let indexPath = cell.indexPath,
+              let selectedTweet = dataSource?.snapshot().itemIdentifiers[indexPath.row] else { return }
+        let controller = ProfileViewController(user: selectedTweet.user)
+        navigationController?.pushViewController(controller, animated: true)
+    }
     
-    func handleReplyTapped(_ cell: TweetCell) {
+    func replyButtonDidTap(_ cell: TweetCell) {
         
     }
     
-    func handleLikeTapped(_ cell: TweetCell, likeCanceled: Bool) {
+    func likeButtonDidTap(_ cell: TweetCell, likeCanceled: Bool) {
         guard let indexPath = cell.indexPath,
               let selectedTweet = dataSource?.snapshot().itemIdentifiers[indexPath.row] else { return }
-        guard let user else { return }
-        //좋아요를 눌렀다면 해당 트윗의 likeUser에 추가하고, likes + 1
+        guard let loginUserID = UserDefaults.fecthUserID() else { return }
+        
         Task {
+            
+            let loginUser = try await NetworkService.fetchUser(userID: loginUserID)
+            
             if likeCanceled {
-                let likes = selectedTweet.likes + 1
+                // 좋아요
                 var likeUsers = selectedTweet.likeUsers
-                likeUsers.append(user.email)
+                likeUsers.append(loginUser.email) // 여기선 로그인한 사람의 이메일이 추가되어야 함
                 
-                try await NetworkManager.tweetCollection.document(selectedTweet.id).updateData([
-                    "likes": likes,
+                try await NetworkService.tweetCollection.document(selectedTweet.id).updateData([
+                    "likes": selectedTweet.likes + 1,
                     "likeUsers": likeUsers
                 ])
                 print("좋아요 누르기 완료")
-                
             } else {
-                let likes = selectedTweet.likes - 1
+                // 좋아요 취소
                 var likeUsers = selectedTweet.likeUsers
-                likeUsers.removeAll { $0 == user.email }
+                likeUsers.removeAll { $0 == loginUser.email }
                 
-                try await NetworkManager.tweetCollection.document(selectedTweet.id).updateData([
-                    "likes": likes,
+                try await NetworkService.tweetCollection.document(selectedTweet.id).updateData([
+                    "likes": selectedTweet.likes - 1,
                     "likeUsers": likeUsers
                 ])
                 print("좋아요 취소 완료")
-                
-                requestUserTweets()
             }
-            //좋아요를 취소했다면 해당 트윗의 likeUser에서 삭제하고 , likes - 1
+            fetchUserLikedTweets()
         }
     }
     
-    func handleFetchUser(withUsername username: String) {
-        
-    }
+    
 }
 
 extension ProfileViewController: UIGestureRecognizerDelegate {

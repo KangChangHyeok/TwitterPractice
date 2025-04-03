@@ -11,7 +11,7 @@ private let reuseIdentifier = "NotificationCell"
 
 class NotificationController: UITableViewController {
     // MARK: - Properties
-    private var notifications = [Notification]() {
+    private var notifications = [NotificationDTO]() {
         didSet { tableView.reloadData() }
     }
     // MARK: - LifeCycle
@@ -30,29 +30,13 @@ class NotificationController: UITableViewController {
     @objc func handleRefresh() {
         fetchNotifications()
     }
-    // MARK: - API
+    
     func fetchNotifications() {
-        refreshControl?.beginRefreshing()
-//        NotificationService.shared.fetchNotification { notifications in
-//            
-//            self.refreshControl?.endRefreshing()
-//            self.notifications = notifications
-//            self.checkIfUserIsFollowed(notifications: notifications)
-//        }
-    }
-    func checkIfUserIsFollowed(notifications: [Notification]) {
-        guard !notifications.isEmpty else { return }
-        
-        notifications.forEach { notification in
-            guard case .follow = notification.type else { return }
-            let user = notification.user
-            
-            UserService.shared.checkIfUserIsFollowed(uid: user.uid) { isFollowed in
-                
-                if let index = self.notifications.firstIndex(where: {$0.user.uid == notification.user.uid}) {
-                    self.notifications[index].user.isFollowed = isFollowed
-                }
-            }
+        Task {
+            let loginUserID = UserDefaults.fecthUserID() ?? ""
+            self.notifications = try await NetworkService.notifications.getDocuments().documents
+                .map({ try $0.data(as: NotificationDTO.self) })
+                .filter { $0.user.email == loginUserID }
         }
     }
     
@@ -75,8 +59,7 @@ extension NotificationController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? NotificationCell
         guard let cell = cell else {return UITableViewCell() }
-        cell.notification = notifications[indexPath.row]
-        
+        cell.bind(notifications[indexPath.row])
         cell.delegate = self
         return cell
     }
@@ -84,34 +67,27 @@ extension NotificationController {
 extension NotificationController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let notification = notifications[indexPath.row]
-        guard let tweetID = notification.tweetID else { return }
-        
-//        TweetService.shared.fetchTweet(withTweetID: tweetID) { tweet in
-////            let controller = TweetController(tweet: tweet)
-//            self.navigationController?.pushViewController(controller, animated: true)
-//        }
+//        guard let tweetID = notification.tweetID else { return }
     }
 }
 // MARK: - NotificationCellDelegate
 
 extension NotificationController: NotificationCellDelegate {
     func didTapFollow(_ cell: NotificationCell) {
-        guard let user = cell.notification?.user else { return }
-        
-        if user.isFollowed {
-            UserService.shared.unfollowUser(uid: user.uid) { _, _ in
-                cell.notification?.user.isFollowed = false
-            }
-        } else {
-            UserService.shared.followUser(uid: user.uid) { _, _ in
-                cell.notification?.user.isFollowed = true
-            }
-        }
+//        guard let user = cell.notification?.user else { return }
+//        
+//        if user.isFollowed {
+//            UserService.shared.unfollowUser(uid: user.uid) { _, _ in
+//                cell.notification?.user.isFollowed = false
+//            }
+//        } else {
+//            UserService.shared.followUser(uid: user.uid) { _, _ in
+//                cell.notification?.user.isFollowed = true
+//            }
+//        }
     }
     
     func didTapProfileImage(_ cell: NotificationCell) {
-        guard let user = cell.notification?.user else { return }
-//        let controller = ProfileController(user: user)
-//        navigationController?.pushViewController(controller, animated: true)
+//        guard let user = cell.notification?.user else { return }
     }
 }

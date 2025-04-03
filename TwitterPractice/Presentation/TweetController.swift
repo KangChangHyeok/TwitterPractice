@@ -41,7 +41,7 @@ final class TweetController: BaseViewController {
     
     override func setupDefaults(at viewController: UIViewController) {
         configureDataSource()
-        applySnapShot()
+        fetchRetweets()
     }
     
     override func setupHierarchy(at view: UIView) {
@@ -52,7 +52,7 @@ final class TweetController: BaseViewController {
         retweetsCollectionView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.leading.trailing.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            make.bottom.equalToSuperview()
         }
     }
     
@@ -60,7 +60,7 @@ final class TweetController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.navigationBar.isHidden = false
+        navigationController?.setNavigationBarHidden(false, animated: true)
         tabBarController?.tabBar.isHidden = true
     }
     
@@ -84,13 +84,18 @@ final class TweetController: BaseViewController {
         }
     }
     
-    func applySnapShot() {
+    func fetchRetweets() {
+        Task {
+            let retweets = try await NetworkService.fetchRetweets(retweetIDs: tweet.retweetIDs)
+            applySnapShot(retweets: retweets)
+        }
+    }
+    
+    func applySnapShot(retweets: [TweetDTO]) {
         var snapShot = NSDiffableDataSourceSnapshot<Int, TweetDTO>()
         snapShot.appendSections([0])
-        snapShot.appendItems(tweet.retweets ?? [])
-        Task {
-            await dataSource?.apply(snapShot)
-        }
+        snapShot.appendItems(retweets)
+        dataSource?.apply(snapShot)
     }
     
     func repliesCollectionViewLayout() -> UICollectionViewLayout {
@@ -168,7 +173,7 @@ extension TweetController: ActionSheetLaunCherDelegate {
         case .delete:
             Task {
                 do {
-                    try await NetworkManager.tweetCollection.document(tweet.id).delete()
+                    try await NetworkService.tweetCollection.document(tweet.id).delete()
                     self.navigationController?.popViewController(animated: true)
                 } catch {
                     print(error)

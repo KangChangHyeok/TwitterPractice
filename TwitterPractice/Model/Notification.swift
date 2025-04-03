@@ -13,24 +13,19 @@ enum NotificationType: Int {
     case reply
     case retweet
     case mention
-}
-
-struct Notification {
-    var tweetID: String?
-    var timestamp: Date!
-    var user: UserInfo
-    var type: NotificationType!
-    init(user: UserInfo, dictionary: [String: AnyObject]) {
-        self.user = user
-        
-        if let tweetID = dictionary["tweetID"] as? String {
-            self.tweetID = tweetID
-        }
-        if let timestamp = dictionary["timestamp"] as? Double {
-            self.timestamp = Date(timeIntervalSince1970: timestamp)
-        }
-        if let type = dictionary["type"] as? Int {
-            self.type = NotificationType(rawValue: type)
+    
+    var description: String {
+        switch self {
+        case .follow:
+            return "Follow"
+        case .like:
+            return "Like"
+        case .reply:
+            return "Reply"
+        case .retweet:
+            return "Retweet"
+        case .mention:
+            return "Mention"
         }
     }
 }

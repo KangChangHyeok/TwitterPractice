@@ -10,11 +10,12 @@ import Foundation
 import FirebaseFirestore
 
 struct TweetDTO: Codable, Hashable {
+    let originalTweetID: String
     let id: String
     let caption: String
-    var likeUsers: [String]
     var likes: Int
-    let retweets: [TweetDTO]?
+    var likeUsers: [String]
+    var retweetIDs: [String]
     let timeStamp: Date
     var user: User
 }

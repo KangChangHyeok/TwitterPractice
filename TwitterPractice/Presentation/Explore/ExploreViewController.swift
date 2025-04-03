@@ -83,7 +83,7 @@ final class ExploreViewController: BaseViewController {
     func fetchUsers() {
         Task {
             do {
-                let users = try await NetworkManager.userCollection.getDocuments().documents.map { try $0.data(as: User.self) }
+                let users = try await NetworkService.userCollection.getDocuments().documents.map { try $0.data(as: User.self) }
                 self.users = users
                 var snapShot = NSDiffableDataSourceSnapshot<Section, User>()
                 snapShot.appendSections([.main])

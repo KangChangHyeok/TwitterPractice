@@ -230,7 +230,7 @@ final class TweetHeader: BaseReusableView {
         dateLabel.text = dateFormatter.string(from: tweet.timeStamp)
         let userID = UserDefaults.fecthUserID()
         likeButton.isSelected = !tweet.likeUsers.filter({ $0 == userID }).isEmpty
-        retweetsLabel.text = "리트윗 \(tweet.retweets?.count ?? 0)"
+        retweetsLabel.text = "리트윗 \(tweet.retweetIDs.count)"
         likesLabel.text = "좋아요 \(tweet.likes)"
     }
     func createButton(withImageName imageName: String) -> UIButton {

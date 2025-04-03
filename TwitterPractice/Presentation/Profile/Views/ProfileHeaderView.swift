@@ -209,17 +209,17 @@ final class ProfileHeaderView: BaseReusableView {
             editProfileFollowButton.isSelected.toggle()
             let isUserFollow = editProfileFollowButton.isSelected
             
-            var currentLoginUser = try await NetworkManager.userCollection.document(currentLoginUserID).getDocument().data(as: User.self)
+            var currentLoginUser = try await NetworkService.userCollection.document(currentLoginUserID).getDocument().data(as: User.self)
             
             if isUserFollow {
 
                 user.following.append(currentLoginUser.email)
-                try await NetworkManager.userCollection.document(user.email).updateData([
+                try await NetworkService.userCollection.document(user.email).updateData([
                     "following": user.following
                 ])
                 
                 currentLoginUser.follow.append(user.email)
-                try await NetworkManager.userCollection.document(currentLoginUser.email).updateData([
+                try await NetworkService.userCollection.document(currentLoginUser.email).updateData([
                     "follow": currentLoginUser.follow
                 ])
                 
@@ -227,16 +227,16 @@ final class ProfileHeaderView: BaseReusableView {
                 // 팔로우 취소한 경우, db 수정후 새로운 user값 가져오기
                 user.following.removeAll { $0 == currentLoginUser.email }
                 // 내가 누른 해당 유저의 팔로잉에서 삭제됨
-                try await NetworkManager.userCollection.document(user.email).updateData([
+                try await NetworkService.userCollection.document(user.email).updateData([
                     "following": user.following
                 ])
                 currentLoginUser.follow.removeAll { $0 == user.email}
-                try await NetworkManager.userCollection.document(currentLoginUser.email).updateData([
+                try await NetworkService.userCollection.document(currentLoginUser.email).updateData([
                     "follow": currentLoginUser.follow
                 ])
             }
             
-            let documents = try await NetworkManager.tweetCollection.whereField("user.email", isEqualTo: user.email).getDocuments().documents
+            let documents = try await NetworkService.tweetCollection.whereField("user.email", isEqualTo: user.email).getDocuments().documents
             
             let db = Firestore.firestore()
             let batch = db.batch()

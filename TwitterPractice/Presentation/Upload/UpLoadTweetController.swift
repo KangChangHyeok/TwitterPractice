@@ -124,43 +124,49 @@ final class UploadTweetViewController: BaseViewController {
     }
     @objc func handleUploadTweet() {
         switch config {
+        // 일반적인 트윗 작성시
         case .tweet:
             guard let caption = captionTextView.text else { return }
             Task {
                 guard let userID = UserDefaults.fecthUserID() else { return }
-                let user = try await NetworkManager.requestUser(userID: userID)
-                let id = UUID().uuidString
-                try await NetworkManager.tweetCollection.document(id).setData([
+                let user = try await NetworkService.fetchUser(userID: userID)
+                let tweetID = UUID().uuidString
+                try await NetworkService.tweetCollection.document(tweetID).setData([
+                    "originalTweetID": "",
+                    "id": tweetID,
                     "caption": caption,
                     "likes": 0,
-                    "timeStamp": Date(),
-                    "retweets": [],
                     "likeUsers": [],
-                    "id": id,
+                    "retweetIDs": [],
+                    "timeStamp": Date(),
                     "user": [
                         "email": user.email,
                         "fullName": user.fullName,
                         "password": user.password,
                         "profileImage": user.profileImage,
                         "userName": user.userName,
-                        "follow": [],
-                        "following": []
+                        "follow": user.follow,
+                        "following": user.following
                     ]
                 ])
                 self.dismiss(animated: true)
             }
-        case .reply(let tweet):
+        // 리트윗 작성시
+        case .reply(var tweet):
             guard let caption = captionTextView.text else { return }
             Task {
                 guard let userID = UserDefaults.fecthUserID() else { return }
-                let user = try await NetworkManager.requestUser(userID: userID)
+                let user = try await NetworkService.fetchUser(userID: userID)
+                let retweetID = UUID().uuidString
                 do {
-                    let retweet = [[
+                    // 리트윗 저장하기
+                    let retweet = [
+                        "originalTweetID": tweet.id,
+                        "id": retweetID,
                         "caption": caption,
-                        "id": UUID().uuidString,
-                        "retweets": [],
-                        "likeUsers": [],
                         "likes": 0,
+                        "likeUsers": [],
+                        "retweetIDs": [],
                         "timeStamp": Date(),
                         "user": [
                             "email": user.email,
@@ -168,15 +174,37 @@ final class UploadTweetViewController: BaseViewController {
                             "password": user.password,
                             "profileImage": user.profileImage,
                             "userName": user.userName,
-                            "follow": [],
-                            "following": []
+                            "follow": user.follow,
+                            "following": user.following
                         ]
-                    ]]
-                    try await NetworkManager.tweetCollection.document(tweet.id).updateData(
-                        ["retweets": FieldValue.arrayUnion(retweet)]
-                    )
+                    ]
+                    try await NetworkService.tweetCollection.document(retweetID).setData(retweet)
+                    tweet.retweetIDs.append(retweetID)
+                    var updatedRetweetIDs = tweet.retweetIDs
+                    
+                    try await NetworkService.tweetCollection.document(tweet.id).updateData(["retweetIDs": updatedRetweetIDs])
+                    
+                    let notificationID = UUID().uuidString
+                
+                    try await NetworkService.notifications.document(notificationID).setData([
+                        "id": notificationID,
+                        "tweetID": tweet.id,
+                        "caption": caption,
+                        "type": NotificationType.reply.description,
+                        "timeStamp": Date(),
+                        "user": [
+                            "email": user.email,
+                            "fullName": user.fullName,
+                            "password": user.password,
+                            "profileImage": user.profileImage,
+                            "userName": user.userName,
+                            "follow": user.follow,
+                            "following": user.following
+                        ]
+                    ])
+                    print("알림 전송 완료!")
                 } catch {
-                    print(error)
+                    print("ERROR: \(error)")
                 }
                 
                 self.dismiss(animated: true)
@@ -189,7 +217,7 @@ final class UploadTweetViewController: BaseViewController {
     func requestUser() {
         Task {
             guard let userID = UserDefaults.fecthUserID() else { return }
-            self.user = try await NetworkManager.requestUser(userID: userID)
+            self.user = try await NetworkService.fetchUser(userID: userID)
         }
     }
     

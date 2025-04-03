@@ -107,25 +107,16 @@ final class HomeFeedViewController: BaseViewController {
     func requestUser() {
         Task {
             guard let userID = UserDefaults.fecthUserID() else { return }
-            self.user = try await NetworkManager.requestUser(userID: userID)
+            self.user = try await NetworkService.fetchUser(userID: userID)
         }
     }
     
     // MARK: - Selectors
     
     @objc func handleRefresh() {
-        Task {
-            refreshControl.beginRefreshing()
-            let tweets = try await NetworkManager.tweetCollection.getDocuments().documents
-                .map { try $0.data(as: TweetDTO.self) }
-                .sorted { $0.timeStamp > $1.timeStamp }
-            var snapShot = NSDiffableDataSourceSnapshot<Section, TweetDTO>()
-            snapShot.appendSections([.main])
-            snapShot.appendItems(tweets)
-            
-            await dataSource?.apply(snapShot, animatingDifferences: true)
-            refreshControl.endRefreshing()
-        }
+        refreshControl.beginRefreshing()
+        requestTweets()
+        refreshControl.endRefreshing()
     }
     
     @objc func handleProfileImageTap() {
@@ -155,8 +146,9 @@ final class HomeFeedViewController: BaseViewController {
     func requestTweets() {
         Task {
             do {
-                let tweets = try await NetworkManager.tweetCollection.getDocuments().documents
+                let tweets = try await NetworkService.tweetCollection.getDocuments().documents
                     .map { try $0.data(as: TweetDTO.self) }
+                    .filter({ $0.originalTweetID.isEmpty })
                     .sorted { $0.timeStamp > $1.timeStamp }
                 var snapShot = NSDiffableDataSourceSnapshot<Section, TweetDTO>()
                 snapShot.appendSections([.main])
@@ -186,7 +178,7 @@ extension HomeFeedViewController: UICollectionViewDelegate {
 
 extension HomeFeedViewController: TweetCellDelegate {
     
-    func handleLikeTapped(_ cell: TweetCell, likeCanceled: Bool) {
+    func likeButtonDidTap(_ cell: TweetCell, likeCanceled: Bool) {
         guard let indexPath = cell.indexPath,
               let selectedTweet = dataSource?.snapshot().itemIdentifiers[indexPath.row] else { return }
         guard let user else { return }
@@ -197,7 +189,7 @@ extension HomeFeedViewController: TweetCellDelegate {
                 likeUsers.append(user.email)
                 let likes = selectedTweet.likes + 1
                 
-                try await NetworkManager.tweetCollection.document(selectedTweet.id).updateData([
+                try await NetworkService.tweetCollection.document(selectedTweet.id).updateData([
                     "likes": likes,
                     "likeUsers": likeUsers
                 ])
@@ -207,7 +199,7 @@ extension HomeFeedViewController: TweetCellDelegate {
                 var likeUsers = selectedTweet.likeUsers
                 likeUsers.removeAll { $0 == user.email }
                 
-                try await NetworkManager.tweetCollection.document(selectedTweet.id).updateData([
+                try await NetworkService.tweetCollection.document(selectedTweet.id).updateData([
                     "likes": likes,
                     "likeUsers": likeUsers
                 ])
@@ -217,7 +209,7 @@ extension HomeFeedViewController: TweetCellDelegate {
             requestTweets()
         }
     }
-    func handleProfileImageTapped(_ cell: TweetCell) {
+    func profileImageViewDidTap(_ cell: TweetCell) {
         // 내 트윗을 눌렀으면 내 유저 객체 보내주고 아니면 해당 트윗의 유저 정보 보내주기
         guard let indexPath = cell.indexPath else { return }
         let selectedTweetUser = dataSource?.snapshot().itemIdentifiers[indexPath.row].user
@@ -225,7 +217,7 @@ extension HomeFeedViewController: TweetCellDelegate {
         navigationController?.pushViewController(controller, animated: true)
     }
     
-    func handleReplyTapped(_ cell: TweetCell) {
+    func replyButtonDidTap(_ cell: TweetCell) {
         guard let indexPath = cell.indexPath,
               let tweet = dataSource?.snapshot().itemIdentifiers[indexPath.row]  else { return }
         let uploadTweetViewController = UploadTweetViewController(config: .reply(tweet))

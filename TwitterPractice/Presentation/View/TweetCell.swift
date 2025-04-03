@@ -8,9 +8,9 @@
 import UIKit
 
 protocol TweetCellDelegate: AnyObject {
-    func handleProfileImageTapped(_ cell: TweetCell)
-    func handleReplyTapped(_ cell: TweetCell)
-    func handleLikeTapped(_ cell: TweetCell, likeCanceled: Bool)
+    func profileImageViewDidTap(_ cell: TweetCell)
+    func replyButtonDidTap(_ cell: TweetCell)
+    func likeButtonDidTap(_ cell: TweetCell, likeCanceled: Bool)
 }
 
 final class TweetCell: BaseCVCell {
@@ -153,16 +153,16 @@ final class TweetCell: BaseCVCell {
     // MARK: - Selectors
     
     @objc func handleProfileImageTapped() {
-        delegate?.handleProfileImageTapped(self)
+        delegate?.profileImageViewDidTap(self)
     }
     @objc func handleCommentTapped() {
-        delegate?.handleReplyTapped(self)
+        delegate?.replyButtonDidTap(self)
     }
     @objc func handleRetweetTapped() {
     }
     @objc func handleLikeTapped() {
         likeButton.isSelected.toggle()
-        delegate?.handleLikeTapped(self, likeCanceled: likeButton.isSelected)
+        delegate?.likeButtonDidTap(self, likeCanceled: likeButton.isSelected)
     }
     @objc func handleShareTapped() { }
     // MARK: - Helpers
