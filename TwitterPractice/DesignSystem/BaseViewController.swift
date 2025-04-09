@@ -11,16 +11,17 @@ open class BaseViewController: UIViewController {
     
     open override func viewDidLoad() {
         super.viewDidLoad()
-        setupDefaults(at: self)
-        setupHierarchy(at: self.view)
-        setupLayout(at: self.view)
+        view.backgroundColor = .white
+        setupDefaults()
+        setupHierarchy()
+        setupLayout()
     }
     
-    open func setupDefaults(at viewController: UIViewController) {}
+    open func setupDefaults() {}
     
-    open func setupHierarchy(at view: UIView) {}
+    open func setupHierarchy() {}
     
-    open func setupLayout(at view: UIView) {}
+    open func setupLayout() {}
     
     deinit {
         print("❗️\(String(describing: self)) deinit")

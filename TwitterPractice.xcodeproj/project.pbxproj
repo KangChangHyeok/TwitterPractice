@@ -15,6 +15,8 @@
 		635249EC2C5F5949001C6649 /* BaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635249EB2C5F5949001C6649 /* BaseView.swift */; };
 		635249EE2C5F59F5001C6649 /* BaseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635249ED2C5F59F5001C6649 /* BaseCell.swift */; };
 		635249FC2C5F92D3001C6649 /* UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635249FB2C5F92D3001C6649 /* UIButton.swift */; };
+		63680E3C2DA2B5F000BFA576 /* ChatRoom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63680E3B2DA2B5F000BFA576 /* ChatRoom.swift */; };
+		63680E3E2DA2B5FD00BFA576 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63680E3D2DA2B5FD00BFA576 /* Message.swift */; };
 		63751FDC2D997CAB003A8BBE /* EditProfileOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63751FDB2D997CAB003A8BBE /* EditProfileOptions.swift */; };
 		638BAE062C5E129E003CA3F2 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638BAE052C5E129E003CA3F2 /* BaseViewController.swift */; };
 		6393D2852C562A5F00532D95 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6393D2842C562A5F00532D95 /* GoogleService-Info.plist */; };
@@ -51,8 +53,6 @@
 		6393D2C92C562E2600532D95 /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 6393D2C82C562E2600532D95 /* SDWebImageMapKit */; };
 		6393D2CB2C590FE500532D95 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6393D2CA2C590FE500532D95 /* NetworkService.swift */; };
 		6393D2CF2C59170D00532D95 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6393D2CE2C59170D00532D95 /* User.swift */; };
-		639EA20028F003E300564ED9 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639EA1FF28F003E300564ED9 /* AuthService.swift */; };
-		639EA20228F068D500564ED9 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639EA20128F068D500564ED9 /* UserService.swift */; };
 		639EA20428F06D9A00564ED9 /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639EA20328F06D9A00564ED9 /* UserInfo.swift */; };
 		639EA20C28F5320E00564ED9 /* TweetDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639EA20B28F5320E00564ED9 /* TweetDTO.swift */; };
 		63CEFC8C2D9EC4A800642E45 /* NotificationDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CEFC8B2D9EC4A800642E45 /* NotificationDTO.swift */; };
@@ -69,13 +69,13 @@
 		635249EB2C5F5949001C6649 /* BaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseView.swift; sourceTree = "<group>"; };
 		635249ED2C5F59F5001C6649 /* BaseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCell.swift; sourceTree = "<group>"; };
 		635249FB2C5F92D3001C6649 /* UIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButton.swift; sourceTree = "<group>"; };
+		63680E3B2DA2B5F000BFA576 /* ChatRoom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoom.swift; sourceTree = "<group>"; };
+		63680E3D2DA2B5FD00BFA576 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		63751FDB2D997CAB003A8BBE /* EditProfileOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileOptions.swift; sourceTree = "<group>"; };
 		638BAE052C5E129E003CA3F2 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		6393D2842C562A5F00532D95 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		6393D2CA2C590FE500532D95 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		6393D2CE2C59170D00532D95 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		639EA1FF28F003E300564ED9 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
-		639EA20128F068D500564ED9 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		639EA20328F06D9A00564ED9 /* UserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfo.swift; sourceTree = "<group>"; };
 		639EA20B28F5320E00564ED9 /* TweetDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetDTO.swift; sourceTree = "<group>"; };
 		63CEFC8B2D9EC4A800642E45 /* NotificationDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationDTO.swift; sourceTree = "<group>"; };
@@ -168,7 +168,6 @@
 				63751FF82D9984CB003A8BBE /* Shared */,
 				63751FDD2D997E63003A8BBE /* Presentation */,
 				639EA1FB28EFF7F100564ED9 /* Model */,
-				639EA1FC28EFF7FC00564ED9 /* API */,
 				635249EA2C5F5930001C6649 /* DesignSystem */,
 				6393D2842C562A5F00532D95 /* GoogleService-Info.plist */,
 			);
@@ -198,17 +197,10 @@
 				6393D2CE2C59170D00532D95 /* User.swift */,
 				63751FDB2D997CAB003A8BBE /* EditProfileOptions.swift */,
 				63CEFC8B2D9EC4A800642E45 /* NotificationDTO.swift */,
+				63680E3B2DA2B5F000BFA576 /* ChatRoom.swift */,
+				63680E3D2DA2B5FD00BFA576 /* Message.swift */,
 			);
 			path = Model;
-			sourceTree = "<group>";
-		};
-		639EA1FC28EFF7FC00564ED9 /* API */ = {
-			isa = PBXGroup;
-			children = (
-				639EA1FF28F003E300564ED9 /* AuthService.swift */,
-				639EA20128F068D500564ED9 /* UserService.swift */,
-			);
-			path = API;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -348,7 +340,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				639EA20228F068D500564ED9 /* UserService.swift in Sources */,
 				635249EC2C5F5949001C6649 /* BaseView.swift in Sources */,
 				631459D62C9E960A00C07623 /* BaseReusableView.swift in Sources */,
 				27EF662328EC269000C1E570 /* AppDelegate.swift in Sources */,
@@ -356,14 +347,15 @@
 				63CEFC8C2D9EC4A800642E45 /* NotificationDTO.swift in Sources */,
 				63751FDC2D997CAB003A8BBE /* EditProfileOptions.swift in Sources */,
 				63D0BA78290685B6009F369A /* Notification.swift in Sources */,
-				639EA20028F003E300564ED9 /* AuthService.swift in Sources */,
 				639EA20428F06D9A00564ED9 /* UserInfo.swift in Sources */,
 				27EF662528EC269000C1E570 /* SceneDelegate.swift in Sources */,
 				634FB5852ABF23F000BBCBA3 /* InputTextFieldView.swift in Sources */,
 				6393D2CB2C590FE500532D95 /* NetworkService.swift in Sources */,
+				63680E3E2DA2B5FD00BFA576 /* Message.swift in Sources */,
 				6393D2CF2C59170D00532D95 /* User.swift in Sources */,
 				638BAE062C5E129E003CA3F2 /* BaseViewController.swift in Sources */,
 				635249EE2C5F59F5001C6649 /* BaseCell.swift in Sources */,
+				63680E3C2DA2B5F000BFA576 /* ChatRoom.swift in Sources */,
 				639EA20C28F5320E00564ED9 /* TweetDTO.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

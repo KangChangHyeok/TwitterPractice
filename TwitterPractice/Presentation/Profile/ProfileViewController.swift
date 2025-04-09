@@ -48,16 +48,16 @@ final class ProfileViewController: BaseViewController {
     
     // MARK: - Set
     
-    override func setupDefaults(at viewController: UIViewController) {
+    override func setupDefaults() {
         configureDataSource()
         requestUserTweets()
     }
     
-    override func setupHierarchy(at view: UIView) {
+    override func setupHierarchy() {
         view.addSubview(tweetCollectionView)
     }
     
-    override func setupLayout(at view: UIView) {
+    override func setupLayout() {
         tweetCollectionView.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.leading.trailing.bottom.equalToSuperview()
@@ -219,6 +219,14 @@ extension ProfileViewController: ProfileHeaderViewDelegate {
 // MARK: - TweetCellDelegate
 
 extension ProfileViewController: TweetCellDelegate {
+    func chatButtonDidTap(_ cell: TweetCell, receiverID: String) {
+        Task {
+            let roomID = try await NetworkService.createChatRoom(for: receiverID)
+            print(roomID)
+        }
+        
+    }
+    
     
     func profileImageViewDidTap(_ cell: TweetCell) {
         guard let indexPath = cell.indexPath,
@@ -273,3 +281,7 @@ extension ProfileViewController: UIGestureRecognizerDelegate {
         return true
     }
 }
+
+//#Preview {
+//    ProfileViewController(user: <#T##User?#>)
+//}

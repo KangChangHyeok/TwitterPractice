@@ -9,6 +9,7 @@ import UIKit
 
 protocol TweetCellDelegate: AnyObject {
     func profileImageViewDidTap(_ cell: TweetCell)
+    func chatButtonDidTap(_ cell: TweetCell, receiverID: String)
     func replyButtonDidTap(_ cell: TweetCell)
     func likeButtonDidTap(_ cell: TweetCell, likeCanceled: Bool)
 }
@@ -18,6 +19,7 @@ final class TweetCell: BaseCVCell {
     // MARK: - Properties
     
     weak var delegate: TweetCellDelegate?
+    private var tweet: TweetDTO?
     
     // MARK: - UI
     
@@ -53,17 +55,17 @@ final class TweetCell: BaseCVCell {
         return label
     }()
     
-    private lazy var commentButton: UIButton = {
+    private lazy var chatButton: UIButton = {
         let button = UIButton(type: .system)
         button.configure(imageName: "comment")
-        button.addTarget(self, action: #selector(handleCommentTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(chatButtonDidTap), for: .touchUpInside)
         return button
     }()
     
     private lazy var retweetButton: UIButton = {
         let button = UIButton(type: .system)
         button.configure(imageName: "retweet")
-        button.addTarget(self, action: #selector(handleCommentTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(retweetButtonDidTap), for: .touchUpInside)
         return button
     }()
     
@@ -76,7 +78,6 @@ final class TweetCell: BaseCVCell {
     private lazy var shareButton: UIButton = {
         let button = UIButton(type: .system)
         button.configure(imageName: "share")
-        button.addTarget(self, action: #selector(handleCommentTapped), for: .touchUpInside)
         return button
     }()
     
@@ -105,7 +106,7 @@ final class TweetCell: BaseCVCell {
     }()
     
     private lazy var buttonStackView: UIStackView = {
-        let buttonStackView = UIStackView(arrangedSubviews: [commentButton, retweetButton, likeButton, shareButton])
+        let buttonStackView = UIStackView(arrangedSubviews: [chatButton, retweetButton, likeButton, shareButton])
         buttonStackView.axis = .horizontal
         buttonStackView.distribution = .equalCentering
         buttonStackView.spacing = 72
@@ -117,6 +118,10 @@ final class TweetCell: BaseCVCell {
         view.backgroundColor = .systemGroupedBackground
         return view
     }()
+    
+    override func prepareForReuse() {
+        self.tweet = nil
+    }
     
     // MARK: - Set
     
@@ -155,27 +160,34 @@ final class TweetCell: BaseCVCell {
     @objc func handleProfileImageTapped() {
         delegate?.profileImageViewDidTap(self)
     }
-    @objc func handleCommentTapped() {
+    
+    @objc func chatButtonDidTap() {
+        guard let tweet else { return }
+        delegate?.chatButtonDidTap(self, receiverID: tweet.user.email)
+    }
+    
+    @objc func retweetButtonDidTap() {
         delegate?.replyButtonDidTap(self)
     }
-    @objc func handleRetweetTapped() {
-    }
+    
     @objc func handleLikeTapped() {
         likeButton.isSelected.toggle()
         delegate?.likeButtonDidTap(self, likeCanceled: likeButton.isSelected)
     }
+    
     @objc func handleShareTapped() { }
+    
     // MARK: - Helpers
 
     func bind(tweet: TweetDTO) {
+        self.tweet = tweet
         captionLabel.text = tweet.caption
         profileImageView.image = UIImage(data: tweet.user.profileImage)
         infoLabel.text = tweet.user.userName
         
         guard let userID = UserDefaults.fecthUserID() else { return }
         likeButton.isSelected = !tweet.likeUsers.filter({ $0 == userID }).isEmpty
-    //        replyLabel.isHidden = viewModel.shouldHideReplyLabel
-    //        replyLabel.text = viewModel.replyText
+        
     }
     
     func bind(_ retweet: TweetDTO) {

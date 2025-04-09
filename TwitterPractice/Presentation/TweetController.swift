@@ -39,16 +39,16 @@ final class TweetController: BaseViewController {
     
     // MARK: - Setup
     
-    override func setupDefaults(at viewController: UIViewController) {
+    override func setupDefaults() {
         configureDataSource()
         fetchRetweets()
     }
     
-    override func setupHierarchy(at view: UIView) {
+    override func setupHierarchy() {
         view.addSubview(retweetsCollectionView)
     }
     
-    override func setupLayout(at view: UIView) {
+    override func setupLayout() {
         retweetsCollectionView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.leading.trailing.equalToSuperview()
@@ -148,10 +148,6 @@ extension TweetController: UICollectionViewDelegateFlowLayout {
 
 extension TweetController: TweetHeaderDelegate {
     func handleFetchUser(withUsername username: String) {
-//        UserService.shared.fetchUser(WithUsername: username) { user in
-//            let controller = ProfileController(user: user)
-//            self.navigationController?.pushViewController(controller, animated: true)
-//        }
     }
     
     func optionButtonDidTap(_ sender: UIButton) {

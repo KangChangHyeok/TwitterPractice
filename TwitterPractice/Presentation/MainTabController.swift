@@ -30,13 +30,13 @@ final class MainTabController: UITabBarController {
         super.viewDidLoad()
         view.backgroundColor = .twitterBlue
 //        UserDefaults.standard.set(false, forKey: "userIsLogin")
+        self.delegate = self
         configureUI()
         checkUserIsloggedIn()
         NotificationCenter.default.addObserver(
             self, selector: #selector(userLogout), name: NSNotification.Name("userLogout"), object: nil
         )
     }
-    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -93,7 +93,7 @@ final class MainTabController: UITabBarController {
         )
         let conversations = templateNavigationController(
             image: UIImage(named: "ic_mail_outline_white_2x-1"),
-            rootViewController: ConversationsController()
+            rootViewController: ChattingsViewController()
         )
         viewControllers = [feed, explore, notifications, conversations]
     }
@@ -121,5 +121,15 @@ final class MainTabController: UITabBarController {
         let nav = UINavigationController(rootViewController: LoginViewController())
         nav.modalPresentationStyle = .fullScreen
         self.present(nav, animated: true)
+    }
+}
+
+extension MainTabController: UITabBarControllerDelegate {
+    
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        
+        let tweetButtonIsHidden = viewController === self.viewControllers?[3]
+        
+        tweetRegisterButton.isHidden = tweetButtonIsHidden
     }
 }

@@ -11,8 +11,6 @@ import BuilderKit
 final class RegisterationViewController: BaseViewController {
     // MARK: - Properties
     
-    var viewModel = RegisterViewModel()
-    
     private let imagePicker = UIImagePickerController()
     private var profileImage: UIImage?
     
@@ -160,7 +158,7 @@ final class RegisterationViewController: BaseViewController {
     
     // MARK: - Helpers
     
-    override func setupDefaults(at viewController: UIViewController) {
+    override func setupDefaults() {
         view.backgroundColor = .twitterBlue
         imagePicker.delegate = self
         imagePicker.allowsEditing = true
@@ -169,13 +167,13 @@ final class RegisterationViewController: BaseViewController {
         navigationController?.navigationBar.barStyle = .black
     }
     
-    override func setupHierarchy(at view: UIView) {
+    override func setupHierarchy() {
         view.addSubview(plusPhotoButton)
         view.addSubview(stackView)
         view.addSubview(alreadyHaveAccountButton)
     }
     
-    override func setupLayout(at view: UIView) {
+    override func setupLayout() {
         plusPhotoButton.snp.makeConstraints {
             $0.centerX.equalTo(view)
             $0.top.equalTo(view.safeAreaLayoutGuide)

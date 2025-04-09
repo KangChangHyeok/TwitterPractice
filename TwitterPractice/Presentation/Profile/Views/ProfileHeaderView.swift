@@ -7,6 +7,7 @@
 
 import UIKit
 
+import SnapKit
 import Firebase
 
 protocol ProfileHeaderViewDelegate: AnyObject {
@@ -46,10 +47,10 @@ final class ProfileHeaderView: BaseReusableView {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 48 / 2
         imageView.backgroundColor = .lightGray
         imageView.layer.borderColor = UIColor.white.cgColor
         imageView.layer.borderWidth = 4
+        imageView.layer.cornerRadius = 80 / 2
         return imageView
     }()
     
@@ -58,6 +59,7 @@ final class ProfileHeaderView: BaseReusableView {
         button.layer.borderColor = UIColor.twitterBlue.cgColor
         button.layer.borderWidth = 1.25
         button.backgroundColor = .clear
+        button.layer.cornerRadius = 36 / 2
         button.setTitleColor(.twitterBlue, for: .normal)
         button.setTitleColor(.twitterBlue, for: .selected)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
@@ -96,25 +98,26 @@ final class ProfileHeaderView: BaseReusableView {
         return label
     }()
     
-    private lazy var followStackView = UIStackView(arrangedSubviews: [followLabel, followingLabel]).configure {
+    private lazy var followStackView = UIStackView(
+        arrangedSubviews: [followLabel, followingLabel]
+    ).configure {
         $0.axis = .horizontal
         $0.spacing = 8
-        $0.distribution = .fillEqually
+        $0.alignment = .leading
+        $0.distribution = .fill
     }
     
     private lazy var followLabel: UILabel = {
         let label = UILabel()
-        label.text = "0 팔로우"
         return label
     }()
     
     private lazy var followingLabel: UILabel = {
         let label = UILabel()
-        label.text = "0 팔로잉"
         return label
     }()
     
-    //MARK: - Setup
+    // MARK: - Setup
     
     override func setupDefaults() {
         filterBar.delegate = self
@@ -130,44 +133,39 @@ final class ProfileHeaderView: BaseReusableView {
     }
     
     override func setupLayout() {
-        filterBar.anchor(left: leftAnchor,
-                         bottom: bottomAnchor,
-                         right: rightAnchor,
-                         height: 50)
         
-        containerView.anchor(top: topAnchor,
-                             left: leftAnchor,
-                             right: rightAnchor,
-                             height: 108)
+        containerView.snp.makeConstraints { make in
+            make.leading.trailing.top.equalToSuperview()
+            make.height.equalTo(108)
+        }
         
+        profileImageView.snp.makeConstraints { make in
+            make.top.equalTo(containerView.snp.bottom).inset(24)
+            make.leading.equalToSuperview().offset(8)
+            make.size.equalTo(CGSize(width: 80, height: 80))
+        }
         
-        profileImageView.anchor(top: containerView.bottomAnchor,
-                                left: leftAnchor,
-                                paddingTop: -24,
-                                paddingLeft: 8)
-        profileImageView.setDimensions(width: 80, height: 80)
-        profileImageView.layer.cornerRadius = 80 / 2
+        editProfileFollowButton.snp.makeConstraints { make in
+            make.top.equalTo(containerView.snp.bottom).offset(12)
+            make.trailing.equalToSuperview().inset(12)
+            make.size.equalTo(CGSize(width: 100, height: 36))
+        }
         
-        editProfileFollowButton.anchor(top: containerView.bottomAnchor,
-                                       right: rightAnchor,
-                                       paddingTop: 12,
-                                       paddingRight: 12)
-        editProfileFollowButton.setDimensions(width: 100, height: 36)
-        editProfileFollowButton.layer.cornerRadius = 36 / 2
+        userDetailStackView.snp.makeConstraints { make in
+            make.top.equalTo(profileImageView.snp.bottom).offset(8)
+            make.leading.equalToSuperview().offset(12)
+        }
         
-        userDetailStackView.anchor(top: profileImageView.bottomAnchor,
-                               left: leftAnchor,
-                               right: rightAnchor,
-                               paddingTop: 8,
-                               paddingLeft: 12,
-                               paddingRight: 12)
+        followStackView.snp.makeConstraints { make in
+            make.top.equalTo(userDetailStackView.snp.bottom).offset(8)
+            make.leading.equalToSuperview().offset(12)
+            make.bottom.equalTo(filterBar.snp.top).offset(-4)
+        }
         
-        
-        
-        followStackView.anchor(top: userDetailStackView.bottomAnchor,
-                           left: leftAnchor,
-                           paddingTop: 8,
-                           paddingLeft: 12)
+        filterBar.snp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            make.height.equalTo(50)
+        }
     }
     
     //MARK: - Bind

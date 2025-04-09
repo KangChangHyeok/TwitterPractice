@@ -86,18 +86,18 @@ final class UploadTweetViewController: BaseViewController {
     
     // MARK: - Set
     
-    override func setupDefaults(at viewController: UIViewController) {
-        viewController.view.backgroundColor = .white
+    override func setupDefaults() {
+        self.view.backgroundColor = .white
         configureNavigationBar()
         configureDefaults(config: self.config)
         requestUser()
     }
     
-    override func setupHierarchy(at view: UIView) {
+    override func setupHierarchy() {
         view.addSubview(mainStackView)
     }
     
-    override func setupLayout(at view: UIView) {
+    override func setupLayout() {
         mainStackView.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview().inset(16)
             make.bottom.equalToSuperview()

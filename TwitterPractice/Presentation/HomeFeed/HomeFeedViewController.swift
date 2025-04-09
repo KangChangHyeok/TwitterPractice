@@ -44,23 +44,23 @@ final class HomeFeedViewController: BaseViewController {
     
     // MARK: - Set
     
-    override func setupDefaults(at viewController: UIViewController) {
-        viewController.view.backgroundColor = .white
+    override func setupDefaults() {
+        self.view.backgroundColor = .white
         let appearance = UINavigationBarAppearance()
         appearance.backgroundColor = .white
         tabBarController?.navigationController?.navigationBar.standardAppearance = appearance
         let imageView = UIImageView(image: UIImage(named: "twitter_logo_blue"))
         imageView.contentMode = .scaleAspectFit
         imageView.setDimensions(width: 44, height: 44)
-        viewController.navigationItem.titleView = imageView
+        self.navigationItem.titleView = imageView
         configureDataSource()
     }
     
-    override func setupHierarchy(at view: UIView) {
+    override func setupHierarchy() {
         view.addSubview(tweetCollectionView)
     }
     
-    override func setupLayout(at view: UIView) {
+    override func setupLayout() {
         tweetCollectionView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
@@ -177,6 +177,11 @@ extension HomeFeedViewController: UICollectionViewDelegate {
 // MARK: - TweetCellDelegate
 
 extension HomeFeedViewController: TweetCellDelegate {
+    
+    func chatButtonDidTap(_ cell: TweetCell, receiverID: String) {
+        
+    }
+    
     
     func likeButtonDidTap(_ cell: TweetCell, likeCanceled: Bool) {
         guard let indexPath = cell.indexPath,

@@ -78,19 +78,19 @@ final class LoginViewController: BaseViewController {
         self.view.endEditing(true)
     }
     
-    override func setupDefaults(at viewController: UIViewController) {
+    override func setupDefaults() {
         view.backgroundColor = .twitterBlue
         navigationController?.navigationBar.isHidden = true
         navigationController?.navigationBar.barStyle = .black
     }
     
-    override func setupHierarchy(at view: UIView) {
+    override func setupHierarchy() {
         view.addSubview(logoImageView)
         view.addSubview(stackView)
         view.addSubview(dontHaveAccountButton)
     }
     
-    override func setupLayout(at view: UIView) {
+    override func setupLayout() {
         logoImageView.snp.makeConstraints {
             $0.centerX.equalTo(view)
             $0.top.equalTo(view.safeAreaLayoutGuide)

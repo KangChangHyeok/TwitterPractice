@@ -15,6 +15,8 @@ final class NetworkService {
     static let userCollection = database.collection("Users")
     static let tweetCollection = database.collection("Tweets")
     static let notifications = database.collection("Notifications")
+    static let chatRooms = database.collection("ChatRooms")
+    static let messages = database.collection("Messages")
     
     static func fetchUser(userID: String) async throws -> User {
         try await Firestore.firestore().collection("Users").document(userID).getDocument(as: User.self)
@@ -37,4 +39,48 @@ final class NetworkService {
         }
         return retweets
     }
+    
+    // 채팅방 생성
+    static func createChatRoom(for receiveUserID: String) async throws -> String {
+        let loginUserID = UserDefaults.fecthUserID()!
+        let roomID = UUID().uuidString
+        
+        let loginUser = try await NetworkService.fetchUser(userID: loginUserID)
+        let receiveUser = try await NetworkService.fetchUser(userID: receiveUserID)
+        
+        let chatRoom = ChatRoom(
+            id: roomID,
+            joinedUsers: [loginUser, receiveUser],
+            messageIDs: nil,
+            lastMessage: nil,
+            lastMessageTime: nil,
+            createdAt: Date()
+        )
+        
+        try NetworkService.chatRooms.document(roomID).setData(from: chatRoom)
+        return roomID
+    }
+    
+    // 메세지 보내기
+    static func sendMessage(to roomID: String, content: String) async throws {
+            let messageID = UUID().uuidString
+            let loginUserID = UserDefaults.fecthUserID()!
+            
+            let message = Message(
+                id: messageID,
+                senderID: loginUserID,
+                content: content,
+                timeStamp: Date(),
+                isRead: false
+            )
+            
+        try NetworkService.messages.document(messageID).setData(from: message)
+            
+            // 채팅방의 마지막 메시지 업데이트
+            try await NetworkService.chatRooms.document(roomID).updateData([
+                "lastMessage": content,
+                "lastMessageTime": Date()
+            ])
+        }
+    
 }
