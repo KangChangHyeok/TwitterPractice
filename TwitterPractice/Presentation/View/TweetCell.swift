@@ -32,14 +32,14 @@ final class TweetCell: BaseCVCell {
     }()
     
     private lazy var profileImageView: UIImageView = {
-        let iv = UIImageView()
-        iv.contentMode = .scaleAspectFill
-        iv.clipsToBounds = true
-        iv.layer.cornerRadius = 24
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 24
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleProfileImageTapped))
-        iv.addGestureRecognizer(tap)
-        iv.isUserInteractionEnabled = true
-        return iv
+        imageView.addGestureRecognizer(tap)
+        imageView.isUserInteractionEnabled = true
+        return imageView
     }()
     
     private let infoLabel: UILabel = {
@@ -187,7 +187,6 @@ final class TweetCell: BaseCVCell {
         
         guard let userID = UserDefaults.fecthUserID() else { return }
         likeButton.isSelected = !tweet.likeUsers.filter({ $0 == userID }).isEmpty
-        
     }
     
     func bind(_ retweet: TweetDTO) {

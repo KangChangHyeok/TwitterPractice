@@ -227,7 +227,6 @@ extension ProfileViewController: TweetCellDelegate {
         
     }
     
-    
     func profileImageViewDidTap(_ cell: TweetCell) {
         guard let indexPath = cell.indexPath,
               let selectedTweet = dataSource?.snapshot().itemIdentifiers[indexPath.row] else { return }

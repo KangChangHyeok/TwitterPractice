@@ -18,10 +18,16 @@ final class MessageCell: BaseCVCell {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
+    private lazy var stackView = UIStackView(arrangedSubviews: [recevierNameLabel, contentLabelBackgroundView]).configure {
+        $0.spacing = 3
+        $0.axis = .vertical
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
     private let recevierNameLabel = UILabel().configure {
         $0.font = .systemFont(ofSize: 12)
         $0.textColor = .lightGray
-        $0.numberOfLines = 0
+        $0.numberOfLines = 1
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
@@ -37,20 +43,32 @@ final class MessageCell: BaseCVCell {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
+    private let messageTimeStampLabel = UILabel().configure {
+        $0.numberOfLines = 1
+        $0.font = .systemFont(ofSize: 12)
+        $0.textColor = .lightGray
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
     override func setDefaults(at view: UIView) {
     }
     
     override func setHierarchy(at view: UIView) {
         contentLabelBackgroundView.addSubview(contentLabel)
         view.addSubview(recevierProfileImageView)
-        view.addSubview(recevierNameLabel)
-        view.addSubview(contentLabelBackgroundView)
+        view.addSubview(stackView)
+        view.addSubview(messageTimeStampLabel)
     }
     
     override func setLayout(at view: UIView) {
         contentLabel.snp.makeConstraints { make in
-            make.top.bottom.equalToSuperview().inset(12)
-            make.leading.trailing.equalToSuperview().inset(8)
+            make.top.equalTo(contentLabelBackgroundView).inset(12)
+            make.bottom.equalTo(contentLabelBackgroundView.snp.bottom).inset(12)
+            make.leading.equalTo(contentLabelBackgroundView).inset(8)
+            make.trailing.equalTo(contentLabelBackgroundView.snp.trailing).inset(8)
+        }
+        recevierNameLabel.snp.makeConstraints { make in
+            make.height.equalTo(15)
         }
     }
     
@@ -76,11 +94,17 @@ final class MessageCell: BaseCVCell {
                 contentLabel.textColor = .white
                 contentLabelBackgroundView.backgroundColor = .twitterBlue
                 
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "HH:mm"
+                
+                messageTimeStampLabel.text = dateFormatter.string(from: message.timeStamp)
                 constraints = [
-                    contentLabelBackgroundView.widthAnchor.constraint(lessThanOrEqualToConstant: contentView.frame.width * 0.8),
-                    contentLabelBackgroundView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-                    contentLabelBackgroundView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
-                    contentLabelBackgroundView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
+                    stackView.widthAnchor.constraint(lessThanOrEqualToConstant: contentView.frame.width * 0.8),
+                    stackView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
+                    stackView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
+                    stackView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
+                    messageTimeStampLabel.trailingAnchor.constraint(equalTo: self.stackView.leadingAnchor, constant: -3),
+                    messageTimeStampLabel.bottomAnchor.constraint(equalTo: self.stackView.bottomAnchor)
                 ]
             } else {
                 recevierProfileImageView.isHidden = false
@@ -90,19 +114,25 @@ final class MessageCell: BaseCVCell {
                 recevierNameLabel.text = receiver.userName
                 
                 contentLabel.textColor = .black
-                contentLabelBackgroundView.backgroundColor = .gray
+                contentLabelBackgroundView.backgroundColor = .systemGray6
+                
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "HH:mm"
+                
+                messageTimeStampLabel.text = dateFormatter.string(from: message.timeStamp)
                 
                 constraints = [
                     recevierProfileImageView.widthAnchor.constraint(equalToConstant: 30),
                     recevierProfileImageView.heightAnchor.constraint(equalToConstant: 30),
                     recevierProfileImageView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
                     recevierProfileImageView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
-                    recevierNameLabel.topAnchor.constraint(equalTo: recevierProfileImageView.topAnchor),
-                    recevierNameLabel.leadingAnchor.constraint(equalTo: recevierProfileImageView.trailingAnchor, constant: 3),
-                    contentLabelBackgroundView.widthAnchor.constraint(lessThanOrEqualToConstant: (contentView.frame.width * 0.8) - 25),
-                    contentLabelBackgroundView.topAnchor.constraint(equalTo: self.recevierNameLabel.bottomAnchor, constant: 3),
-                    contentLabelBackgroundView.leadingAnchor.constraint(equalTo: self.recevierProfileImageView.trailingAnchor, constant: 3),
-                    contentLabelBackgroundView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor)
+                    stackView.widthAnchor.constraint(lessThanOrEqualToConstant: (contentView.frame.width * 0.8) - 25),
+                    stackView.topAnchor.constraint(equalTo: recevierProfileImageView.topAnchor),
+                    stackView.leadingAnchor.constraint(equalTo: recevierProfileImageView.trailingAnchor, constant: 5),
+                    stackView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
+                    messageTimeStampLabel.leadingAnchor.constraint(equalTo: self.contentLabelBackgroundView.trailingAnchor, constant: 3),
+                    messageTimeStampLabel.trailingAnchor.constraint(lessThanOrEqualTo: self.contentView.trailingAnchor),
+                    messageTimeStampLabel.bottomAnchor.constraint(equalTo: self.contentLabelBackgroundView.bottomAnchor)
                 ]
             }
             

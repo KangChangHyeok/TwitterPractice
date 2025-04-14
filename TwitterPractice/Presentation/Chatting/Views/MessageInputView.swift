@@ -63,6 +63,13 @@ final class MessageInputView: BaseView {
     func reset() {
         textView.text = ""
         messageSendButton.isEnabled = false
+        let size = CGSize(width: textView.textContainer.size.width, height: .infinity)
+        let estimatedSize = textView.sizeThatFits(size)
+        textView.constraints.forEach { (constraint) in
+            guard estimatedSize.height >= 25 else { return }
+            guard constraint.firstAttribute == .height else { return }
+            constraint.constant = estimatedSize.height
+        }
     }
 }
 

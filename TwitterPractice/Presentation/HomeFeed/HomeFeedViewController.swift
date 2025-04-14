@@ -41,7 +41,6 @@ final class HomeFeedViewController: BaseViewController {
         return refreshControl
     }()
     
-    
     // MARK: - Set
     
     override func setupDefaults() {
@@ -162,6 +161,15 @@ final class HomeFeedViewController: BaseViewController {
             }
         }
     }
+    
+    private func fetchChatRooms() async throws -> [ChatRoom] {
+        let userEmail = UserDefaults.fecthUserID() ?? ""
+                
+        return try await NetworkService.chatRooms.getDocuments().documents
+                    .map { try $0.data(as: ChatRoom.self) }
+                    .sorted { $0.createdAt > $1.createdAt }
+                    .filter { $0.joinedUsers.contains { $0.email == userEmail} }
+    }
 }
 
 // MARK: - UICollectionViewDelegate/DataSource
@@ -179,9 +187,22 @@ extension HomeFeedViewController: UICollectionViewDelegate {
 extension HomeFeedViewController: TweetCellDelegate {
     
     func chatButtonDidTap(_ cell: TweetCell, receiverID: String) {
-        
+        // receiverid에 해당하는 유저의 채팅방이 있으면, 해당 채팅방으로 이동하고, 아니면 새로운 채팅방을 생성한다.
+        Task {
+            let userChatRooms = try await fetchChatRooms()
+            guard let forRecevierChatRoom = userChatRooms.filter({ $0.joinedUsers.contains { $0.email == receiverID} }).first else {
+                
+                //해당 유저와의 채팅이 없으면 새로운 채팅방 생성후 채팅 시작하기
+                let createdChatRoom = try await NetworkService.createChatRoom(for: receiverID)
+                let chattingRoomViewController = ChattingRoomViewController(chatRoom: createdChatRoom)
+                self.navigationController?.pushViewController(chattingRoomViewController, animated: true)
+                return
+            }
+            // 있으면 기존의 채팅방으로 이동하기
+            let chattingRoomViewController = ChattingRoomViewController(chatRoom: forRecevierChatRoom)
+            self.navigationController?.pushViewController(chattingRoomViewController, animated: true)
+        }
     }
-    
     
     func likeButtonDidTap(_ cell: TweetCell, likeCanceled: Bool) {
         guard let indexPath = cell.indexPath,

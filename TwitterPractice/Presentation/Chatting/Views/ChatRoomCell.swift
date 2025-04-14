@@ -32,6 +32,7 @@ final class ChatRoomCell: BaseCVCell {
     private let lastMessageLabel = UILabel().configure {
         $0.text = "마지막메세지"
         $0.font = .systemFont(ofSize: 11)
+        $0.numberOfLines = 1
     }
     
     private let dateLabel = UILabel().configure {
@@ -57,21 +58,28 @@ final class ChatRoomCell: BaseCVCell {
         }
         dateLabel.snp.makeConstraints { make in
             make.top.equalTo(recevierStackView)
+            make.leading.greaterThanOrEqualTo(recevierStackView.snp.trailing)
             make.trailing.equalToSuperview().inset(20)
         }
     }
     
     func bind(_ chatRoom: ChatRoom) {
         let loginUserID = UserDefaults.fecthUserID()!
-        let recevierUser = chatRoom.joinedUsers.filter { $0.email != loginUserID }.first!
-        let loginUser = chatRoom.joinedUsers.filter { $0.email == loginUserID }.first!
+        print("로그인 유저 id", loginUserID)
         
-        recevierImageView.image = UIImage(data: recevierUser.profileImage)
-        recevierNameLabel.text = recevierUser.userName
+        let recevierUser = chatRoom.joinedUsers.filter { $0.email != loginUserID }.first
+        let loginUser = chatRoom.joinedUsers.filter { $0.email == loginUserID }.first
+        
+        print(recevierUser, loginUser)
+        
+        recevierNameLabel.text = recevierUser?.userName
         lastMessageLabel.text = chatRoom.lastMessage
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM월 dd일"
+        
+        guard let recevierUser else { return }
+        recevierImageView.image = UIImage(data: recevierUser.profileImage)
         
         guard let lastMessageSendTime = chatRoom.lastMessageTime else {
             return

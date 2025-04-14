@@ -10,7 +10,7 @@ import Foundation
 struct ChatRoom: Codable, Hashable {
     let id: String
     let joinedUsers: [User]
-    let messageIDs: [String]?
+    let messageIDs: [String]
     let lastMessage: String?
     let lastMessageTime: Date?
     let createdAt: Date

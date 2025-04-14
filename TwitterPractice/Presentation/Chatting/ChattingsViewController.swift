@@ -45,7 +45,9 @@ final class ChattingsViewController: UIViewController {
     func configureUI() {
         view.backgroundColor = .white
         navigationItem.title = "Messages"
-        
+        let backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil) // title 부분 수정
+        backBarButtonItem.tintColor = .black
+        self.navigationItem.backBarButtonItem = backBarButtonItem
         view.addSubview(chattingCollectionView)
         chattingCollectionView.snp.makeConstraints { make in
             make.edges.equalTo(view.safeAreaLayoutGuide.snp.edges)
@@ -85,9 +87,13 @@ final class ChattingsViewController: UIViewController {
     private func fetchChatRooms() {
         Task {
             do {
+                let userEmail = UserDefaults.fecthUserID() ?? ""
+                
                 let chatRooms = try await NetworkService.chatRooms.getDocuments().documents
                     .map { try $0.data(as: ChatRoom.self) }
                     .sorted { $0.createdAt > $1.createdAt }
+                    .filter { $0.joinedUsers.contains { $0.email == userEmail} }
+                
                 var snapShot = NSDiffableDataSourceSnapshot<Int, ChatRoom>()
                 snapShot.appendSections([0])
                 snapShot.appendItems(chatRooms)

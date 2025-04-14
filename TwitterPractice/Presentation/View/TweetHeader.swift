@@ -12,11 +12,17 @@ import SnapKit
 protocol TweetHeaderDelegate: AnyObject {
     func optionButtonDidTap(_ button: UIButton)
     func handleFetchUser(withUsername username: String)
+    func chatButtonDidTap(receiverID: String)
+    func retweetButtonDidTap(tweet: TweetDTO?)
+    func likeButtonDidTap(tweet: TweetDTO?, likeCanceled: Bool)
+    func shareButtonDidTap()
 }
 
 final class TweetHeader: BaseReusableView {
     
     // MARK: - Properties
+    
+    private var tweet: TweetDTO?
     
     weak var delegate: TweetHeaderDelegate?
     
@@ -129,22 +135,22 @@ final class TweetHeader: BaseReusableView {
     
     private lazy var commentButton: UIButton = {
         let button = createButton(withImageName: "comment")
-        button.addTarget(self, action: #selector(handleCommentTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(chatButtonDidTap), for: .touchUpInside)
         return button
     }()
     private lazy var retweetButton: UIButton = {
         let button = createButton(withImageName: "retweet")
-        button.addTarget(self, action: #selector(handleRetweetTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(retweetButtonDidTap), for: .touchUpInside)
         return button
     }()
     private lazy var likeButton: LikeButton = {
         let button = LikeButton()
-        button.addTarget(self, action: #selector(handleLikeTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(likeButtonDidTap), for: .touchUpInside)
         return button
     }()
     private lazy var shareButton: UIButton = {
         let button = createButton(withImageName: "share")
-        button.addTarget(self, action: #selector(handleShareTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(shareButtonDidTap), for: .touchUpInside)
         return button
     }()
     
@@ -208,16 +214,21 @@ final class TweetHeader: BaseReusableView {
     @objc func showActionSheet(sender: UIButton) {
         delegate?.optionButtonDidTap(sender)
     }
-    @objc func handleCommentTapped() {
+    @objc func chatButtonDidTap() {
+        delegate?.chatButtonDidTap(receiverID: tweet?.user.email ?? "")
     }
-    @objc func handleRetweetTapped() {
+    @objc func retweetButtonDidTap() {
+        delegate?.retweetButtonDidTap(tweet: self.tweet)
     }
-    @objc func handleLikeTapped() {
+    @objc func likeButtonDidTap() {
+        delegate?.likeButtonDidTap(tweet: self.tweet, likeCanceled: likeButton.isSelected)
     }
-    @objc func handleShareTapped() {
+    @objc func shareButtonDidTap() {
+        delegate?.shareButtonDidTap()
     }
     // MARK: - Helpers
     func bind(_ tweet: TweetDTO?) {
+        self.tweet = tweet
         guard let tweet else { return }
         profileImageView.image = UIImage(data: tweet.user.profileImage)
         fullnameLabel.text = tweet.user.fullName

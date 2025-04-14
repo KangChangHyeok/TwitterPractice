@@ -41,7 +41,7 @@ final class NetworkService {
     }
     
     // 채팅방 생성
-    static func createChatRoom(for receiveUserID: String) async throws -> String {
+    static func createChatRoom(for receiveUserID: String) async throws -> ChatRoom {
         let loginUserID = UserDefaults.fecthUserID()!
         let roomID = UUID().uuidString
         
@@ -51,14 +51,14 @@ final class NetworkService {
         let chatRoom = ChatRoom(
             id: roomID,
             joinedUsers: [loginUser, receiveUser],
-            messageIDs: nil,
+            messageIDs: [],
             lastMessage: nil,
             lastMessageTime: nil,
             createdAt: Date()
         )
         
         try NetworkService.chatRooms.document(roomID).setData(from: chatRoom)
-        return roomID
+        return chatRoom
     }
     
     // 메세지 보내기

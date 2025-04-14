@@ -11,7 +11,7 @@ import Firebase
 
 final class ChattingRoomViewController: BaseViewController {
     
-    private let chatRoom: ChatRoom
+    private var chatRoom: ChatRoom
     
     private var dataSource: UICollectionViewDiffableDataSource<Int, Message>!
     
@@ -19,7 +19,7 @@ final class ChattingRoomViewController: BaseViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: messageCollectionViewLayout())
         collectionView.backgroundColor = .white
         collectionView.delegate = self
-        collectionView.keyboardDismissMode
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
     
@@ -94,20 +94,22 @@ final class ChattingRoomViewController: BaseViewController {
     
     private func fetchMessages() {
         Task {
-            let messages = try await NetworkService.messages.getDocuments().documents
-                .map { try $0.data(as: Message.self) }
-                .sorted { $0.timeStamp < $1.timeStamp }
+            let messageIDs = chatRoom.messageIDs
+            
+            let messages: [Message]
+            if messageIDs.isEmpty == false {
+                messages = try await NetworkService.messages.whereField("id", in: messageIDs).getDocuments().documents
+                    .map { try $0.data(as: Message.self) }
+                    .sorted { $0.timeStamp < $1.timeStamp }
+            } else {
+                messages = []
+            }
+            
             var snapShot = NSDiffableDataSourceSnapshot<Int, Message>()
             snapShot.appendSections([0])
             snapShot.appendItems(messages)
+            snapShot.reloadItems(messages)
             await dataSource.apply(snapShot)
-            snapShot.reconfigureItems(messages)
-            messageCollectionView.scrollToItem(at: IndexPath(item: messages.count - 1, section: 0), at: .bottom, animated: false)
-        }
-    }
-    
-    private func fetchReceiver() {
-        Task {
             
         }
     }
@@ -119,8 +121,6 @@ final class ChattingRoomViewController: BaseViewController {
     @objc func messageSendButtonDidTap() {
         
         let loginUserID = UserDefaults.fecthUserID()!
-        let recevierUser = chatRoom.joinedUsers.filter { $0.email != loginUserID }.first!
-        let loginUser = chatRoom.joinedUsers.filter { $0.email == loginUserID }.first!
         
         let message = Message(
             id: UUID().uuidString,
@@ -139,8 +139,12 @@ final class ChattingRoomViewController: BaseViewController {
                     "lastMessage": message.content
                 ]
                 )
+                
+                let chatRoom = try await NetworkService.chatRooms.document(chatRoom.id).getDocument().data(as: ChatRoom.self)
+                
+                self.chatRoom = chatRoom
                 // message 생성후 저장
-                try await NetworkService.messages.document(message.id).setData(from: message)
+                try NetworkService.messages.document(message.id).setData(from: message)
                 messageInputView.reset()
                 fetchMessages()
             } catch {
