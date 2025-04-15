@@ -7,7 +7,6 @@
 
 import UIKit
 
-import BuilderKit
 import SnapKit
 
 final class InputTextFieldView: UIView {
@@ -16,9 +15,9 @@ final class InputTextFieldView: UIView {
     
     var textField: UITextField
     
-    private let dividerView = UIViewBuilder()
-        .backgroundColor(color: .white)
-        .create()
+    private let dividerView = UIView().configure {
+        $0.backgroundColor = .white
+    }
     
     init(withImage: UIImage?, textField: UITextField) {
         self.textField = textField

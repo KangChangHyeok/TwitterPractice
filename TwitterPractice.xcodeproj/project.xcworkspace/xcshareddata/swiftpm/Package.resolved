@@ -1,5 +1,5 @@
 {
-  "originHash" : "1c9235eed77595310f798d11c691867d95cd2578d1b55e1193ff10f5fd7cd69d",
+  "originHash" : "4f03b9c1cccf5d229c7c27d34cb1e40067bab5ae12056add28c636cf8a2da5a4",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -17,15 +17,6 @@
       "state" : {
         "revision" : "3b62f154d00019ae29a71e9738800bb6f18b236d",
         "version" : "10.19.2"
-      }
-    },
-    {
-      "identity" : "builderkit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/KangChangHyeok/BuilderKit.git",
-      "state" : {
-        "branch" : "main",
-        "revision" : "5388e9395e907439be8e7bd909d57c3b5ad6a8bf"
       }
     },
     {
@@ -116,15 +107,6 @@
       "state" : {
         "revision" : "540318ecedd63d883069ae7f1ed811a2df00b6ac",
         "version" : "2.4.0"
-      }
-    },
-    {
-      "identity" : "sdwebimage",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SDWebImage/SDWebImage.git",
-      "state" : {
-        "revision" : "86e9185ef41c4238a93ad8efe61ddeb701e80bbf",
-        "version" : "5.19.5"
       }
     },
     {

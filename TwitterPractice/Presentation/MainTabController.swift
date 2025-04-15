@@ -7,7 +7,6 @@
 
 import UIKit
 
-import BuilderKit
 import SnapKit
 
 final class MainTabController: UITabBarController {

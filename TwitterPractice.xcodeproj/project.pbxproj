@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		27EF662328EC269000C1E570 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EF662228EC269000C1E570 /* AppDelegate.swift */; };
 		27EF662528EC269000C1E570 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EF662428EC269000C1E570 /* SceneDelegate.swift */; };
-		634FB56F2ABB021C00BBCBA3 /* BuilderKit in Frameworks */ = {isa = PBXBuildFile; productRef = 634FB56E2ABB021C00BBCBA3 /* BuilderKit */; };
 		6393D2852C562A5F00532D95 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6393D2842C562A5F00532D95 /* GoogleService-Info.plist */; };
 		6393D2882C562BD200532D95 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 6393D2872C562BD200532D95 /* SnapKit */; };
 		6393D28E2C562CF100532D95 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 6393D28D2C562CF100532D95 /* FirebaseAnalytics */; };
@@ -40,8 +39,6 @@
 		6393D2C02C562CF100532D95 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 6393D2BF2C562CF100532D95 /* FirebaseStorage */; };
 		6393D2C22C562CF100532D95 /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 6393D2C12C562CF100532D95 /* FirebaseStorageCombine-Community */; };
 		6393D2C42C562CF100532D95 /* FirebaseVertexAI-Preview in Frameworks */ = {isa = PBXBuildFile; productRef = 6393D2C32C562CF100532D95 /* FirebaseVertexAI-Preview */; };
-		6393D2C72C562E2600532D95 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 6393D2C62C562E2600532D95 /* SDWebImage */; };
-		6393D2C92C562E2600532D95 /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 6393D2C82C562E2600532D95 /* SDWebImageMapKit */; };
 		63D0BA6A28FC4313009F369A /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 63D0BA6928FC4313009F369A /* .swiftlint.yml */; };
 /* End PBXBuildFile section */
 
@@ -78,12 +75,10 @@
 			files = (
 				6393D2B22C562CF100532D95 /* FirebaseInAppMessagingSwift-Beta in Frameworks */,
 				6393D2A22C562CF100532D95 /* FirebaseDatabaseSwift in Frameworks */,
-				6393D2C72C562E2600532D95 /* SDWebImage in Frameworks */,
 				6393D2A02C562CF100532D95 /* FirebaseDatabase in Frameworks */,
 				6393D2B62C562CF100532D95 /* FirebaseMLModelDownloader in Frameworks */,
 				6393D2962C562CF100532D95 /* FirebaseAppCheck in Frameworks */,
 				6393D2AE2C562CF100532D95 /* FirebaseFunctionsCombine-Community in Frameworks */,
-				6393D2C92C562E2600532D95 /* SDWebImageMapKit in Frameworks */,
 				6393D2B42C562CF100532D95 /* FirebaseInstallations in Frameworks */,
 				6393D2B82C562CF100532D95 /* FirebaseMessaging in Frameworks */,
 				6393D29A2C562CF100532D95 /* FirebaseAuth in Frameworks */,
@@ -93,7 +88,6 @@
 				6393D2BA2C562CF100532D95 /* FirebasePerformance in Frameworks */,
 				6393D2A62C562CF100532D95 /* FirebaseFirestore in Frameworks */,
 				6393D2C42C562CF100532D95 /* FirebaseVertexAI-Preview in Frameworks */,
-				634FB56F2ABB021C00BBCBA3 /* BuilderKit in Frameworks */,
 				6393D2B02C562CF100532D95 /* FirebaseInAppMessaging-Beta in Frameworks */,
 				6393D2882C562BD200532D95 /* SnapKit in Frameworks */,
 				6393D2902C562CF100532D95 /* FirebaseAnalyticsOnDeviceConversion in Frameworks */,
@@ -171,7 +165,6 @@
 			);
 			name = TwitterPractice;
 			packageProductDependencies = (
-				634FB56E2ABB021C00BBCBA3 /* BuilderKit */,
 				6393D2872C562BD200532D95 /* SnapKit */,
 				6393D28D2C562CF100532D95 /* FirebaseAnalytics */,
 				6393D28F2C562CF100532D95 /* FirebaseAnalyticsOnDeviceConversion */,
@@ -201,8 +194,6 @@
 				6393D2BF2C562CF100532D95 /* FirebaseStorage */,
 				6393D2C12C562CF100532D95 /* FirebaseStorageCombine-Community */,
 				6393D2C32C562CF100532D95 /* FirebaseVertexAI-Preview */,
-				6393D2C62C562E2600532D95 /* SDWebImage */,
-				6393D2C82C562E2600532D95 /* SDWebImageMapKit */,
 			);
 			productName = TwitterPractice;
 			productReference = 27EF661F28EC269000C1E570 /* TwitterPractice.app */;
@@ -233,10 +224,8 @@
 			);
 			mainGroup = 27EF661628EC269000C1E570;
 			packageReferences = (
-				634FB56B2ABB008600BBCBA3 /* XCRemoteSwiftPackageReference "BuilderKit" */,
 				6393D2862C562BD200532D95 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				6393D28C2C562CF100532D95 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				6393D2C52C562E2600532D95 /* XCRemoteSwiftPackageReference "SDWebImage" */,
 			);
 			productRefGroup = 27EF662028EC269000C1E570 /* Products */;
 			projectDirPath = "";
@@ -491,14 +480,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		634FB56B2ABB008600BBCBA3 /* XCRemoteSwiftPackageReference "BuilderKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/KangChangHyeok/BuilderKit.git";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
 		6393D2862C562BD200532D95 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
@@ -515,22 +496,9 @@
 				minimumVersion = 10.29.0;
 			};
 		};
-		6393D2C52C562E2600532D95 /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SDWebImage/SDWebImage.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.1.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		634FB56E2ABB021C00BBCBA3 /* BuilderKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 634FB56B2ABB008600BBCBA3 /* XCRemoteSwiftPackageReference "BuilderKit" */;
-			productName = BuilderKit;
-		};
 		6393D2872C562BD200532D95 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 6393D2862C562BD200532D95 /* XCRemoteSwiftPackageReference "SnapKit" */;
@@ -675,16 +643,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 6393D28C2C562CF100532D95 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = "FirebaseVertexAI-Preview";
-		};
-		6393D2C62C562E2600532D95 /* SDWebImage */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 6393D2C52C562E2600532D95 /* XCRemoteSwiftPackageReference "SDWebImage" */;
-			productName = SDWebImage;
-		};
-		6393D2C82C562E2600532D95 /* SDWebImageMapKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 6393D2C52C562E2600532D95 /* XCRemoteSwiftPackageReference "SDWebImage" */;
-			productName = SDWebImageMapKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

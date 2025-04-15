@@ -7,16 +7,15 @@
 
 import UIKit
 
-import BuilderKit
 import SnapKit
 
 final class LoginViewController: BaseViewController {
     // MARK: - Properties
     
-    private let logoImageView = UIImageViewBuilder()
-        .contentMode(.scaleAspectFit)
-        .image(.init(named: "TwitterLogo"))
-        .create()
+    private let logoImageView = UIImageView().configure(configuration: {
+        $0.contentMode = .scaleAspectFit
+        $0.image = .init(named: "TwitterLogo")
+    })
     
     private lazy var emailContainerView = InputTextFieldView(
         withImage: UIImage(named: "ic_mail_outline_white_2x-1"),
@@ -27,50 +26,55 @@ final class LoginViewController: BaseViewController {
         textField: passwordTextField
     )
     
-    private lazy var stackView = UIStackViewBuilder()
-        .axis(.vertical)
-        .spacing(20)
-        .distribution(.fillEqually)
-        .addArrangedSubviews([emailContainerView, passwordContainerView, loginButton])
-        .create()
+    private lazy var stackView = UIStackView().configure(configuration: {
+        $0.addArrangedSubview(emailContainerView)
+        $0.addArrangedSubview(passwordContainerView)
+        $0.addArrangedSubview(loginButton)
+        $0.axis = .vertical
+        $0.spacing = 20
+        $0.distribution = .fillEqually
+    })
+        
     
-    private let emailTextField = UITextFieldBuilder()
-        .textColor(.white)
-        .font(.systemFont(ofSize: 16))
-        .attributedPlaceHolder(NSAttributedString(
+    private let emailTextField = UITextField().configure(configuration: {
+        $0.textColor = .white
+        $0.font = .systemFont(ofSize: 16)
+        $0.attributedPlaceholder = NSAttributedString(
             string: "이메일 입력",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
-        )
-        .create()
+    })
     
-    private let passwordTextField = UITextFieldBuilder()
-        .textColor(.white)
-        .font(.systemFont(ofSize: 16))
-        .attributedPlaceHolder(NSAttributedString(
+    private let passwordTextField = UITextField().configure(configuration: {
+        $0.textColor = .white
+        $0.font = .systemFont(ofSize: 16)
+        $0.attributedPlaceholder = NSAttributedString(
             string: "비밀번호 입력",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
-        )
-        .isSecureTextEntry(true)
-        .create()
+        $0.isSecureTextEntry = true
+    })
     
-    private lazy var loginButton = UIButtonBuilder(buttonType: .filled)
-        .title("로그인",font: .boldSystemFont(ofSize: 20) , color: .twitterBlue)
-        .backgroundColor(.white)
-        .cornerRadius(5)
-        .addAction { [weak self] _ in
-            guard let self else { return }
-            self.loginButtonDidTap()
-        }
-        .create()
+    private lazy var loginButton = UIButton().configure {
+        $0.setTitle("로그인", for: .normal)
+        $0.titleLabel?.font = .boldSystemFont(ofSize: 20)
+        $0.setTitleColor(.twitterBlue, for: .normal)
+        $0.layer.cornerRadius = 5
+        $0.addAction(loginButtonAction, for: .touchUpInside)
+    }
     
-    private lazy var dontHaveAccountButton = UIButtonBuilder(buttonType: .plain)
-        .foregroundColor(.white)
-        .attributedTitle(attributedString("아직 회원이 아니라면?", " 회원가입"))
-        .addAction { [weak self] _ in
-            let controller = RegisterationViewController()
-            self?.navigationController?.pushViewController(controller, animated: true)
-        }
-        .create()
+    private lazy var loginButtonAction = UIAction { [weak self] _ in
+        self?.loginButtonDidTap()
+    }
+    
+    private lazy var dontHaveAccountButton = UIButton().configure {
+        $0.setTitleColor(.white, for: .normal)
+        $0.setTitle("아직 회원이 아니라면?  회원가입", for: .normal)
+        $0.addAction(dontHaveAccountButtonAction, for: .touchUpInside)
+    }
+    
+    private lazy var dontHaveAccountButtonAction = UIAction { [weak self] _ in
+        let controller = RegisterationViewController()
+        self?.navigationController?.pushViewController(controller, animated: true)
+    }
     
     // MARK: - Life Cycle
     
