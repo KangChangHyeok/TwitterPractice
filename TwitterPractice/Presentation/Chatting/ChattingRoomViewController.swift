@@ -115,7 +115,10 @@ final class ChattingRoomViewController: BaseViewController {
     }
     
     @objc func handleKeyboardWillShow(notification: Notification) {
-        messageCollectionView.scrollToItem(at: IndexPath(item: dataSource.snapshot().itemIdentifiers.count - 1, section: 0), at: .bottom, animated: false)
+        messageCollectionView.scrollToItem(
+            at: IndexPath(item: dataSource.snapshot().itemIdentifiers.count - 1, section: 0),
+            at: .bottom, animated: false
+        )
     }
     
     @objc func messageSendButtonDidTap() {

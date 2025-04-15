@@ -186,6 +186,14 @@ extension HomeFeedViewController: UICollectionViewDelegate {
 
 extension HomeFeedViewController: TweetCellDelegate {
     
+    func profileImageViewDidTap(_ cell: TweetCell) {
+        // 내 트윗을 눌렀으면 내 유저 객체 보내주고 아니면 해당 트윗의 유저 정보 보내주기
+        guard let indexPath = cell.indexPath else { return }
+        let selectedTweetUser = dataSource?.snapshot().itemIdentifiers[indexPath.row].user
+        let controller = ProfileViewController(user: selectedTweetUser)
+        navigationController?.pushViewController(controller, animated: true)
+    }
+    
     func chatButtonDidTap(_ cell: TweetCell, receiverID: String) {
         // receiverid에 해당하는 유저의 채팅방이 있으면, 해당 채팅방으로 이동하고, 아니면 새로운 채팅방을 생성한다.
         Task {
@@ -202,6 +210,15 @@ extension HomeFeedViewController: TweetCellDelegate {
             let chattingRoomViewController = ChattingRoomViewController(chatRoom: forRecevierChatRoom)
             self.navigationController?.pushViewController(chattingRoomViewController, animated: true)
         }
+    }
+    
+    func replyButtonDidTap(_ cell: TweetCell) {
+        guard let indexPath = cell.indexPath,
+              let tweet = dataSource?.snapshot().itemIdentifiers[indexPath.row]  else { return }
+        let uploadTweetViewController = UploadTweetViewController(config: .reply(tweet))
+        let nav = UINavigationController(rootViewController: uploadTweetViewController)
+        nav.modalPresentationStyle = .fullScreen
+        present(nav, animated: true)
     }
     
     func likeButtonDidTap(_ cell: TweetCell, likeCanceled: Bool) {
@@ -235,20 +252,13 @@ extension HomeFeedViewController: TweetCellDelegate {
             requestTweets()
         }
     }
-    func profileImageViewDidTap(_ cell: TweetCell) {
-        // 내 트윗을 눌렀으면 내 유저 객체 보내주고 아니면 해당 트윗의 유저 정보 보내주기
-        guard let indexPath = cell.indexPath else { return }
-        let selectedTweetUser = dataSource?.snapshot().itemIdentifiers[indexPath.row].user
-        let controller = ProfileViewController(user: selectedTweetUser)
-        navigationController?.pushViewController(controller, animated: true)
-    }
     
-    func replyButtonDidTap(_ cell: TweetCell) {
-        guard let indexPath = cell.indexPath,
-              let tweet = dataSource?.snapshot().itemIdentifiers[indexPath.row]  else { return }
-        let uploadTweetViewController = UploadTweetViewController(config: .reply(tweet))
-        let nav = UINavigationController(rootViewController: uploadTweetViewController)
-        nav.modalPresentationStyle = .fullScreen
-        present(nav, animated: true)
+    func shareButtonDidTap(_ cell: TweetCell, text: String?) {
+        UIPasteboard.general.string = text
+        
+        let alertController = UIAlertController(title: "복사 완료", message: "클립보드에 트위터가 복사되었습니다.", preferredStyle: .alert)
+        let checkAction = UIAlertAction(title: "확인", style: .default)
+        alertController.addAction(checkAction)
+        self.present(alertController, animated: true)
     }
 }

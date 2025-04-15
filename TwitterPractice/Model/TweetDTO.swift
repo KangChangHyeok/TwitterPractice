@@ -7,8 +7,6 @@
 
 import Foundation
 
-import FirebaseFirestore
-
 struct TweetDTO: Codable, Hashable {
     let originalTweetID: String
     let id: String

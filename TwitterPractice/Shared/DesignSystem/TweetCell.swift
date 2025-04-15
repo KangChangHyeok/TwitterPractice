@@ -12,6 +12,7 @@ protocol TweetCellDelegate: AnyObject {
     func chatButtonDidTap(_ cell: TweetCell, receiverID: String)
     func replyButtonDidTap(_ cell: TweetCell)
     func likeButtonDidTap(_ cell: TweetCell, likeCanceled: Bool)
+    func shareButtonDidTap(_ cell: TweetCell, text: String?)
 }
 
 final class TweetCell: BaseCVCell {
@@ -78,6 +79,7 @@ final class TweetCell: BaseCVCell {
     private lazy var shareButton: UIButton = {
         let button = UIButton(type: .system)
         button.configure(imageName: "share")
+        button.addTarget(self, action: #selector(handleShareTapped), for: .touchUpInside)
         return button
     }()
     
@@ -175,7 +177,9 @@ final class TweetCell: BaseCVCell {
         delegate?.likeButtonDidTap(self, likeCanceled: likeButton.isSelected)
     }
     
-    @objc func handleShareTapped() { }
+    @objc func handleShareTapped() {
+        delegate?.shareButtonDidTap(self, text: tweet?.caption)
+    }
     
     // MARK: - Helpers
 
@@ -190,6 +194,7 @@ final class TweetCell: BaseCVCell {
     }
     
     func bind(_ retweet: TweetDTO) {
+        self.tweet = retweet
         captionLabel.text = retweet.caption
         profileImageView.image = UIImage(data: retweet.user.profileImage)
         infoLabel.text = retweet.user.userName

@@ -17,10 +17,20 @@ final class ActionSheetLauncher: NSObject {
     
     // MARK: - Properties
     
+    var options: [ActionSheetOptions] {
+        var results = [ActionSheetOptions]()
+        
+        guard let userID = UserDefaults.fecthUserID() else { return [.blockUser] }
+        if user.email == userID {
+            results.append(.delete)
+        }
+        results.append(.report)
+    return results
+    }
+    
     private let user: User
     private let tableView = UITableView()
     private var window: UIWindow?
-    private lazy var viewModel = ActionSheetViewModel(user: user)
     weak var delegate: ActionSheetLaunCherDelegate?
     private var tableViewHeight: CGFloat?
     
@@ -37,8 +47,9 @@ final class ActionSheetLauncher: NSObject {
         let view = UIView()
         view.addSubview(cancelButton)
         cancelButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        cancelButton.anchor(left: view.leftAnchor, right: view.rightAnchor, paddingLeft: 12, paddingRight: 12)
-        cancelButton.centerY(inView: view)
+        cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 12).isActive = true
+        cancelButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -12).isActive = true
+        cancelButton.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         cancelButton.layer.cornerRadius = 50 / 2
         return view
     }()
@@ -49,6 +60,7 @@ final class ActionSheetLauncher: NSObject {
         button.titleLabel?.font = UIFont.systemFont(ofSize: 18)
         button.setTitleColor(.black, for: .normal)
         button.backgroundColor = .systemGray6
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(handleDismissal), for: .touchUpInside)
         return button
     }()
@@ -76,12 +88,14 @@ final class ActionSheetLauncher: NSObject {
         tableView.frame.origin.y = xxy
     }
     func present() {
-        guard let window = UIApplication.shared.windows.first(where: {$0.isKeyWindow}) else { return }
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let window = windowScene.windows.first else { return }
+        
         self.window = window
         window.addSubview(blackView)
         blackView.frame = window.frame
         window.addSubview(tableView)
-        let height = CGFloat(viewModel.options.count * 60) + 100
+        let height = CGFloat(options.count * 60) + 100
         self.tableViewHeight = height
         tableView.frame = CGRect(x: 0, y: window.frame.height, width: window.frame.width, height: height)
         UIView.animate(withDuration: 0.5) {
@@ -101,15 +115,15 @@ final class ActionSheetLauncher: NSObject {
     }
 }
 
-//MARK: - UITableViewDataSource
+// MARK: - UITableViewDataSource
 
 extension ActionSheetLauncher: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.options.count
+        return options.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuserIdentifier, for: indexPath) as? ActionSheetCell
-        cell?.option = viewModel.options[indexPath.row]
+        cell?.option = options[indexPath.row]
         guard let cell = cell else { return UITableViewCell() }
         return cell
     }
@@ -124,7 +138,7 @@ extension ActionSheetLauncher: UITableViewDelegate {
         return 60
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let option = viewModel.options[indexPath.row]
+        let option = options[indexPath.row]
         UIView.animate(withDuration: 0.5) {
             self.blackView.alpha = 0
             self.showTableView(false)

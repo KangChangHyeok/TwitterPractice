@@ -1,5 +1,5 @@
 //
-//  SearchController.swift
+//  UserSearchViewController.swift
 //  TwitterPractice
 //
 //  Created by 강창혁 on 2022/10/04.
@@ -9,7 +9,7 @@ import UIKit
 
 import SnapKit
 
-final class ExploreViewController: BaseViewController {
+final class UserSearchViewController: BaseViewController {
     
     private enum Section {
         case main
@@ -113,7 +113,7 @@ final class ExploreViewController: BaseViewController {
 
 // MARK: - UISearchResultsUpdating
 
-extension ExploreViewController: UISearchResultsUpdating {
+extension UserSearchViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         
         guard searchController.searchBar.text != "",
@@ -137,7 +137,7 @@ extension ExploreViewController: UISearchResultsUpdating {
     }
 }
 
-extension ExploreViewController: UICollectionViewDelegate {
+extension UserSearchViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let user = users?[indexPath.row]

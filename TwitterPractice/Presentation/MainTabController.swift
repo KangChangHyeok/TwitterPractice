@@ -85,7 +85,7 @@ final class MainTabController: UITabBarController {
         )
         let explore = templateNavigationController(
             image: UIImage(named: "search_unselected"),
-            rootViewController: ExploreViewController()
+            rootViewController: UserSearchViewController()
         )
         let notifications = templateNavigationController(
             image: UIImage(named: "like_unselected"),

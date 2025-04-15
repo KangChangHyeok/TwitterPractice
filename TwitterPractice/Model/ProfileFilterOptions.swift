@@ -5,7 +5,7 @@
 //  Created by 강창혁 on 2022/10/12.
 //
 
-import UIKit
+import Foundation
 
 enum ProfileFilterOptions: Int, CaseIterable {
     case tweets

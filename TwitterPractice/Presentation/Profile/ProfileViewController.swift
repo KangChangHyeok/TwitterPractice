@@ -209,8 +209,6 @@ extension ProfileViewController: ProfileHeaderViewDelegate {
         self.present(navigationController, animated: true)
     }
     
-    
-    
     func handleEditProfileFollow(_ header: ProfileHeaderView) {
     }
     
@@ -219,6 +217,7 @@ extension ProfileViewController: ProfileHeaderViewDelegate {
 // MARK: - TweetCellDelegate
 
 extension ProfileViewController: TweetCellDelegate {
+    
     func chatButtonDidTap(_ cell: TweetCell, receiverID: String) {
         Task {
             let roomID = try await NetworkService.createChatRoom(for: receiverID)
@@ -272,7 +271,14 @@ extension ProfileViewController: TweetCellDelegate {
         }
     }
     
-    
+    func shareButtonDidTap(_ cell: TweetCell, text: String?) {
+        UIPasteboard.general.string = text
+        
+        let alertController = UIAlertController(title: "복사 완료", message: "클립보드에 트위터가 복사되었습니다.", preferredStyle: .alert)
+        let checkAction = UIAlertAction(title: "확인", style: .default)
+        alertController.addAction(checkAction)
+        self.present(alertController, animated: true)
+    }
 }
 
 extension ProfileViewController: UIGestureRecognizerDelegate {
@@ -280,7 +286,3 @@ extension ProfileViewController: UIGestureRecognizerDelegate {
         return true
     }
 }
-
-//#Preview {
-//    ProfileViewController(user: <#T##User?#>)
-//}
