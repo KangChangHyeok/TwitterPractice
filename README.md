@@ -1,17 +1,36 @@
 # 트위터 클론 프로젝트
+
+## 개요
 - [유데미 트위터 클론코딩 강의](https://www.udemy.com/course/twitter-ios-clone-swift)를 보고 따라하면서 만든 프로젝트입니다.
-- 강의를 다 수강하고 난 이후 오랜만에 다시 프로젝트를 점검해보니 부족하고 고칠 부분들이 많이 보여서 리팩토링을 진행하고 있습니다.( 23.09.20 ~ 진행중)
+- 강의를 보면서 다 작성한 이후, Realtime DataBase가 사용하는데 너무 불편해서 Firestore로 데이터베이스를 변경했습니다.
+- 추가적으로 추가 결제를 해야 들을수 있던 채팅 기능 구현 강의를 듣지 않고, 직접 채팅 기능을 구현했습니다.
 
-# ✨ 핵심 키워드
-- UICompositional Layout + DiffableDataSource
-- Swift Concurrency (async - await)
+## 아키텍처
+- UIKit을 기반으로 화면을 구성했습니다.
+- 프로젝트 구조는 MVC입니다.
 
-# 🎬 화면 시연 영상
-| 로그인 | 회원가입 | 트윗 작성 | 
-| :--: | :--: | :--: |
-| <img src = "https://github.com/user-attachments/assets/a41fc939-029d-4c33-bbe4-7bbe0c8a15f6"> | <img src = "https://github.com/user-attachments/assets/bac62146-6200-4f48-a1df-6075badc87fc"> | <img src = "https://github.com/user-attachments/assets/aa5ac40f-16c7-4c15-ae37-2e6ad869ef9d"> |
-| 유저 검색 | 유저 프로필 |  |  
-<img src = "https://github.com/user-attachments/assets/9bbce1b8-4cea-437c-8338-39b4520e5e6e" witdh = 200> | ![유저 프로필](https://github.com/user-attachments/assets/e6d6b556-8288-441b-a910-af0518c0e24d) | ![유저 목록, 검색](https://github.c![Simulator Screen Recording - 
+## 주요 화면 & 기능
+| 로그인 화면 | 회원가입 화면 | 트위터 작성 화면 | 
+| --- | --- | --- |
+| ![로그인](https://github.com/user-attachments/assets/2cf92420-bd75-4238-b423-252b1b82cf44) | ![회원가입](https://github.com/user-attachments/assets/e86a7b01-1743-40a1-a4a4-11d9864438dd) | ![트위터작성](https://github.com/user-attachments/assets/94687afc-e073-498e-b14c-7e864893847f) |
+
+### 로그인 화면
+
+### 회원가입 화면
+
+### 트위터 작성 화면
+
+ 
+| 유저 검색 화면 | 유저 프로필 화면 | 채팅 화면 |  
+| --- | --- | --- |
+| ![유저검색](https://github.com/user-attachments/assets/3ae920a5-c12e-45ea-a31e-c3020220ebf9) | ![유저프로필](https://github.com/user-attachments/assets/9d0139f2-2f67-4bb4-b3ed-f5c85acd07bb) | ![채팅](https://github.com/user-attachments/assets/54fe3cf9-7c54-4b20-b6f5-22fbd7c586b8) |
+
+### 유저 검색 화면
+
+### 유저 프로필 화면
+
+### 채팅 화면
+
 
 # 🔫 트러블 슈팅
 ### iOS 15 이후 지정한 NavigationBar의 BartintColor가 적용되지 않는 문제
