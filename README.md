@@ -40,7 +40,8 @@
 - 유저간 채팅을 할수 있는 화면입니다. 메세지 내용을 입력하여 전송하면, 서버에 전달하고 보낸 메세지를 말풍선 모양의 UI로 표시해줍니다.
 - 메세지를 보낸 시간을 같이 확인할수 있으며, 채팅 내용에 따라 말풍선의 크기가 수정되도록 구성했습니다.
 
-# 🔫 트러블 슈팅
+## 기술적 고민, 문제 해결 🤔
+
 ### iOS 15 이후 지정한 NavigationBar의 BartintColor가 적용되지 않는 문제
 
 - 문제상황
@@ -66,30 +67,28 @@
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
         ```
         
-
 ### preferredStatusBarStyle이 적용되지 않는 문제
 
 - **문제상황**
-    - StatusBarStyle을 변경하기 위해 preferredStatusBarStyle을 override하여
+    - statusBar의 StatusBarStyle을 변경하기 위해 preferredStatusBarStyle을 override하여
     .lightContent로 재정의 하였지만, 실제 화면에서는 .darkContent로 출력되었습니다.
 - **문제해결**
-    - 단일 뷰가 아닌 containerViewController에 속해있는 ViewController의 경우에는
-    상위 ContainerViewController에서 childForStatusBarStyle 속성을 재정의하여,
-    해당 속성을 변경할려고하는 ViewController를 호출해 줘야 합니다.
-    - 해당 프로젝트에서는 TabBarController안에 NavigationController가 여러개 있는 구조이기 때문에,
-    selectedController를 NavigationController로 타입캐스팅하여 제일 최 상단에 있는 뷰 컨트롤러에 대해서 적용시키는 방법으로 구현했습니다.
-        
-        ```swift
-        override var childForStatusBarStyle: UIViewController? {
-                let selectedViewController = selectedViewController as? UINavigationController
-                return selectedViewController?.topViewController
-            }
-        ```
-        
-    - 변경하고 싶은 ViewController에 대해서만 preferredStatusBarStyle를 재정의하여 속성값 변경
-        
-        ```swift
-        override var preferredStatusBarStyle: UIStatusBarStyle {
+    - 공식문서를 찾아보니 containerViewController(UINavigationController, UITabBarController)에서 관리하는 ViewController의 경우에는
+    상위 ContainerViewController에서 childForStatusBarStyle 속성을 재정의하여, 자식 뷰 컨트롤러의 상태 표시줄 스타일을 사용할수 있도록 구성해야 함. 
+    - 해당 프로젝트에서는 TabBarController안의 viewController들이 각각 NavigationController로 감싸져 들어가 있었기 때문에, 먼저 .lightCotent를 사용할 뷰컨트롤러에서 preferredStatusBarStyle를 재정의하여 원하는 설정값으로 반환할수 있도록 처리한다.
+ 
+  ```swift
+  override var preferredStatusBarStyle: UIStatusBarStyle {
                 return .lightContent
             }
-        ```
+  ```
+  - 이후 UINavigationController의 childForStatusBarStyle 속성을 재정의하여 네비게이션 스택 맨 위에 있는 뷰컨트롤러의 preferredStatusBarStyle를 사용하도록 설정하였다.
+  - 서브클래싱을 하여 사용할수도 있지만, extension을 사용하여 구현하는 방식이 제일 깔끔하다고 생각해서 해당 방식을 사용하여 해결함.
+  ```swift
+        extension UINavigationController {
+    
+    open override var childForStatusBarStyle: UIViewController? {
+        return self.topViewController
+    }
+  }
+  ```
