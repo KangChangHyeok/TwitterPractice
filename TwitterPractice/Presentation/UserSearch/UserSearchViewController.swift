@@ -116,7 +116,7 @@ final class UserSearchViewController: BaseViewController {
 extension UserSearchViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         
-        guard searchController.searchBar.text != "",
+        guard searchController.searchBar.text?.isEmpty == false,
               let searchText = searchController.searchBar.text?.lowercased() else {
             guard let users else { return }
             var snapShot = NSDiffableDataSourceSnapshot<Section, User>()

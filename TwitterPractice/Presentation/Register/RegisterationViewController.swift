@@ -7,7 +7,10 @@
 import UIKit
 
 final class RegisterationViewController: BaseViewController {
+    
     // MARK: - Properties
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle { .lightContent }
     
     private lazy var imagePicker = UIImagePickerController()
     private var profileImage: UIImage?
@@ -56,7 +59,6 @@ final class RegisterationViewController: BaseViewController {
         $0.spacing = 20
         $0.distribution = .fillEqually
     }
-    
     
     private let emailTextField = UITextField().configure {
         $0.attributedPlaceholder = NSAttributedString(

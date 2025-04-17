@@ -12,11 +12,13 @@ private let headerIdentifier = "ProfileHeader"
 
 final class ProfileViewController: BaseViewController {
     
-    // MARK: - Properties
-    
     private enum Section {
         case tweet
     }
+    
+    // MARK: - Properties
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle { return .lightContent }
     
     private var user: User?
     
@@ -67,7 +69,6 @@ final class ProfileViewController: BaseViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.navigationBar.barStyle = .black
         navigationController?.setNavigationBarHidden(true, animated: true)
         navigationController?.interactivePopGestureRecognizer?.isEnabled = true
         navigationController?.interactivePopGestureRecognizer?.delegate = self
@@ -148,7 +149,6 @@ final class ProfileViewController: BaseViewController {
                 .map { try $0.data(as: TweetDTO.self) }
                 .flatMap({ $0.retweetIDs })
             
-            
             self.tweets = try await NetworkService.fetchRetweets(retweetIDs: retweetIDs)
             
             var snapshot = NSDiffableDataSourceSnapshot<Section, TweetDTO>()
@@ -170,7 +170,6 @@ final class ProfileViewController: BaseViewController {
             snapshot.appendItems(self.tweets)
             await dataSource?.apply(snapshot)
         }
-        
     }
 }
 

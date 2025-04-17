@@ -10,7 +10,10 @@ import UIKit
 import SnapKit
 
 final class LoginViewController: BaseViewController {
+    
     // MARK: - Properties
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle { return .lightContent }
     
     private let logoImageView = UIImageView().configure(configuration: {
         $0.contentMode = .scaleAspectFit
@@ -35,7 +38,6 @@ final class LoginViewController: BaseViewController {
         $0.distribution = .fillEqually
     })
         
-    
     private let emailTextField = UITextField().configure(configuration: {
         $0.textColor = .white
         $0.font = .systemFont(ofSize: 16)
@@ -55,6 +57,7 @@ final class LoginViewController: BaseViewController {
     
     private lazy var loginButton = UIButton().configure {
         $0.setTitle("로그인", for: .normal)
+        $0.backgroundColor = .white
         $0.titleLabel?.font = .boldSystemFont(ofSize: 20)
         $0.setTitleColor(.twitterBlue, for: .normal)
         $0.layer.cornerRadius = 5
@@ -82,6 +85,10 @@ final class LoginViewController: BaseViewController {
         self.view.endEditing(true)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        setNeedsStatusBarAppearanceUpdate()
+    }
+    
     override func setupDefaults() {
         view.backgroundColor = .twitterBlue
         navigationController?.navigationBar.isHidden = true
@@ -92,6 +99,7 @@ final class LoginViewController: BaseViewController {
         view.addSubview(logoImageView)
         view.addSubview(stackView)
         view.addSubview(dontHaveAccountButton)
+        
     }
     
     override func setupLayout() {

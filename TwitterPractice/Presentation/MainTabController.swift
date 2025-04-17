@@ -28,7 +28,6 @@ final class MainTabController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .twitterBlue
-//        UserDefaults.standard.set(false, forKey: "userIsLogin")
         self.delegate = self
         configureUI()
         checkUserIsloggedIn()
@@ -65,7 +64,7 @@ final class MainTabController: UITabBarController {
     func checkUserIsloggedIn() {
         guard UserDefaults.userIsLogin() else {
             DispatchQueue.main.async { [weak self] in
-                let nav = UINavigationController(rootViewController: LoginViewController())
+                let nav = LoginNavigationController(rootViewController: LoginViewController())
                 nav.modalPresentationStyle = .fullScreen
                 self?.present(nav, animated: true)
             }
@@ -117,9 +116,9 @@ final class MainTabController: UITabBarController {
         UserDefaults.standard.set(false, forKey: "userIsLogin")
         UserDefaults.standard.removeObject(forKey: "userID")
         self.viewControllers = []
-        let nav = UINavigationController(rootViewController: LoginViewController())
-        nav.modalPresentationStyle = .fullScreen
-        self.present(nav, animated: true)
+        let navigationController = UINavigationController(rootViewController: LoginViewController())
+        navigationController.modalPresentationStyle = .fullScreen
+        self.present(navigationController, animated: true)
     }
 }
 
